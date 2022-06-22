@@ -31,6 +31,7 @@ namespace BagproWebAPI.Controllers
             return await _context.Clientes.ToListAsync();
         }
 
+        //El campo IdentNro es la llave primaria de la tabla clientes.
         // GET: api/Clientes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cliente>> GetCliente(string id)

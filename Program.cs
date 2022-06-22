@@ -2,7 +2,7 @@ using BagproWebAPI.Data;
 using BagproWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-
+//Variable para habilitar error de CORS
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<plasticaribeContext>(options =>
 
-//CONEXIÓN A BASE DE DATOS PlasticaribeBDD. 
+//CONEXIÓN A BASE DE DATOS plasticaribe en BAGPRO. 
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
@@ -25,14 +25,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: myAllowSpecificOrigins,
 
-
         builder =>
         {
-
-            builder.WithOrigins("http://192.168.0.153:4600")
+            builder.WithOrigins("http://localhost:4200", "http://192.168.0.153:4600")
             .AllowAnyMethod()
             .AllowAnyHeader();
-
         });
 });
 
