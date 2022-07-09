@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "7TngO8EMcBCFP+MnA18sBgfsrBSfGCxOnBfMf9IUelw=",
+  "Source": "BagproWebAPI",
+  "BasePath": "_content/BagproWebAPI",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

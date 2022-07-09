@@ -49,6 +49,26 @@ namespace BagproWebAPI.Controllers
             return clientesOtItem;
         }
 
+        //Consultar por Id de Cliente Item
+        [HttpGet("OtItem/{ClienteItems}")]
+        public  IActionResult GetIdClientesOtItem(int ClienteItems)
+        {
+           
+            var idClientesItem =  _context.ClientesOtItems.Where(idc => idc.ClienteItems == ClienteItems);
+
+            if (idClientesItem == null)
+            {
+                return NotFound();
+
+            } else 
+            
+            {
+                return Ok(idClientesItem); 
+            }
+
+            //return idClientesOtItem;
+        }
+
         // PUT: api/ClientesOtItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
