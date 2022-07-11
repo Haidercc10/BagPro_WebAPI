@@ -166,5 +166,6 @@ namespace BagproWebAPI.Models
         public string? Laminado2 { get; set; }
         public decimal? DiaC { get; set; }
         public decimal? NocheC { get; set; }
+       
     }
 }

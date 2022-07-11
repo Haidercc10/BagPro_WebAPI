@@ -53,8 +53,16 @@ namespace BagproWebAPI.Controllers
         [HttpGet("OtItem/{ClienteItems}")]
         public  IActionResult GetIdClientesOtItem(int ClienteItems)
         {
-           
-            var idClientesItem =  _context.ClientesOtItems.Where(idc => idc.ClienteItems == ClienteItems);
+
+            var idClientesItem = _context.ClientesOtItems
+                                  .Where(idc => idc.ClienteItems == ClienteItems)
+                                  .Select(CO => new
+            {
+                                    CO.ClienteItemsNom,
+                                    CO.Cliente,
+                                    CO.ClienteNom
+
+            }).ToList();
 
             if (idClientesItem == null)
             {
