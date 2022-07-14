@@ -1,4 +1,4 @@
-using BagproWebAPI.Data;
+
 using BagproWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 

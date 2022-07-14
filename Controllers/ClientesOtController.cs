@@ -49,6 +49,35 @@ namespace BagproWebAPI.Controllers
             return clientesOt;
         }
 
+        [HttpGet("CostosOT/{Item}")]
+        public IActionResult GetOt(int Item)
+        {
+            if (_context.ClientesOts == null)
+            {
+                return NotFound();
+            }
+            var OT =  _context.ClientesOts.Where(OrdTrab => OrdTrab.Item == Item)
+                                          .Select(COT => new { 
+                                          COT.ClienteNom,
+                                          COT.ClienteItems,
+                                          COT.ClienteItemsNom,
+                                          COT.PtPresentacionNom,
+                                          COT.DatoscantKg,
+                                          COT.DatosmargenKg,
+                                          COT.DatosotKg,
+                                          COT.DatoscantBolsa,
+                                          COT.DatosvalorBolsa,
+                                          COT.DatosValorKg, 
+                                          COT.DatosvalorOt
+                                          }).ToList();
+            if (OT == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(OT);
+        }
+
         // PUT: api/ClientesOt/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
