@@ -49,33 +49,50 @@ namespace BagproWebAPI.Controllers
             return clientesOt;
         }
 
+
         [HttpGet("CostosOT/{Item}")]
-        public IActionResult GetOt(int Item)
+        public IActionResult GetCostostOt(int Item)
         {
             if (_context.ClientesOts == null)
             {
                 return NotFound();
             }
-            var OT =  _context.ClientesOts.Where(OrdTrab => OrdTrab.Item == Item)
-                                          .Select(COT => new { 
-                                          COT.ClienteNom,
-                                          COT.ClienteItems,
-                                          COT.ClienteItemsNom,
-                                          COT.PtPresentacionNom,
-                                          COT.DatoscantKg,
-                                          COT.DatosmargenKg,
-                                          COT.DatosotKg,
-                                          COT.DatoscantBolsa,
-                                          COT.DatosvalorBolsa,
-                                          COT.DatosValorKg, 
-                                          COT.DatosvalorOt
+            var OT = _context.ClientesOts.Where(OrdTrab => OrdTrab.Item == Item)
+                                          .Select(COT => new {
+                                              COT.ClienteNom,
+                                              COT.ClienteItems,
+                                              COT.ClienteItemsNom,
+                                              COT.PtPresentacionNom,
+                                              COT.DatoscantKg,
+                                              COT.DatosmargenKg,
+                                              COT.DatosotKg,
+                                              COT.DatoscantBolsa,
+                                              COT.DatosvalorBolsa,
+                                              COT.DatosValorKg,
+                                              COT.DatosvalorOt
                                           }).ToList();
             if (OT == null)
+            {
+                return BadRequest();
+            } 
+            else
+            {
+                return Ok(OT);
+            }
+        }
+        [HttpGet("OT/{item}")]
+        public ActionResult<ClientesOt> GetOt(int item)
+        {
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == item).ToList();  
+
+            if (clientesOt == null)
             {
                 return NotFound();
             }
 
-            return Ok(OT);
+            
+            return Ok(clientesOt);
+
         }
 
         // PUT: api/ClientesOt/5
