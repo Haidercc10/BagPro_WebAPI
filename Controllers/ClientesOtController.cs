@@ -50,6 +50,7 @@ namespace BagproWebAPI.Controllers
         }
 
 
+
         [HttpGet("CostosOT/{Item}")]
         public IActionResult GetCostostOt(int Item)
         {
@@ -80,6 +81,9 @@ namespace BagproWebAPI.Controllers
                 return Ok(OT);
             }
         }
+
+        // GET: api/ClientesOt/5
+
         [HttpGet("OT/{item}")]
         public ActionResult<ClientesOt> GetOt(int item)
         {
@@ -89,10 +93,8 @@ namespace BagproWebAPI.Controllers
             {
                 return NotFound();
             }
-
             
             return Ok(clientesOt);
-
         }
 
         // PUT: api/ClientesOt/5
