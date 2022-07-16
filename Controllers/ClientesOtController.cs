@@ -49,8 +49,10 @@ namespace BagproWebAPI.Controllers
             return clientesOt;
         }
 
+
+
         [HttpGet("CostosOT/{Item}")]
-        public IActionResult GetOt(int Item)
+        public IActionResult GetCostostOt(int Item)
         {
             if (_context.ClientesOts == null)
             {
@@ -68,8 +70,7 @@ namespace BagproWebAPI.Controllers
                                           COT.DatoscantBolsa,
                                           COT.DatosvalorBolsa,
                                           COT.DatosValorKg, 
-                                          COT.DatosvalorOt,
-                                          COT.FechaCrea
+                                          COT.DatosvalorOt
                                           }).ToList();
             if (OT == null)
             {
@@ -79,8 +80,21 @@ namespace BagproWebAPI.Controllers
             {
                 return Ok(OT);
             }
+        }
 
-            
+        // GET: api/ClientesOt/5
+
+        [HttpGet("OT/{item}")]
+        public ActionResult<ClientesOt> GetOt(int item)
+        {
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == item).ToList();  
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(OT);
         }
 
         // PUT: api/ClientesOt/5
