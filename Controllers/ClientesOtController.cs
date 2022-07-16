@@ -68,14 +68,19 @@ namespace BagproWebAPI.Controllers
                                           COT.DatoscantBolsa,
                                           COT.DatosvalorBolsa,
                                           COT.DatosValorKg, 
-                                          COT.DatosvalorOt
+                                          COT.DatosvalorOt,
+                                          COT.FechaCrea
                                           }).ToList();
             if (OT == null)
             {
-                return NotFound();
+                return BadRequest();
+            } 
+            else
+            {
+                return Ok(OT);
             }
 
-            return Ok(OT);
+            
         }
 
         // PUT: api/ClientesOt/5
