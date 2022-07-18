@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BagproWebAPI.Controllers
 {
@@ -70,7 +71,8 @@ namespace BagproWebAPI.Controllers
                                           COT.DatoscantBolsa,
                                           COT.DatosvalorBolsa,
                                           COT.DatosValorKg, 
-                                          COT.DatosvalorOt
+                                          COT.DatosvalorOt,
+                                          COT.FechaCrea
                                           }).ToList();
             if (OT == null)
             {
@@ -94,7 +96,7 @@ namespace BagproWebAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(OT);
+            return Ok(clientesOt);
         }
 
         // PUT: api/ClientesOt/5

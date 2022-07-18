@@ -43,5 +43,32 @@ namespace BagproWebAPI.Controllers
 
             return Ok(procExtrusion);
         }
+
+        [HttpGet("FechaFinOT/{ot}")]
+        public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
+        {
+           
+            var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot &&
+                                                          prSella.NomStatus == "SELLADO")
+                                                       .OrderByDescending(x => x.FechaEntrada)
+                                                       .Select(ProSellado => new
+                                                       {
+                                                          ProSellado.Ot,
+                                                          ProSellado.NomStatus,
+                                                          ProSellado.FechaEntrada
+                                                       })
+                                                       .First();
+
+            if (procSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procSellado);
+            }
+
+
+        }
     }
 }

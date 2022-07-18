@@ -62,6 +62,35 @@ namespace BagproWebAPI.Controllers
             return Ok(procExtrusion);
         }
 
+        [HttpGet("FechaFinOT/{ot}")]
+        public ActionResult<ProcExtrusion> GetFechaFinOT(string ot)
+        {
+            var ProcesoEmpaque = "EMPAQUE";
+            var procExtrusion = _context.ProcExtrusions.Where(prExt => prExt.Ot == ot &&
+                                                              prExt.NomStatus == ProcesoEmpaque)
+                                                       .OrderByDescending(x => x.Fecha)
+                                                       .Select(ProcExt => new
+                                                       {
+                                                           ProcExt.Item,
+                                                           ProcExt.Ot,
+                                                           ProcExt.Fecha,
+                                                           ProcExt.NomStatus
+
+                                                       })
+                                                       .First();
+                                                       
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            } else
+            {
+                return Ok(procExtrusion);
+            }
+
+            
+        }
+
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
