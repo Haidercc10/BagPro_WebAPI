@@ -72,7 +72,9 @@ namespace BagproWebAPI.Controllers
                                           COT.DatosvalorBolsa,
                                           COT.DatosValorKg, 
                                           COT.DatosvalorOt,
-                                          COT.FechaCrea
+                                          COT.FechaCrea,
+                                          COT.UsrCrea,
+                                          COT.Estado
                                           }).ToList();
             if (OT == null)
             {
@@ -83,6 +85,7 @@ namespace BagproWebAPI.Controllers
                 return Ok(OT);
             }
         }
+
 
         // GET: api/ClientesOt/5
 
@@ -141,10 +144,10 @@ namespace BagproWebAPI.Controllers
 
             try
             {
-                var Actualizado = _context.ClientesOts.First<ClientesOt>();
-                Actualizado.Estado = Estado;
+                 var Actualizado = _context.ClientesOts.First<ClientesOt>();                                                       
+                 Actualizado.Estado = Estado;
 
-                _context.SaveChanges();
+                 _context.SaveChanges();             
 
             }
             catch (DbUpdateConcurrencyException)
@@ -161,6 +164,8 @@ namespace BagproWebAPI.Controllers
 
             return NoContent();
         }
+
+
 
 
         // POST: api/ClientesOt
