@@ -130,6 +130,39 @@ namespace BagproWebAPI.Controllers
             return NoContent();
         }
 
+        /** Actualizar Estado de Ordenes */
+        [HttpPut("CambioEstadoOT/{Item}")]
+        public IActionResult PutEstadoClientesOt(int Item, ClientesOt clientesOt, string Estado)
+        {
+            if (Item != clientesOt.Item)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var Actualizado = _context.ClientesOts.First<ClientesOt>();
+                Actualizado.Estado = Estado;
+
+                _context.SaveChanges();
+
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClientesOtExists(Item))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+
         // POST: api/ClientesOt
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
