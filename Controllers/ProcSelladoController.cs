@@ -47,9 +47,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet("FechaFinOT/{ot}")]
         public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
         {
-           
+            /*** Consulta para obtener la ultima fecha en que se realizó el proceso de sellado en una OT */
+            var nomStatus = "SELLADO";
             var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot &&
-                                                          prSella.NomStatus == "SELLADO")
+                                                          prSella.NomStatus == nomStatus)
                                                        .OrderByDescending(x => x.FechaEntrada)
                                                        .Select(ProSellado => new
                                                        {
