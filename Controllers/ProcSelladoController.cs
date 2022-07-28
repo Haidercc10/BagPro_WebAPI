@@ -96,5 +96,28 @@ namespace BagproWebAPI.Controllers
                     return Ok(procSellado);
                 }
             }
+
+        [HttpGet("ContarOtEnSellado/{ot}")]
+        public ActionResult<ProcExtrusion> GetConteoOTSellado(string ot)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            
+            var prSellado = _context.ProcSellados.Where(prExt => prExt.Ot == ot)
+                                                       .GroupBy(agr => new { agr.Ot})
+                                                       .Select(ProSella => new
+                                                       {
+                                                           ProSella.Key.Ot,                                                           
+                                                           conteoFilas = ProSella.Count()
+                                                       });
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
     }
 }

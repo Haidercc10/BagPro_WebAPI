@@ -92,7 +92,7 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("OtConEmpaque/{ot}")]
-        public ActionResult<ProcExtrusion> GetOTSellada(string ot)
+        public ActionResult<ProcExtrusion> GetOTEmpaque(string ot)
         {
             /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */            
             var ProcesoEmpaque = "EMPAQUE";
@@ -113,6 +113,32 @@ namespace BagproWebAPI.Controllers
             else
             {
                 return Ok(procSellado);
+            }
+        }
+
+        [HttpGet("ContarOtEnEmpaque/{ot}")]
+        public ActionResult<ProcExtrusion> GetConteoOTEmpaque(string ot)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var ProcesoEmpaque = "EMPAQUE";
+            var prEmpaque = _context.ProcExtrusions.Where(prExt => prExt.Ot == ot &&
+                                                          prExt.NomStatus == ProcesoEmpaque)
+                                                       .GroupBy(agr => new { agr.Ot, agr.NomStatus })
+                                                       .Select(ProEmpaque => new
+                                                       {
+                                                           ProEmpaque.Key.Ot,
+                                                           ProEmpaque.Key.NomStatus,
+                                                           conteoFilas = ProEmpaque.Count()
+                                                       });
+
+            if (prEmpaque == null)
+            {
+                return NotFound();
+                
+            }
+            else
+            {
+                return Ok(prEmpaque);
             }
         }
 
