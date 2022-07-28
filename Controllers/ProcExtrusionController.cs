@@ -88,7 +88,32 @@ namespace BagproWebAPI.Controllers
                 return Ok(procExtrusion);
             }
 
-            
+
+        }
+
+        [HttpGet("OtConEmpaque/{ot}")]
+        public ActionResult<ProcExtrusion> GetOTSellada(string ot)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */            
+            var ProcesoEmpaque = "EMPAQUE";
+            var procSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == ot &&
+                                                          prExt.NomStatus == ProcesoEmpaque)
+                                                       .GroupBy(agr => new { agr.Ot })
+                                                       .Select(ProEmpaque => new
+                                                       {
+                                                           ProEmpaque.Key.Ot,
+                                                           SumaPeso = ProEmpaque.Sum(sma => sma.Extnetokg)
+                                                       });
+
+
+            if (procSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procSellado);
+            }
         }
 
         // PUT: api/ProcExtrusion/5

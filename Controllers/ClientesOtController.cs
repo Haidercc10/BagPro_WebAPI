@@ -51,7 +51,7 @@ namespace BagproWebAPI.Controllers
         }
 
 
-
+        /** Obtener costos de clientes OT*/
         [HttpGet("CostosOT/{Item}")]
         public IActionResult GetCostostOt(int Item)
         {
@@ -148,7 +148,6 @@ namespace BagproWebAPI.Controllers
                  Actualizado.Estado = Estado;
 
                  _context.SaveChanges();             
-
             }
             catch (DbUpdateConcurrencyException)
             {

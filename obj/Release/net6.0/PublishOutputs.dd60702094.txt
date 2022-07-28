@@ -24,6 +24,8 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Rel
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.runtimeconfig.json
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.pdb
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.SqlServer.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Humanizer.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Intercom.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\MessagePack.dll
@@ -82,12 +84,14 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\NuG
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.CodeDom.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Composition.AttributedModel.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Composition.Convention.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Composition.Hosting.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Composition.Runtime.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Composition.TypedParts.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Configuration.ConfigurationManager.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Data.SqlClient.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Runtime.Caching.dll
@@ -259,6 +263,11 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\run
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x64\native\sni.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x86\native\sni.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll

@@ -61,6 +61,7 @@ namespace BagproWebAPI.Controllers
                                   .Where(idc => idc.ClienteItems == ClienteItems)
                                   .Select(CO => new
             {
+                                    CO.ClienteItems,
                                     CO.ClienteItemsNom,
                                     CO.Cliente,
                                     CO.ClienteNom
