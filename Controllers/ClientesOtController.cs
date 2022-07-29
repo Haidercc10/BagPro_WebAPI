@@ -144,7 +144,8 @@ namespace BagproWebAPI.Controllers
 
             try
             {
-                 var Actualizado = _context.ClientesOts.First<ClientesOt>();                                                       
+                 var Actualizado = _context.ClientesOts.Where(x => x.Item == Item)
+                                                       .First<ClientesOt>();                                                       
                  Actualizado.Estado = Estado;
 
                  _context.SaveChanges();             
