@@ -72,30 +72,56 @@ namespace BagproWebAPI.Controllers
         }
 
 
-            [HttpGet("OtConSellado/{ot}")]
-            public ActionResult<ProcSellado> GetOTSellada(string ot)
+        [HttpGet("OtConSellado/{ot}")]
+        public ActionResult<ProcSellado> GetOTSellada(string ot)
+        {
+        /*** Consulta para obtener la ultima fecha en que se realizó el proceso de sellado en una OT */
+        //var nomStatus = "SELLADO";
+        //var nomStatusW = "Wiketiado";
+        var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot)
+                                                    .GroupBy(agr => new { agr.Ot })
+                                                    .Select(ProSellado => new
+                                                    {
+                                                        ProSellado.Key.Ot,
+                                                        SumaPeso = ProSellado.Sum(sma => sma.Peso)
+                                                    });
+                                                           
+
+            if (procSellado == null)
             {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procSellado);
+            }
+        }
+
+        [HttpGet("OtConSelladoPesoUnidad/{ot}")]
+        public ActionResult<ProcSellado> GetOTSelladaPesoUnidad(string ot)
+        {
             /*** Consulta para obtener la ultima fecha en que se realizó el proceso de sellado en una OT */
             //var nomStatus = "SELLADO";
             //var nomStatusW = "Wiketiado";
             var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot)
-                                                       .GroupBy(agr => new { agr.Ot })
-                                                       .Select(ProSellado => new
-                                                       {
-                                                           ProSellado.Key.Ot,
-                                                           SumaPeso = ProSellado.Sum(sma => sma.Peso)
-                                                       });
-                                                           
+                                                        .GroupBy(agr => new { agr.Ot })
+                                                        .Select(ProSellado => new
+                                                        {
+                                                            ProSellado.Key.Ot,
+                                                            SumaPeso = ProSellado.Sum(sma => sma.Peso),
+                                                            SumaUnidades = ProSellado.Sum(sma => sma.Qty)
+                                                        });
 
-                if (procSellado == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(procSellado);
-                }
+
+            if (procSellado == null)
+            {
+                return NotFound();
             }
+            else
+            {
+                return Ok(procSellado);
+            }
+        }
 
         [HttpGet("ContarOtEnSellado/{ot}")]
         public ActionResult<ProcExtrusion> GetConteoOTSellado(string ot)

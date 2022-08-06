@@ -89,10 +89,36 @@ namespace BagproWebAPI.Controllers
 
         // GET: api/ClientesOt/5
 
+        [HttpGet("FechaCreacion/{FechaCrea}")]
+        public ActionResult<ClientesOt> GetOt(DateTime FechaCrea)
+        {
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.FechaCrea == FechaCrea).ToList();  
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(clientesOt);
+        }
+
+        [HttpGet("FechasCreacion/")]
+        public ActionResult<ClientesOt> GetOtFecha(DateTime FechaCrea1, DateTime FechaCrea2)
+        {
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.FechaCrea >= FechaCrea1 && cOt.FechaCrea <= FechaCrea2).ToList();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(clientesOt);
+        }
+
         [HttpGet("OT/{item}")]
         public ActionResult<ClientesOt> GetOt(int item)
         {
-            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == item).ToList();  
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == item).ToList();
 
             if (clientesOt == null)
             {
@@ -145,10 +171,10 @@ namespace BagproWebAPI.Controllers
             try
             {
                  var Actualizado = _context.ClientesOts.Where(x => x.Item == Item)
-                                                       .First<ClientesOt>();                                                       
+                                                       .First<ClientesOt>();
                  Actualizado.Estado = Estado;
 
-                 _context.SaveChanges();             
+                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
