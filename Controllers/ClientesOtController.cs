@@ -128,6 +128,50 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
+        [HttpGet("OT_Cliente_Item_Presentacion/{Cliente}/{ClienteItems}/{PtPresentacionNom}")]
+        public ActionResult<ClientesOt> GetOt(string Cliente, int ClienteItems, string PtPresentacionNom)
+        {
+            var clientesOt = _context.ClientesOts
+                .Where(cOt => cOt.ClienteNom == Cliente && cOt.ClienteItems == ClienteItems && cOt.PtPresentacionNom == PtPresentacionNom)
+                .OrderBy(cOt => cOt.Item)
+                .Last();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(clientesOt);
+            }
+        }
+
+        [HttpGet("UltimaOT/")]
+        public ActionResult<ClientesOt> GetUltimaOt()
+        {
+            var clientesOt = _context.ClientesOts.OrderBy(cOt => cOt.Item).Last();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(clientesOt);
+        }
+
+        [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
+        public ActionResult get(DateTime fecha1, DateTime fecha2, int item, decimal precio)
+        {
+            var con = _context.ClientesOts
+                .Where(x => x.FechaCrea >= fecha1 
+                       && x.FechaCrea <= fecha2
+                       && x.ClienteItems == item
+                       && precio == x.DatosValorKg)
+                .OrderByDescending(x => x.Id)
+                .First();
+            return Ok(con);
+        }
+
         // PUT: api/ClientesOt/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -190,8 +234,6 @@ namespace BagproWebAPI.Controllers
 
             return NoContent();
         }
-
-
 
 
         // POST: api/ClientesOt
