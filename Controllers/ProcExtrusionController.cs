@@ -62,6 +62,32 @@ namespace BagproWebAPI.Controllers
             return Ok(procExtrusion);
         }
 
+        [HttpGet("Fechas/{fechaini}/{fechafin}")]
+        public ActionResult<ProcExtrusion> GetOT(DateTime fechaini, DateTime fechafin)
+        {
+            var procExtrusion = _context.ProcExtrusions.Where(x => x.Fecha >= fechaini && x.Fecha <= fechafin).ToList();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(procExtrusion);
+        }
+
+        [HttpGet("FechasOT/{fechaini}/{fechafin}/{ot}")]
+        public ActionResult<ProcExtrusion> GetOT(DateTime fechaini, DateTime fechafin, string ot)
+        {
+            var procExtrusion = _context.ProcExtrusions.Where(x => x.Fecha >= fechaini && x.Fecha <= fechafin && x.Ot == ot).ToList();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(procExtrusion);
+        }
+
         [HttpGet("FechaFinOT/{ot}")]
         public ActionResult<ProcExtrusion> GetFechaFinOT(string ot)
         {
@@ -142,29 +168,12 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-        [HttpGet("MostrarRollos/{Rollo}")]
-        public ActionResult GetRollosOT(int Rollo)
+        [HttpGet("MostrarRollos/{Rollo}/{item}")]
+        public ActionResult GetRollosOT(int Rollo, string item)
         {
-            /**var procExtrusion = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
-                                                      && prExt.NomStatus == "EMPAQUE")
-                                                     .OrderBy(prExt => prExt.Ot)
-                                                     .Select(agr => new
-                                                     {
-                                                         agr.Item,
-                                                         agr.Cliente,
-                                                         agr.ClienteNombre,
-                                                         agr.ClienteItem,
-                                                         agr.ClienteItemNombre,
-                                                         agr.Extnetokg,
-                                                         agr.NomStatus,
-                                                         agr.EnvioZeus
-                                                     })
-                                                     .ToList();*/
 
-            var procExtrusion = (
-                                 from sc2 in _context.Set<ProcExtrusion>()
-                                 where 
-                                 sc2.Item == Rollo
+            var procExtrusion = from sc2 in _context.Set<ProcExtrusion>()
+                                 where sc2.Item == Rollo && sc2.ClienteItem == item
                                  select new
                                  {
                                     Rollo = Convert.ToString(sc2.Item),
@@ -172,17 +181,11 @@ namespace BagproWebAPI.Controllers
                                     
                                     NombreCliente = Convert.ToString(sc2.ClienteNombre),
                                     Item = Convert.ToString(sc2.ClienteItem),
-                                    NombreItem = Convert.ToString(sc2.ClienteItemNombre),
-                                    Peso_Unidad = Convert.ToString(sc2.Extnetokg),
-                                    Presentacion = Convert.ToString("Kg"),
-                                    Proceso =Convert.ToString( sc2.NomStatus),                                   
-                                    Envio = Convert.ToString(sc2.EnvioZeus)
-                                 });
+                                    NombreItem = Convert.ToString(sc2.ClienteItemNombre)
+                                 };
 
-            var procesoSellado = 
-                                 from sc3 in _context.Set<ProcSellado>()
-                                 where 
-                                sc3.Item == Rollo
+            var procesoSellado = from sc3 in _context.Set<ProcSellado>()
+                                 where sc3.Item == Rollo && sc3.Referencia == item
                                  select new
                                  {
                                      Rollo = Convert.ToString(sc3.Item),
@@ -190,22 +193,16 @@ namespace BagproWebAPI.Controllers
                                      
                                      NombreCliente = Convert.ToString(sc3.Cliente),
                                      Item =Convert.ToString( sc3.Referencia),
-                                     NombreItem =Convert.ToString(sc3.NomReferencia),
-                                     Peso_Unidad = Convert.ToString(sc3.Qty),
-                                     Presentacion = Convert.ToString(sc3.Unidad),
-                                     Proceso = Convert.ToString(sc3.NomStatus),
-                                     Envio = Convert.ToString(sc3.EnvioZeus)
+                                     NombreItem =Convert.ToString(sc3.NomReferencia)
                                  };
 
-
-
-                return Ok(procExtrusion.Concat(procesoSellado));
+           return Ok(procExtrusion.Concat(procesoSellado));
             
         }
-
-            // PUT: api/ProcExtrusion/5
-            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPut("{id}")]
+        
+        // PUT: api/ProcExtrusion/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
         {
             if (id != procExtrusion.Item)

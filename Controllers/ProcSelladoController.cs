@@ -44,6 +44,32 @@ namespace BagproWebAPI.Controllers
             return Ok(procExtrusion);
         }
 
+        [HttpGet("Fechas/{fechaini}/{fechafin}")]
+        public ActionResult<ProcSellado> GetOT(DateTime fechaini, DateTime fechafin)
+        {
+            var procExtrusion = _context.ProcSellados.Where(x => x.FechaEntrada >= fechaini && x.FechaEntrada <= fechafin).ToList();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(procExtrusion);
+        }
+
+        [HttpGet("FechasOT/{fechaini}/{fechafin}/{ot}")]
+        public ActionResult<ProcSellado> GetOT(DateTime fechaini, DateTime fechafin, string ot)
+        {
+            var procExtrusion = _context.ProcSellados.Where(x => x.FechaEntrada >= fechaini && x.FechaEntrada <= fechafin && x.Ot == ot).ToList();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(procExtrusion);
+        }
+
         [HttpGet("FechaFinOT/{ot}")]
         public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
         {
