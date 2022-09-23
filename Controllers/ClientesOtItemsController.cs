@@ -64,7 +64,8 @@ namespace BagproWebAPI.Controllers
                                     CO.ClienteItems,
                                     CO.ClienteItemsNom,
                                     CO.Cliente,
-                                    CO.ClienteNom
+                                    CO.ClienteNom,
+                                    CO.PtPresentacionNom
 
             }).ToList();
 

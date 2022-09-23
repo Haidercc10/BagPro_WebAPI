@@ -17,7 +17,12 @@ builder.Services.AddDbContext<plasticaribeContext>(options =>
 
 //CONEXIÓN A BASE DE DATOS plasticaribe en BAGPRO. 
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptionsAction: SqlOptions =>
+        {
+            SqlOptions.EnableRetryOnFailure();
+        }
+    );
 
 });
 
