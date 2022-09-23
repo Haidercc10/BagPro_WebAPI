@@ -87,6 +87,41 @@ namespace BagproWebAPI.Controllers
         }
 
 
+        [HttpGet("BetweenFechas/")]
+        public IActionResult GetEntreFechas(DateTime FechaInicial, DateTime FechaFinal)
+        {
+            if (_context.ClientesOts == null)
+            {
+                return NotFound();
+            }
+            var OT = _context.ClientesOts.Where(CO => CO.FechaCrea >= FechaInicial && CO.FechaCrea <= FechaFinal)
+                                          .Select(COT => new {
+                                              COT.Item,
+                                              COT.ClienteNom,
+                                              COT.ClienteItems,
+                                              COT.ClienteItemsNom,
+                                              COT.PtPresentacionNom,
+                                              COT.DatoscantKg,
+                                              COT.DatosmargenKg,
+                                              COT.DatosotKg,
+                                              COT.DatoscantBolsa,
+                                              COT.DatosvalorBolsa,
+                                              COT.DatosValorKg,
+                                              COT.DatosvalorOt,
+                                              COT.FechaCrea,
+                                              COT.UsrCrea,
+                                              COT.Estado
+                                          }).ToList();
+            if (OT == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(OT);
+            }
+        }
+
         // GET: api/ClientesOt/5
 
         [HttpGet("OT/{item}")]
@@ -135,20 +170,23 @@ namespace BagproWebAPI.Controllers
 
         /** Actualizar Estado de Ordenes */
         [HttpPut("CambioEstadoOT/{Item}")]
-        public IActionResult PutEstadoClientesOt(int Item, ClientesOt clientesOt, string Estado)
+        public ActionResult PutEstadoClientesOt(int Item, ClientesOt clientesOt, string Estado)
         {
+            
             if (Item != clientesOt.Item)
             {
                 return BadRequest();
             }
 
+            var Actualizado = _context.ClientesOts.Where(x => x.Item == Item)
+                                                 .First<ClientesOt>();
+
             try
             {
-                 var Actualizado = _context.ClientesOts.Where(x => x.Item == Item)
-                                                       .First<ClientesOt>();                                                       
-                 Actualizado.Estado = Estado;
-
-                 _context.SaveChanges();             
+                  
+                Actualizado.Estado = Estado;
+                _context.SaveChanges();
+                
             }
             catch (DbUpdateConcurrencyException)
             {

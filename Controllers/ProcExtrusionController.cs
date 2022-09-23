@@ -142,9 +142,70 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-        // PUT: api/ProcExtrusion/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpGet("MostrarRollos/{Rollo}")]
+        public ActionResult GetRollosOT(int Rollo)
+        {
+            /**var procExtrusion = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                      && prExt.NomStatus == "EMPAQUE")
+                                                     .OrderBy(prExt => prExt.Ot)
+                                                     .Select(agr => new
+                                                     {
+                                                         agr.Item,
+                                                         agr.Cliente,
+                                                         agr.ClienteNombre,
+                                                         agr.ClienteItem,
+                                                         agr.ClienteItemNombre,
+                                                         agr.Extnetokg,
+                                                         agr.NomStatus,
+                                                         agr.EnvioZeus
+                                                     })
+                                                     .ToList();*/
+
+            var procExtrusion = (
+                                 from sc2 in _context.Set<ProcExtrusion>()
+                                 where 
+                                 sc2.Item == Rollo
+                                 select new
+                                 {
+                                    Rollo = Convert.ToString(sc2.Item),
+                                    Cod_BagPro = Convert.ToString(sc2.Cliente),
+                                    
+                                    NombreCliente = Convert.ToString(sc2.ClienteNombre),
+                                    Item = Convert.ToString(sc2.ClienteItem),
+                                    NombreItem = Convert.ToString(sc2.ClienteItemNombre),
+                                    Peso_Unidad = Convert.ToString(sc2.Extnetokg),
+                                    Presentacion = Convert.ToString("Kg"),
+                                    Proceso =Convert.ToString( sc2.NomStatus),                                   
+                                    Envio = Convert.ToString(sc2.EnvioZeus)
+                                 });
+
+            var procesoSellado = 
+                                 from sc3 in _context.Set<ProcSellado>()
+                                 where 
+                                sc3.Item == Rollo
+                                 select new
+                                 {
+                                     Rollo = Convert.ToString(sc3.Item),
+                                     Cod_BagPro = Convert.ToString(sc3.CodCliente),
+                                     
+                                     NombreCliente = Convert.ToString(sc3.Cliente),
+                                     Item =Convert.ToString( sc3.Referencia),
+                                     NombreItem =Convert.ToString(sc3.NomReferencia),
+                                     Peso_Unidad = Convert.ToString(sc3.Qty),
+                                     Presentacion = Convert.ToString(sc3.Unidad),
+                                     Proceso = Convert.ToString(sc3.NomStatus),
+                                     Envio = Convert.ToString(sc3.EnvioZeus)
+                                 };
+
+
+
+                return Ok(procExtrusion.Concat(procesoSellado));
+            
+        }
+
+            // PUT: api/ProcExtrusion/5
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
         {
             if (id != procExtrusion.Item)

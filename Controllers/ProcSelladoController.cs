@@ -108,7 +108,7 @@ namespace BagproWebAPI.Controllers
                                                        {
                                                            ProSella.Key.Ot,                                                           
                                                            conteoFilas = ProSella.Count()
-                                                       });
+                                                       });          
 
             if (prSellado == null)
             {
@@ -118,6 +118,55 @@ namespace BagproWebAPI.Controllers
             {
                 return Ok(prSellado);
             }
+        }
+
+        [HttpGet("MostrarRollos/{Rollo}")]
+        public ActionResult GetRollosOT(int Rollo)
+        {
+            /**var procesoSellado = _context.ProcSellados.Where(prExt => prExt.Ot == OT)                                                       
+                                                     .OrderBy(prExt => prExt.Ot)
+                                                     .Select(agr => new
+                                                     {
+                                                         agr.Item,
+                                                         agr.CodCliente,
+                                                         agr.Cliente,
+                                                         agr.Referencia,
+                                                         agr.NomReferencia,
+                                                         agr.Qty,
+                                                         agr.Peso,
+                                                         agr.Unidad,
+                                                         agr.EnvioZeus,
+                                                         
+                                                     })
+                                                     .ToList();*/
+
+            var procesoSellado = from sc in _context.Set<Cliente>()
+                          from sc2 in _context.Set<ProcSellado>()
+                          where sc.CodBagpro == sc2.Cliente
+                          && sc2.Item == Rollo
+                          select new
+                          {
+                              sc2.Item,
+                              sc2.CodCliente,
+                              sc.IdentNro,
+                              sc2.Cliente,
+                              sc2.Referencia,
+                              sc2.NomReferencia,
+                              sc2.Qty,
+                              sc2.Peso,
+                              sc2.Unidad,
+                              sc2.EnvioZeus
+                          };
+
+            if (procesoSellado == null)
+            {
+                return NotFound();
+            } else
+            {
+                return Ok(procesoSellado);
+            }
+
+            
         }
     }
 }
