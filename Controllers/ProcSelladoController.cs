@@ -44,6 +44,75 @@ namespace BagproWebAPI.Controllers
             return Ok(procExtrusion);
         }
 
+        [HttpGet("RollosOT/{ot}")]
+        public ActionResult Get(string ot)
+        {
+            var con = from sel in _context.Set<ProcSellado>()
+                      from cli in _context.Set<Cliente>()
+                      where sel.Ot == ot
+                            && cli.CodBagpro == sel.CodCliente
+                      select new
+                      {
+                          sel.Ot,
+                          sel.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          sel.Referencia,
+                          sel.NomReferencia,
+                          sel.Qty,
+                          sel.Unidad,
+                          sel.NomStatus
+                      };
+            return Ok(con);
+        }
+
+        [HttpGet("Fechas/{fechaini}/{fechafin}")]
+        public ActionResult<ProcSellado> GetOT(DateTime fechaini, DateTime fechafin)
+        {
+            var con = from sel in _context.Set<ProcSellado>()
+                      from cli in _context.Set<Cliente>()
+                      where sel.FechaEntrada >= fechaini
+                            && sel.FechaEntrada <= fechafin
+                            && cli.CodBagpro == sel.CodCliente
+                      select new
+                      {
+                          sel.Ot,
+                          sel.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          sel.Referencia,
+                          sel.NomReferencia,
+                          sel.Qty,
+                          sel.Unidad,
+                          sel.NomStatus
+                      };
+            return Ok(con);
+        }
+
+        [HttpGet("FechasOT/{fechaini}/{fechafin}/{ot}")]
+        public ActionResult<ProcSellado> GetOT(DateTime fechaini, DateTime fechafin, string ot)
+        {
+            var con = from sel in _context.Set<ProcSellado>()
+                      from cli in _context.Set<Cliente>()
+                      where sel.Ot == ot
+                            && sel.FechaEntrada >= fechaini
+                            && sel.FechaEntrada <= fechafin
+                            && cli.CodBagpro == sel.CodCliente
+                      select new
+                      {
+                          sel.Ot,
+                          sel.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          sel.Referencia,
+                          sel.NomReferencia,
+                          sel.Qty,
+                          sel.Unidad,
+                          sel.NomStatus
+                      };
+            return Ok(con);
+        }
+
         [HttpGet("FechaFinOT/{ot}")]
         public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
         {
@@ -70,7 +139,6 @@ namespace BagproWebAPI.Controllers
             }
 
         }
-
 
         [HttpGet("OtConSellado/{ot}")]
         public ActionResult<ProcSellado> GetOTSellada(string ot)
