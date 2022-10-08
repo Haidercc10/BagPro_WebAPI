@@ -137,6 +137,32 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
+        /** Obtener OT's por Usuario Vendedor. */
+        [HttpGet("BuscarOTxVendedores/{usuarioVendedor}")]
+        public ActionResult<ClientesOt> GetOtXUsuarioVendedor(string usuarioVendedor)
+        {
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.UsrModifica == usuarioVendedor)
+                                                 .Select(coti => new
+                                                 {
+                                                    coti.Item, 
+                                                    coti.Cliente,
+                                                    coti.ClienteNom,
+                                                    coti.ClienteItems,
+                                                    coti.ClienteItemsNom,
+                                                    coti.UsrModifica
+                                                 })
+                                                 .ToList();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(clientesOt);
+            }
+        }
+
         // PUT: api/ClientesOt/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

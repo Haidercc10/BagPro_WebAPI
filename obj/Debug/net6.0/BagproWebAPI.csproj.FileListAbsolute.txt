@@ -31,7 +31,6 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\MessagePack.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\MessagePack.Annotations.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.Build.Locator.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.CodeAnalysis.AnalyzerUtilities.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.CodeAnalysis.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -258,8 +257,6 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-arm
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-arm\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win-arm64\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
@@ -584,3 +581,6 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Debug\net6.0\refint\BagproWeb
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Debug\net6.0\BagproWebAPI.pdb
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Debug\net6.0\BagproWebAPI.genruntimeconfig.cache
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Debug\net6.0\ref\BagproWebAPI.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.Build.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.Build.Framework.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\bin\Debug\net6.0\Microsoft.NET.StringTools.dll

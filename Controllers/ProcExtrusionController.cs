@@ -163,13 +163,14 @@ namespace BagproWebAPI.Controllers
 
             var procExtrusion = (
                                  from sc2 in _context.Set<ProcExtrusion>()
-                                 where 
-                                 sc2.Item == Rollo
+                                 join cl in _context.Set<Cliente>()
+                                 on sc2.Cliente equals cl.CodBagpro
+                                 where sc2.Item == Rollo
                                  select new
                                  {
                                     Rollo = Convert.ToString(sc2.Item),
                                     Cod_BagPro = Convert.ToString(sc2.Cliente),
-                                    
+                                    IDCliente = Convert.ToString(cl.IdentNro), 
                                     NombreCliente = Convert.ToString(sc2.ClienteNombre),
                                     Item = Convert.ToString(sc2.ClienteItem),
                                     NombreItem = Convert.ToString(sc2.ClienteItemNombre),
@@ -179,15 +180,16 @@ namespace BagproWebAPI.Controllers
                                     Envio = Convert.ToString(sc2.EnvioZeus)
                                  });
 
-            var procesoSellado = 
+            /*var procesoSellado = 
                                  from sc3 in _context.Set<ProcSellado>()
-                                 where 
-                                sc3.Item == Rollo
+                                 join cl2 in _context.Set<Cliente>()
+                                 on sc3.Cliente equals cl2.CodBagpro
+                                 where sc3.Item == Rollo
                                  select new
                                  {
                                      Rollo = Convert.ToString(sc3.Item),
                                      Cod_BagPro = Convert.ToString(sc3.CodCliente),
-                                     
+                                     IDCliente = Convert.ToString(cl2.IdentNro),
                                      NombreCliente = Convert.ToString(sc3.Cliente),
                                      Item =Convert.ToString( sc3.Referencia),
                                      NombreItem =Convert.ToString(sc3.NomReferencia),
@@ -195,17 +197,19 @@ namespace BagproWebAPI.Controllers
                                      Presentacion = Convert.ToString(sc3.Unidad),
                                      Proceso = Convert.ToString(sc3.NomStatus),
                                      Envio = Convert.ToString(sc3.EnvioZeus)
-                                 };
+                                 };*/
 
-
-
-                return Ok(procExtrusion.Concat(procesoSellado));
+                return Ok(procExtrusion/*.Concat(procesoSellado)*/);
             
         }
 
+
+
+
+
             // PUT: api/ProcExtrusion/5
             // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
         {
             if (id != procExtrusion.Item)
