@@ -50,7 +50,7 @@ namespace BagproWebAPI.Controllers
             var con = from sel in _context.Set<ProcSellado>()
                       from cli in _context.Set<Cliente>()
                       where sel.Ot == ot
-                            && cli.CodBagpro == sel.CodCliente
+                            && (cli.CodBagpro == sel.CodCliente || cli.NombreComercial == sel.Cliente)
                       select new
                       {
                           sel.Ot,
@@ -61,7 +61,8 @@ namespace BagproWebAPI.Controllers
                           sel.NomReferencia,
                           sel.Qty,
                           sel.Unidad,
-                          sel.NomStatus
+                          sel.NomStatus,
+                          sel.FechaEntrada
                       };
             return Ok(con);
         }
@@ -73,7 +74,7 @@ namespace BagproWebAPI.Controllers
                       from cli in _context.Set<Cliente>()
                       where sel.FechaEntrada >= fechaini
                             && sel.FechaEntrada <= fechafin
-                            && cli.CodBagpro == sel.CodCliente
+                            && (cli.CodBagpro == sel.CodCliente || cli.NombreComercial == sel.Cliente)
                       select new
                       {
                           sel.Ot,
@@ -84,7 +85,31 @@ namespace BagproWebAPI.Controllers
                           sel.NomReferencia,
                           sel.Qty,
                           sel.Unidad,
-                          sel.NomStatus
+                          sel.NomStatus,
+                          sel.FechaEntrada
+                      };
+            return Ok(con);
+        }
+
+        [HttpGet("Rollos/{Rollo}")]
+        public ActionResult Get(int Rollo)
+        {
+            var con = from sel in _context.Set<ProcSellado>()
+                      from cli in _context.Set<Cliente>()
+                      where sel.Item == Rollo
+                            && (cli.CodBagpro == sel.CodCliente || cli.NombreComercial == sel.Cliente)
+                      select new
+                      {
+                          sel.Ot,
+                          sel.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          sel.Referencia,
+                          sel.NomReferencia,
+                          sel.Qty,
+                          sel.Unidad,
+                          sel.NomStatus,
+                          sel.FechaEntrada
                       };
             return Ok(con);
         }
@@ -97,7 +122,7 @@ namespace BagproWebAPI.Controllers
                       where sel.Ot == ot
                             && sel.FechaEntrada >= fechaini
                             && sel.FechaEntrada <= fechafin
-                            && cli.CodBagpro == sel.CodCliente
+                            && (cli.CodBagpro == sel.CodCliente || cli.NombreComercial == sel.Cliente)
                       select new
                       {
                           sel.Ot,
@@ -108,7 +133,8 @@ namespace BagproWebAPI.Controllers
                           sel.NomReferencia,
                           sel.Qty,
                           sel.Unidad,
-                          sel.NomStatus
+                          sel.NomStatus,
+                          sel.FechaEntrada
                       };
             return Ok(con);
         }

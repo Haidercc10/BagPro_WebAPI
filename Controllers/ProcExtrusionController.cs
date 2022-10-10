@@ -75,6 +75,29 @@ namespace BagproWebAPI.Controllers
             return Ok(procExtrusion);
         }
 
+        [HttpGet("Rollos/{Rollo}")]
+        public ActionResult Get(int Rollo)
+        {
+            var con = from ext in _context.Set<ProcExtrusion>()
+                      from cli in _context.Set<Cliente>()
+                      where ext.Item == Rollo /*&& ext.NomStatus == "EMPAQUE" && ext.NomStatus == "EXTRUSION"*/
+                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      select new
+                      {
+                          ext.Ot,
+                          ext.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          ext.ClienteItem,
+                          ext.ClienteItemNombre,
+                          ext.Extnetokg,
+                          unidad = "Kg",
+                          ext.NomStatus,
+                          ext.Fecha
+                      };
+            return Ok(con);
+        }
+
         [HttpGet("FechasOT/{fechaini}/{fechafin}/{ot}")]
         public ActionResult<ProcExtrusion> GetOT(DateTime fechaini, DateTime fechafin, string ot)
         {
@@ -205,17 +228,84 @@ namespace BagproWebAPI.Controllers
             
         }
 
+        [HttpGet("RollosOT/{ot}")]
+        public ActionResult<ProcExtrusion> Get(string ot)
+        {
+            var con = from ext in _context.Set<ProcExtrusion>()
+                      from cli in _context.Set<Cliente>()
+                      where ext.Ot == ot
+                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      /*&& ext.NomStatus == "EMPAQUE" 
+                      && ext.NomStatus == "EXTRUSION"*/
+                      select new
+                      {
+                          ext.Ot,
+                          ext.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          ext.ClienteItem,
+                          ext.ClienteItemNombre,
+                          ext.Extnetokg,
+                          unidad = "Kg",
+                          ext.NomStatus,
+                          ext.Fecha
+                      };
+            return Ok(con);
+        }
 
+        [HttpGet("FechasRollos/{fechaini}/{fechafin}")]
+        public ActionResult<ProcExtrusion> GetFechas(DateTime fechaini, DateTime fechafin)
+        {
+            var con = from ext in _context.Set<ProcExtrusion>()
+                      from cli in _context.Set<Cliente>()
+                      where ext.Fecha >= fechaini
+                            && ext.Fecha <= fechafin
+                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      /*&& ext.NomStatus == "EMPAQUE"
+                      && ext.NomStatus == "EXTRUSION"*/
+                      select new
+                      {
+                          ext.Ot,
+                          ext.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          ext.ClienteItem,
+                          ext.ClienteItemNombre,
+                          ext.Extnetokg,
+                          unidad = "Kg",
+                          ext.NomStatus,
+                          ext.Fecha
+                      };
+            return Ok(con);
+        }
 
+        [HttpGet("FechasOTRollos/{fechaini}/{fechafin}/{ot}")]
+        public ActionResult<ProcExtrusion> GetFechasOT(DateTime fechaini, DateTime fechafin, string ot)
+        {
+            var con = from ext in _context.Set<ProcExtrusion>()
+                      from cli in _context.Set<Cliente>()
+                      where ext.Ot == ot
+                            && ext.Fecha >= fechaini
+                            && ext.Fecha <= fechafin
+                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      /*&& ext.NomStatus == "EMPAQUE"
+                      && ext.NomStatus == "EXTRUSION"*/
+                      select new
+                      {
+                          ext.Ot,
+                          ext.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          ext.ClienteItem,
+                          ext.ClienteItemNombre,
+                          ext.Extnetokg,
+                          unidad = "Kg",
+                          ext.NomStatus,
+                          ext.Fecha
+                      };
+            return Ok(con);
+        }
 
-
-            // PUT: api/ProcExtrusion/5
-            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-                                
-
-        
-        
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
