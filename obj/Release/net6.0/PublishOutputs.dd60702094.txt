@@ -32,7 +32,8 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Mes
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\MessagePack.Annotations.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Build.Locator.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Build.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Build.Framework.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.CodeAnalysis.AnalyzerUtilities.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.CodeAnalysis.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.CodeAnalysis.CSharp.dll
@@ -61,6 +62,7 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Mic
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.NET.StringTools.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.OpenApi.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.VisualStudio.Debugger.Contracts.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGeneration.dll
@@ -260,8 +262,6 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\run
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
-C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\lib\net6.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x64\native\sni.dll

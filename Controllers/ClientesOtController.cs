@@ -138,10 +138,10 @@ namespace BagproWebAPI.Controllers
         }
 
         /** Obtener OT's por Usuario Vendedor. */
-        [HttpGet("BuscarOTxVendedores/{usuarioVendedor}")]
-        public ActionResult<ClientesOt> GetOtXUsuarioVendedor(string usuarioVendedor)
+        [HttpGet("BuscarOTxVendedores/{OT}")]
+        public ActionResult GetOtXUsuarioVendedor(int OT)
         {
-            var clientesOt = _context.ClientesOts.Where(cOt => cOt.UsrModifica == usuarioVendedor)
+            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == OT)
                                                  .Select(coti => new
                                                  {
                                                     coti.Item, 
