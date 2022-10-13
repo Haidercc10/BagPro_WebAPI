@@ -391,6 +391,34 @@ namespace BagproWebAPI.Controllers
             }
         }
 
+        /** Consultas para consolidación de Info para modal en Estados Procesos OT */
+        [HttpGet("MostrarDatosConsolidados_ProcSellado/{OT}/{Proceso}")]
+        public ActionResult<ProcSellado> GetObtenerInfoConsolidadaProcSellado(string OT, string Proceso)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var prSellado = _context.ProcSellados.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Proceso)
+                                                 .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus } )
+                                                 .Select(ProSella => new
+                                                 {
+                                                     SumaCantidad = ProSella.Sum(ProSel => ProSel.Qty),
+                                                     SumaPeso = ProSella.Sum(ProSel => ProSel.Peso),
+                                                     ProSella.Key.Ot,
+                                                     ProSella.Key.NomReferencia,
+                                                     ProSella.Key.Operario,
+                                                     ProSella.Key.FechaEntrada,
+                                                     ProSella.Key.NomStatus
+                                                 }).ToList();
 
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+  
     }
 }

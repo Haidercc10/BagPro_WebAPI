@@ -571,6 +571,36 @@ namespace BagproWebAPI.Controllers
         }
 
 
+        /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
+
+        [HttpGet("MostrarDatosConsolidados_ProcExtrusion/{OT}/{Proceso}")]
+        public ActionResult<ProcExtrusion> GetObtenerInfoConsolidadaProcExtrusion(string OT, string Proceso)
+        {
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Proceso)
+                                                 .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
+                                                 .Select(ProEx => new
+                                                 {
+                                                     SumaPesoKg = ProEx.Sum(ProSel => ProSel.Extnetokg),
+                                                     ProEx.Key.Ot,
+                                                     ProEx.Key.ClienteItemNombre,
+                                                     ProEx.Key.Operador,
+                                                     ProEx.Key.Fecha,
+                                                     ProEx.Key.NomStatus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+        
+        
 
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
