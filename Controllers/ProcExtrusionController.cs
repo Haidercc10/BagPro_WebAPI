@@ -306,6 +306,272 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        /** Consultas INFO por NomStatus y OT*/
+
+        /** Extrusión */
+        [HttpGet("ObtenerDatosOTxExtrusion/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusExtrusion(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "EXTRUSION";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,                                                     
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,                                                    
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Impresion */
+        [HttpGet("ObtenerDatosOTxImpresion/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusImpresion(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "IMPRESION";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Rotog. */
+        [HttpGet("ObtenerDatosOTxRotograbado/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusRotograbado(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "ROTOGRABADO";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Doblado */
+        [HttpGet("ObtenerDatosOTxDoblado/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusDoblado(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "DOBLADO";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Laminado */
+        [HttpGet("ObtenerDatosOTxLaminado/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusLaminado(string OT)
+        {          
+            var Estatus = "LAMINADO";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Corte */
+        [HttpGet("ObtenerDatosOTxCorte/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusCorte(string OT)
+        {
+            var Estatus = "CORTE";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Empaque */
+        [HttpGet("ObtenerDatosOTxEmpaque/{OT}")]
+        public ActionResult<ProcExtrusion> GetObtenerStatusEmpaque(string OT)
+        {
+            var Estatus = "EMPAQUE";
+            var prSellado = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     ProExtru.Item,
+                                                     ProExtru.Ot,
+                                                     ProExtru.Cliente,
+                                                     ProExtru.ClienteNombre,
+                                                     ProExtru.ClienteItem,
+                                                     ProExtru.ClienteItemNombre,
+                                                     ProExtru.Extnetokg,
+                                                     ProExtru.Operador,
+                                                     ProExtru.Maquina,
+                                                     ProExtru.Fecha,
+                                                     ProExtru.NomStatus,
+                                                     ProExtru.Turno,
+                                                     ProExtru.Hora,
+                                                     ProExtru.EnvioZeus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 

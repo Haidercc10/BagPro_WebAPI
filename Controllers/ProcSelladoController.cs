@@ -288,5 +288,109 @@ namespace BagproWebAPI.Controllers
 
             
         }
+
+        /** Obtener Info por OT y NomStatus */
+
+        /** Sellado */
+        [HttpGet("ObtenerDatosOTxSellado/{OT}")]
+        public ActionResult<ProcSellado> GetObtenerStatusSellado(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "SELLADO";
+            var prSellado = _context.ProcSellados.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProSella => new
+                                                       {
+                                                           ProSella.Item,
+                                                           ProSella.CodCliente,
+                                                           ProSella.Cliente,
+                                                           ProSella.Referencia,
+                                                           ProSella.NomReferencia,
+                                                           ProSella.Cedula,
+                                                           ProSella.Operario,
+                                                           ProSella.Cedula2,
+                                                           ProSella.Operario2,
+                                                           ProSella.Cedula3,
+                                                           ProSella.Operario3,
+                                                           ProSella.Cedula4,
+                                                           ProSella.Operario4,
+                                                           ProSella.Maquina,
+                                                           ProSella.Qty,
+                                                           ProSella.Peso,
+                                                           ProSella.FechaEntrada,
+                                                           ProSella.Supervisor,                                                            
+                                                           ProSella.FechaCambio,
+                                                           ProSella.Unidad,
+                                                           ProSella.Hora,
+                                                           ProSella.EnvioZeus,
+                                                           ProSella.Turnos,
+                                                           ProSella.Pesot,
+                                                           ProSella.PesoMillar,
+                                                           ProSella.NomStatus
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
+        /** Wiketiado */
+        [HttpGet("ObtenerDatosOTxWiketiado/{OT}")]
+        public ActionResult<ProcSellado> GetObtenerStatusWiketiado(string OT)
+        {
+            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            var Estatus = "Wiketiado";
+            var prSellado = _context.ProcSellados.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Estatus)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProSella => new
+                                                 {
+                                                     ProSella.Item,
+                                                     ProSella.CodCliente,
+                                                     ProSella.Cliente,
+                                                     ProSella.Referencia,
+                                                     ProSella.NomReferencia,
+                                                     ProSella.Cedula,
+                                                     ProSella.Operario,
+                                                     ProSella.Cedula2,
+                                                     ProSella.Operario2,
+                                                     ProSella.Cedula3,
+                                                     ProSella.Operario3,
+                                                     ProSella.Cedula4,
+                                                     ProSella.Operario4,
+                                                     ProSella.Maquina,
+                                                     ProSella.Qty,
+                                                     ProSella.Peso,
+                                                     ProSella.FechaEntrada,
+                                                     ProSella.Supervisor,
+                                                     ProSella.Estado,
+                                                     ProSella.FechaCambio,
+                                                     ProSella.Unidad,
+                                                     ProSella.Hora,
+                                                     ProSella.EnvioZeus,
+                                                     ProSella.Turnos,
+                                                     ProSella.Pesot,
+                                                     ProSella.PesoMillar,
+                                                     ProSella.NomStatus,
+                                                 }).ToList();
+
+            if (prSellado == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(prSellado);
+            }
+        }
+
+
     }
 }
