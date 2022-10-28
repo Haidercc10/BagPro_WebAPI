@@ -407,7 +407,8 @@ namespace BagproWebAPI.Controllers
                                                      ProSella.Key.NomReferencia,
                                                      ProSella.Key.Operario,
                                                      ProSella.Key.FechaEntrada,
-                                                     ProSella.Key.NomStatus
+                                                     ProSella.Key.NomStatus,
+                                                     Count = ProSella.Count(),
                                                  }).ToList();
 
             if (prSellado == null)
