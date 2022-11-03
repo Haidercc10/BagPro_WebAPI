@@ -56,6 +56,7 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Mic
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Identity.Client.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Logging.dll

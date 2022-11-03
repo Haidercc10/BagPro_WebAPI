@@ -587,7 +587,8 @@ namespace BagproWebAPI.Controllers
                                                      ProEx.Key.ClienteItemNombre,
                                                      ProEx.Key.Operador,
                                                      ProEx.Key.Fecha,
-                                                     ProEx.Key.NomStatus
+                                                     ProEx.Key.NomStatus,
+                                                     Count = ProEx.Count(),
                                                  }).ToList();
 
             if (prSellado == null)
