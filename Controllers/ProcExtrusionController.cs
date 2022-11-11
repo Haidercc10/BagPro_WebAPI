@@ -600,8 +600,16 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-        
-        
+        //Consultar toda la informacion de un rollo
+        [HttpGet("consultarRollo/{rollo}")]
+        public ActionResult consultarRollo(int rollo)
+        {
+            var con = from x in _context.Set<ProcExtrusion>()
+                      where x.Item == rollo && x.NomStatus == "EXTRUSION"
+                      select x;
+            return Ok(con);
+        }
+
 
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -666,6 +674,26 @@ namespace BagproWebAPI.Controllers
 
             _context.ProcExtrusions.Remove(procExtrusion);
             await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //Eliminar Rollo del ingreso
+        [HttpDelete("EliminarRollExtrusion/{rollo}")]
+        public ActionResult EliminarRolloIngresados(int rollo)
+        {
+            var x = (from y in _context.Set<ProcExtrusion>()
+                     where y.Item == rollo && y.NomStatus == "EXTRUSION"
+                     orderby y.Item descending
+                     select y).FirstOrDefault();
+
+            if (x == null)
+            {
+                return NotFound();
+            }
+
+            _context.ProcExtrusions.Remove(x);
+            _context.SaveChanges();
 
             return NoContent();
         }
