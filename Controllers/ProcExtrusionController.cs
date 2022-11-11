@@ -257,10 +257,11 @@ namespace BagproWebAPI.Controllers
         public ActionResult<ProcExtrusion> GetFechas(DateTime fechaini, DateTime fechafin)
         {
             var con = from ext in _context.Set<ProcExtrusion>()
-                      from cli in _context.Set<Cliente>()
+                      from cli in _context.Set<Cliente>()                     
                       where ext.Fecha >= fechaini
                             && ext.Fecha <= fechafin
                             && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      orderby (ext.Ot)
                       /*&& ext.NomStatus == "EMPAQUE"
                       && ext.NomStatus == "EXTRUSION"*/
                       select new

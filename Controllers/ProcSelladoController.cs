@@ -395,7 +395,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("MostrarDatosConsolidados_ProcSellado/{OT}/{Proceso}")]
         public ActionResult<ProcSellado> GetObtenerInfoConsolidadaProcSellado(string OT, string Proceso)
         {
-            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
+            
             var prSellado = _context.ProcSellados.Where(prExt => prExt.Ot == OT
                                                        && prExt.NomStatus == Proceso)
                                                  .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus } )
