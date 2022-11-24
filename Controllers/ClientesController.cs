@@ -71,8 +71,33 @@ namespace BagproWebAPI.Controllers
             {
                 return Ok(cliente);
             }
-
             
+        }
+
+        /** Obtener Nombre Clientes con OT de 2 años hasta la fecha */
+        [HttpGet("UltimosClientes2/{fecha}/{cliente2}")]
+        public ActionResult GetClienteConOT2(DateTime fecha, string cliente2)
+        {
+            if (_context.Clientes == null)
+            {
+                return NotFound();
+            }
+
+            var ClientesOT = _context.ClientesOts.Where(clot => clot.FechaCrea >= fecha && clot.ClienteNom == cliente2).Select(Id => Id.Cliente.ToString()).ToList();
+
+            var cliente = _context.Clientes.Where(P => ClientesOT.Contains(P.CodBagpro)).Select(c => new { c.NombreComercial }).First();
+
+
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(cliente);
+            }
+
+
         }
 
         // PUT: api/Clientes/5

@@ -420,6 +420,29 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-  
+
+
+        /** Eliminar rollos de extrusión o Empaque*/
+        [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
+        public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
+        {
+            if (_context.ProcSellados == null)
+            {
+                return NotFound();
+            }
+            var procSellado = _context.ProcSellados.Where(e => e.NomStatus == "SELLADO" ||
+                                                              e.NomStatus == "Wiketiado"
+                                                              && e.Item == id).FirstOrDefault();
+            if (procSellado == null)
+            {
+                return NotFound();
+            }
+
+            _context.ProcSellados.Remove(procSellado);
+            _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

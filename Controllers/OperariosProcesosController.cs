@@ -43,7 +43,7 @@ namespace BagproWebAPI.Controllers
 
         /** Cargar nombre de Operarios */
         [HttpGet("NombreOperarios")]
-        public ActionResult GetNombreOperariosProceso(int id)
+        public ActionResult GetNombreOperariosProceso()
         {
             var Proceso = "EXTRUSION";
             var operariosProceso = _context.OperariosProcesos.Where(P => P.Planta == Proceso)
@@ -62,6 +62,29 @@ namespace BagproWebAPI.Controllers
             {
                 return Ok(operariosProceso);
             }             
+        }
+
+
+        [HttpGet("NombreOperarios2/{NombreOpe}")]
+        public ActionResult GetNombreOperariosProceso2(string NombreOpe)
+        {
+            var Proceso = "EXTRUSION";
+            var operariosProceso = _context.OperariosProcesos.Where(P => P.Planta == Proceso && P.Nombre == NombreOpe)
+                                                              .Select(Ope => new
+                                                              {
+                                                                  Ope.Nombre
+                                                              })
+                                                              .ToList();
+
+
+            if (operariosProceso == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(operariosProceso);
+            }
         }
 
         // PUT: api/OperariosProcesos/5
