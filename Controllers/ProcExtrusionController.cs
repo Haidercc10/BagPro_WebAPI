@@ -601,7 +601,6 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
         //Consultar toda la informacion de un rollo
         [HttpGet("consultarRollo/{rollo}")]
         public ActionResult consultarRollo(int rollo)
@@ -611,131 +610,6 @@ namespace BagproWebAPI.Controllers
                       select x;
             return Ok(con);
         }
-
-        /** Consultas por NomStatus */
-        /** NomStatus */
-        [HttpGet("DatosxNomStatus/{status}")]
-        public ActionResult<ProcExtrusion> GetObtenerStatus(string status)
-        {
-            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
-            var rollos =  _context.ProcExtrusions.Where(prExt => prExt.Ot == status)
-                                                 .Select(ProExtru => new
-                                                 {
-                                                     ProExtru.Item,
-                                                     ProExtru.Ot,
-                                                     ProExtru.Cliente,
-                                                     ProExtru.ClienteNombre,
-                                                     ProExtru.ClienteItem,
-                                                     ProExtru.ClienteItemNombre,
-                                                     ProExtru.Extnetokg,
-                                                     ProExtru.Fecha,
-                                                     ProExtru.NomStatus,
-                                                 }).ToList();
-
-            if (rollos == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(rollos);
-            }
-        }
-
-
-        /** NomStatus, Fechas */
-        [HttpGet("DatosxFechasxNomStatus/{fecha1}/{fecha2}/{status}")]
-        public ActionResult<ProcExtrusion> GetObtenerStatus2(DateTime fecha1, DateTime fecha2, string status)
-        {
-            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
-            var rollos = _context.ProcExtrusions.Where(prExt => prExt.Ot == status &&
-                                                  prExt.Fecha >= fecha1 && 
-                                                  prExt.Fecha <= fecha2)
-                                                 .Select(ProExtru => new
-                                                 {
-                                                     ProExtru.Item,
-                                                     ProExtru.Ot,
-                                                     ProExtru.Cliente,
-                                                     ProExtru.ClienteNombre,
-                                                     ProExtru.ClienteItem,
-                                                     ProExtru.ClienteItemNombre,
-                                                     ProExtru.Extnetokg,
-                                                     ProExtru.Fecha,
-                                                     ProExtru.NomStatus,
-                                                 }).ToList();
-
-            if (rollos == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(rollos);
-            }
-        }
-
-
-        /** NomStatus, rollo */
-        [HttpGet("DatosxRolloxNomStatus/{rollo}/{status}")]
-        public ActionResult<ProcExtrusion> GetObtenerStatus3(int rollo, string status)
-        {
-            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
-            var rollos = _context.ProcExtrusions.Where(prExt => prExt.Ot == status &&
-                                                  prExt.Item == rollo)
-                                                 .Select(ProExtru => new
-                                                 {
-                                                     ProExtru.Item,
-                                                     ProExtru.Ot,
-                                                     ProExtru.Cliente,
-                                                     ProExtru.ClienteNombre,
-                                                     ProExtru.ClienteItem,
-                                                     ProExtru.ClienteItemNombre,
-                                                     ProExtru.Extnetokg,
-                                                     ProExtru.Fecha,
-                                                     ProExtru.NomStatus,
-                                                 }).ToList();
-
-            if (rollos == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(rollos);
-            }
-        }
-
-
-        /** NomStatus, OT */
-        [HttpGet("DatosxOTxNomStatus/{OT}/{status}")]
-        public ActionResult<ProcExtrusion> GetObtenerStatus4(string OT, string status)
-        {
-            /** Consulta para obtener la suma realizada en KG en el proceso de empaque en una OT */
-            var rollos = _context.ProcExtrusions.Where(prExt => prExt.NomStatus == status &&
-                                                  prExt.Ot == OT)
-                                                 .Select(ProExtru => new
-                                                 {
-                                                     ProExtru.Item,
-                                                     ProExtru.Ot,
-                                                     ProExtru.Cliente,
-                                                     ProExtru.ClienteNombre,
-                                                     ProExtru.ClienteItem,
-                                                     ProExtru.ClienteItemNombre,
-                                                     ProExtru.Extnetokg,
-                                                     ProExtru.Fecha,
-                                                     ProExtru.NomStatus,
-                                                 }).ToList();
-
-            if (rollos == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(rollos);
-            }
-        }
-        
 
 
         // PUT: api/ProcExtrusion/5
