@@ -123,6 +123,8 @@ namespace BagproWebAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProcExtrusion>().ToTable(tb => tb.HasTrigger("TRIGGER_EliminarRollosExtrusion"));
+
             modelBuilder.Entity<Anoestadistica>(entity =>
             {
                 entity.HasKey(e => e.Ano);
@@ -133,6 +135,7 @@ namespace BagproWebAPI.Models
                     .HasMaxLength(50)
                     .HasColumnName("ano");
             });
+
 
             modelBuilder.Entity<ArticuloMateriaprima>(entity =>
             {

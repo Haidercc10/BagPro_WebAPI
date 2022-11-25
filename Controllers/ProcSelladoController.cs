@@ -420,6 +420,26 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-  
+
+        [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
+        public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
+        {
+            if (_context.ProcSellados == null)
+            {
+                return NotFound();
+            }
+            var procSellado = _context.Database.ExecuteSql($"DELETE FROM ProcSellado WHERE Item = {id}");
+
+#pragma warning disable CS0472 // El resultado de la expresión siempre es el mismo ya que un valor de este tipo siempre es igual a "null"
+            if (procSellado == null)
+            {
+                return NotFound();
+            }
+#pragma warning restore CS0472 // El resultado de la expresión siempre es el mismo ya que un valor de este tipo siempre es igual a "null"
+
+            return Ok(procSellado);
+        }
+
+
     }
 }

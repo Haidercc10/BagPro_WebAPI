@@ -611,6 +611,30 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        /** Consulta por Orden de Trabajo*/
+        [HttpGet("Orden_Trabajo/{OT}")]
+        public ActionResult GetRollosxOT(string OT)
+        {
+            var con = from ext in _context.Set<ProcExtrusion>()
+                      from cli in _context.Set<Cliente>()
+                      where ext.Ot == OT /*&& ext.NomStatus == "EMPAQUE" && ext.NomStatus == "EXTRUSION"*/
+                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
+                      select new
+                      {
+                          ext.Ot,
+                          ext.Item,
+                          cli.IdentNro,
+                          cli.NombreComercial,
+                          ext.ClienteItem,
+                          ext.ClienteItemNombre,
+                          ext.Extnetokg,
+                          unidad = "Kg",
+                          ext.NomStatus,
+                          ext.Fecha
+                      };
+            return Ok(con);
+        }
+
 
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
