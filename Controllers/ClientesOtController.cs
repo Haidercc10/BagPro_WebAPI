@@ -137,6 +137,60 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
+        [HttpGet("OT_Cliente_Item_Presentacion/{Cliente}/{ClienteItems}/{PtPresentacionNom}")]
+        public ActionResult<ClientesOt> GetOt(string Cliente, int ClienteItems, string PtPresentacionNom)
+        {
+            var clientesOt = _context.ClientesOts
+                .Where(cOt => cOt.ClienteNom == Cliente && cOt.ClienteItems == ClienteItems && cOt.PtPresentacionNom == PtPresentacionNom)
+                .OrderBy(cOt => cOt.Item)
+                .Last();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(clientesOt);
+            }
+        }
+
+        [HttpGet("UltimaOT/")]
+        public ActionResult<ClientesOt> GetUltimaOt()
+        {
+            var clientesOt = _context.ClientesOts.OrderBy(cOt => cOt.Item).Last();
+
+            if (clientesOt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(clientesOt);
+        }
+
+        [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
+        public ActionResult consultarItem(DateTime fecha1, DateTime fecha2, int item, decimal precio)
+        {
+            //var con = _context.ClientesOts
+            //    .Where(x => x.FechaCrea >= fecha1
+            //           && x.FechaCrea <= fecha2
+            //           && x.ClienteItems == item
+            //           && precio == x.DatosValorKg)
+            //    .Select(x => x)
+            //    .OrderByDescending(x => x.Id)
+            //    .First();
+
+            var con = from ot in _context.Set<ClientesOt>()
+                      where ot.FechaCrea >= fecha1
+                            && ot.FechaCrea <= fecha2
+                            && ot.ClienteItems == item
+                            && ot.DatosValorKg == precio
+                      orderby ot.Id descending
+                      select ot.FechaCrea;
+
+            return Ok(con);
+        }
+
         /** Obtener OT's por Usuario Vendedor. */
         [HttpGet("BuscarOTxVendedores/{OT}")]
         public ActionResult GetOtXUsuarioVendedor(int OT)
