@@ -171,22 +171,13 @@ namespace BagproWebAPI.Controllers
         [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
         public ActionResult consultarItem(DateTime fecha1, DateTime fecha2, int item, decimal precio)
         {
-            //var con = _context.ClientesOts
-            //    .Where(x => x.FechaCrea >= fecha1
-            //           && x.FechaCrea <= fecha2
-            //           && x.ClienteItems == item
-            //           && precio == x.DatosValorKg)
-            //    .Select(x => x)
-            //    .OrderByDescending(x => x.Id)
-            //    .First();
-
-            var con = from ot in _context.Set<ClientesOt>()
+            var con = (from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
                             && ot.ClienteItems == item
-                            && ot.DatosValorKg == precio
-                      orderby ot.Id descending
-                      select ot.FechaCrea;
+                            && (ot.DatosValorKg == precio || ot.DatosvalorBolsa == precio)
+                      orderby ot.Id
+                      select ot.FechaCrea).FirstOrDefault();
 
             return Ok(con);
         }
@@ -283,8 +274,65 @@ namespace BagproWebAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet("getCostoOrdenesUltimoMes/{fecha1}/{fecha2}")]
+        public ActionResult getCostoOrdenesUltimoMes(DateTime fecha1, DateTime fecha2)
+        {
+            var con = from ot in _context.Set<ClientesOt>()
+                      where ot.FechaCrea >= fecha1 
+                            && ot.FechaCrea <= fecha2
+                      group ot by new
+                      {
+                          ot.ExtMaterial
+                      }
+                      into ot
+                      select new
+                      {
+                          costo = ot.Sum(x => x.DatosvalorOt)
+                      };
+            return Ok(con);
+        }
 
+        [HttpGet("getCostoOredenesUltimoMes_Vendedores/{fecha1}/{fecha2}")]
+        public ActionResult getCostoOredenesUltimoMes_Vendedores(DateTime fecha1, DateTime fecha2)
+        {
+            var con = from ot in _context.Set<ClientesOt>()
+                      from vendedor in _context.Set<Vendedore>()
+                      where ot.FechaCrea >= fecha1
+                            && ot.FechaCrea <= fecha2
+                            && vendedor.Id == ot.UsrModifica
+                      group ot by new
+                      {
+                          ot.UsrModifica,
+                          vendedor.NombreCompleto
+                      } into ot
+                      select new
+                      {
+                          ot.Key.UsrModifica,
+                          ot.Key.NombreCompleto,
+                          costo = ot.Sum(x => x.DatosvalorOt),
+                          cantidad = ot.Count(),
+                      };
+            return Ok(con);
+        }
 
+        [HttpGet("getCostoOredenesUltimoMes_Clientes/{fecha1}/{fecha2}")]
+        public ActionResult getCostoOredenesUltimoMes_Clientes(DateTime fecha1, DateTime fecha2)
+        {
+            var con = from ot in _context.Set<ClientesOt>()
+                      where ot.FechaCrea >= fecha1
+                            && ot.FechaCrea <= fecha2
+                      group ot by new
+                      {
+                          ot.ClienteNom
+                      } into ot
+                      select new
+                      {
+                          ot.Key.ClienteNom,
+                          costo = ot.Sum(x => x.DatosvalorOt),
+                          cantidad = ot.Count(),
+                      };
+            return Ok(con);
+        }
 
         // POST: api/ClientesOt
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
