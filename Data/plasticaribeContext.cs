@@ -2258,7 +2258,11 @@ namespace BagproWebAPI.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasDefaultValueSql("('')");
+
             });
+
+            modelBuilder.Entity<ClientesOt>().ToTable(tb => tb.HasTrigger("ActualizarOT_EstadosProcesosOT"));
+            modelBuilder.Entity<ClientesOt>().ToTable(tb => tb.HasTrigger("CrearOT_EnEstadoProcesosOT_PBdD"));
 
             modelBuilder.Entity<ClientesOtItem>(entity =>
             {

@@ -287,6 +287,64 @@ namespace BagproWebAPI.Controllers
                       into ot
                       select new
                       {
+                          costo = ot.Sum(x => x.DatosvalorOt),
+                          peso = ot.Sum(x => x.DatosotKg)
+                      };
+            return Ok(con);
+        }
+
+        [HttpGet("getPesoProcesosUltimoMes/{fecha1}/{fecha2}")]
+        public ActionResult getPesoProcesosUltimoMes(DateTime fecha1, DateTime fecha2)
+        {
+            var extrusion = from ot in _context.Set<ProcExtrusion>()
+                      where ot.Fecha >= fecha1
+                            && ot.Fecha <= fecha2
+                      group ot by new
+                      {
+                          ot.NomStatus
+                      }
+                      into ot
+                      select new
+                      {
+                          ot.Key.NomStatus,
+                          peso = ot.Sum(x => x.Extnetokg),
+                          und = ot.Sum(x => x.Extnetokg),
+                      };
+
+            var sellado = from ot in _context.Set<ProcSellado>()
+                            where ot.FechaEntrada >= fecha1
+                                  && ot.FechaEntrada <= fecha2
+                            group ot by new
+                            {
+                                ot.NomStatus
+                            }
+                      into ot
+                            select new
+                            {
+                                ot.Key.NomStatus,
+                                peso = ot.Sum(x => x.Peso),
+                                und = ot.Sum(x => x.Qty)
+                            };
+
+            return Ok(extrusion.Concat(sellado));
+
+        }
+
+        [HttpGet("getCantOrdenesMateriales/{fecha1}/{fecha2}")]
+        public ActionResult getCantOrdenesMateriales(DateTime fecha1, DateTime fecha2)
+        {
+            var con = from ot in _context.Set<ClientesOt>()
+                      where ot.FechaCrea >= fecha1
+                            && ot.FechaCrea <= fecha2
+                      group ot by new
+                      {
+                          ot.ExtMaterialNom
+                      } into ot
+                      select new
+                      {
+                          ot.Key.ExtMaterialNom,
+                          peso = ot.Sum(x => x.DatosotKg),
+                          cantidad = ot.Count(),
                           costo = ot.Sum(x => x.DatosvalorOt)
                       };
             return Ok(con);
@@ -311,6 +369,7 @@ namespace BagproWebAPI.Controllers
                           ot.Key.NombreCompleto,
                           costo = ot.Sum(x => x.DatosvalorOt),
                           cantidad = ot.Count(),
+                          peso = ot.Sum(x => x.DatosotKg)
                       };
             return Ok(con);
         }
@@ -330,6 +389,7 @@ namespace BagproWebAPI.Controllers
                           ot.Key.ClienteNom,
                           costo = ot.Sum(x => x.DatosvalorOt),
                           cantidad = ot.Count(),
+                          peso = ot.Sum(x => x.DatosotKg)
                       };
             return Ok(con);
         }
