@@ -9,11 +9,12 @@ using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BagproWebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ClientesOtItemsController : ControllerBase
     {
         private readonly plasticaribeContext _context;
@@ -56,30 +57,28 @@ namespace BagproWebAPI.Controllers
         [HttpGet("OtItem/{ClienteItems}")]
         public  IActionResult GetIdClientesOtItem(int ClienteItems)
         {
-
-            var idClientesItem = _context.ClientesOtItems
-                                  .Where(idc => idc.ClienteItems == ClienteItems)
-                                  .Select(CO => new
-            {
-                                    CO.ClienteItems,
-                                    CO.ClienteItemsNom,
-                                    CO.Cliente,
-                                    CO.ClienteNom,
-                                    CO.PtPresentacionNom
-
-            }).ToList();
+            var idClientesItem = from cliOT in _context.Set<ClientesOtItem>()
+                                 from ven in _context.Set<Vendedore>()
+                                 where cliOT.ClienteItems == ClienteItems
+                                 && cliOT.UsrModifica == ven.Id
+                                 select new
+                                 {
+                                     cliOT.ClienteItems,
+                                     cliOT.ClienteItemsNom,
+                                     cliOT.Cliente,
+                                     cliOT.ClienteNom,
+                                     cliOT.PtPresentacionNom,
+                                     ven.NombreCompleto
+                                 };
 
             if (idClientesItem == null)
             {
                 return NotFound();
 
-            } else 
-            
+            } else             
             {
                 return Ok(idClientesItem); 
             }
-
-            //return idClientesOtItem;
         }
 
         // PUT: api/ClientesOtItems/5
