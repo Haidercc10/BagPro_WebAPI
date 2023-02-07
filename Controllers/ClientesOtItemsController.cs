@@ -9,11 +9,12 @@ using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BagproWebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ClientesOtItemsController : ControllerBase
     {
         private readonly plasticaribeContext _context;

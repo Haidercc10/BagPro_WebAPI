@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 //using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BagproWebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ClientesOtController : ControllerBase
     {
         private readonly plasticaribeContext _context;
@@ -137,11 +138,11 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
-        [HttpGet("OT_Cliente_Item_Presentacion/{Cliente}/{ClienteItems}/{PtPresentacionNom}")]
-        public ActionResult<ClientesOt> GetOt(string Cliente, int ClienteItems, string PtPresentacionNom)
+        [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
+        public ActionResult<ClientesOt> GetOt(int ClienteItems, string PtPresentacionNom)
         {
             var clientesOt = _context.ClientesOts
-                .Where(cOt => cOt.ClienteNom == Cliente && cOt.ClienteItems == ClienteItems && cOt.PtPresentacionNom == PtPresentacionNom)
+                .Where(cOt => cOt.ClienteItems == ClienteItems && cOt.PtPresentacionNom == PtPresentacionNom)
                 .OrderBy(cOt => cOt.Item)
                 .Last();
 

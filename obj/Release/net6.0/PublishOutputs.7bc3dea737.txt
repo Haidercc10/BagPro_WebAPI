@@ -28,10 +28,16 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Azu
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Azure.Identity.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.SqlServer.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Grpc.Core.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Grpc.Core.Api.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Humanizer.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Intercom.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\MessagePack.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\MessagePack.Annotations.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Build.dll
@@ -62,6 +68,8 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Mic
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Identity.Core.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Options.dll
@@ -96,6 +104,8 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\NuG
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\NuGet.ProjectModel.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\NuGet.Protocol.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\NuGet.Versioning.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Pipelines.Sockets.Unofficial.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\StackExchange.Redis.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -272,6 +282,11 @@ C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\ru\
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\linux-arm64\native\libgrpc_csharp_ext.arm64.so
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\linux-x64\native\libgrpc_csharp_ext.x64.so
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\osx-x64\native\libgrpc_csharp_ext.x64.dylib
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x64\native\grpc_csharp_ext.x64.dll
+C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-x86\native\grpc_csharp_ext.x86.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\SANDRA\Documents\GitHub\BagPro_WebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
