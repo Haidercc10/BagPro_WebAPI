@@ -24,6 +24,8 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Rel
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.runtimeconfig.json
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.pdb
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Azure.Core.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Azure.Identity.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.SqlServer.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\EntityFramework.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Humanizer.dll
@@ -55,9 +57,18 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Mic
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Options.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Primitives.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Identity.Client.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Logging.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.dll
@@ -65,6 +76,7 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Mic
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.NET.StringTools.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.OpenApi.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.SqlServer.Server.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.VisualStudio.Debugger.Contracts.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGeneration.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
@@ -97,9 +109,12 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\Sys
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Data.SqlClient.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Memory.Data.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Runtime.Caching.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Security.Permissions.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Text.Encodings.Web.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Text.Json.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\System.Windows.Extensions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\de\Microsoft.CodeAnalysis.resources.dll
@@ -273,5 +288,6 @@ C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\run
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Desarrollo1\source\repos\BagproWebAPI\obj\Release\net6.0\PubTmp\Out\BagproWebAPI.deps.json
