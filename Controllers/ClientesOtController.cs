@@ -139,21 +139,15 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
-        public ActionResult<ClientesOt> GetOt(int ClienteItems, string PtPresentacionNom)
+        public ActionResult GetItemUltOT(int ClienteItems, string PtPresentacionNom)
         {
-            var clientesOt = _context.ClientesOts
-                .Where(cOt => cOt.ClienteItems == ClienteItems && cOt.PtPresentacionNom == PtPresentacionNom)
-                .OrderBy(cOt => cOt.Item)
-                .Last();
+            var con = from ot in _context.Set<ClientesOtItem>()
+                      where ot.ClienteItems == ClienteItems
+                            && ot.PtPresentacionNom == PtPresentacionNom
+                      select ot;
 
-            if (clientesOt == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(clientesOt);
-            }
+            if (con != null) return Ok(con);
+            return NotFound();
         }
 
         [HttpGet("UltimaOT/")]

@@ -1,4 +1,3 @@
-
 using BagproWebAPI.Models;
 using BagproWebAPI.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,15 +7,10 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using ConfigurationManager = BagproWebAPI.Service.ConfigurationManager;
 
-//Variable para habilitar error de CORS
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -60,14 +54,13 @@ builder.Services.AddAuthentication(opt => {
 #pragma warning restore CS8604 // Posible argumento de referencia nulo
 });
 
-//HABILITAR CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: myAllowSpecificOrigins,
 
         builder =>
         {
-            builder.WithOrigins("http://localhost:4200", "http://192.168.0.153:4600", "http://192.168.0.85:4700")
+            builder.WithOrigins("http://192.168.0.153:4600", "http://192.168.0.85:4700", "http://192.168.0.153:4700", "http://localhost:4200")
             .AllowAnyMethod()
             .AllowAnyHeader();
         });
