@@ -636,6 +636,44 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        // Consulta los rollos pesados en bagpro de los procesos de Extrusion, Empaque y Sellado
+        [HttpGet("getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}")]
+        public ActionResult GetRollosExtrusion_Empaque_Sellado(DateTime fechaInicial, DateTime fechaFinal, string proceso, string? ot = "")
+        {
+            var extrusion = from pe in _context.Set<ProcExtrusion>()
+                            where pe.NomStatus == proceso
+                                  && pe.Fecha >= fechaInicial
+                                  && pe.Fecha <= fechaFinal
+                                  && pe.Ot.Contains(ot)
+                            select new
+                            {
+                                Orden = Convert.ToString(pe.Ot),
+                                Id_Producto = Convert.ToString(pe.ClienteItem),
+                                Producto = Convert.ToString(pe.ClienteItemNombre),
+                                Rollo = Convert.ToString(pe.Item),
+                                Cantidad = Convert.ToString(pe.Extnetokg),
+                                Presentacion = Convert.ToString("Kg"),
+                                Proceso = Convert.ToString(pe.NomStatus)
+                            };
+
+            var sellado = from ps in _context.Set<ProcSellado>()
+                          where ps.NomStatus == proceso
+                                && ps.FechaEntrada >= fechaInicial
+                                && ps.FechaEntrada <= fechaFinal
+                                && ps.Ot.Contains(ot)
+                          select new
+                          {
+                              Orden = Convert.ToString(ps.Ot),
+                              Id_Producto = Convert.ToString(ps.Referencia),
+                              Producto = Convert.ToString(ps.NomReferencia),
+                              Rollo = Convert.ToString(ps.Item),
+                              Cantidad = Convert.ToString(ps.Qty),
+                              Presentacion = Convert.ToString(ps.Unidad),
+                              Proceso = Convert.ToString(ps.NomStatus)
+                          };
+
+            return Ok(extrusion.Concat(sellado));
+        }
 
         // PUT: api/ProcExtrusion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
