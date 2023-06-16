@@ -516,6 +516,75 @@ namespace BagproWebAPI.Controllers
             return result.Count() > 0 ? Ok(result) : NoContent();
         }
 
+        // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por Items y Personas
+        [HttpGet("getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}")]
+        public ActionResult GetNominaSelladoDetalladaItemPersona(DateTime fechaInicio, DateTime fechaFin, string producto, string persona)
+        {
+            var con = from PS in _context.Set<ProcSellado>()
+                      join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
+                      where PS.FechaEntrada >= fechaInicio
+                            && PS.FechaEntrada <= fechaFin
+                            && PS.Referencia == producto
+                            && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
+                      select new
+                      {
+                          PS.Item,
+                          PS.Cedula,
+                          PS.Cedula2,
+                          PS.Cedula3,
+                          PS.Cedula4,
+                          PS.Operario,
+                          PS.Operario2,
+                          PS.Operario3,
+                          PS.Operario4,
+                          PS.Referencia,
+                          Cantidad = (
+                            PS.Cedula4 != "0" ? PS.Qty / 4 :
+                            PS.Cedula3 != "0" ? PS.Qty / 3 :
+                            PS.Cedula2 != "0" ? PS.Qty / 2 :
+                            PS.Qty
+                          ),
+                          CantidadTotal = PS.Qty,
+                          PS.Unidad,
+                          PS.Turnos,
+                          PS.NomStatus,
+                          PrecioDia = (
+                            PS.NomStatus == "SELLADO" ? Convert.ToDecimal(CL.Dia) :
+                            PS.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
+                          ),
+                          PrecioNoche = (
+                            PS.NomStatus == "SELLADO" ? Convert.ToDecimal(CL.Noche) :
+                            PS.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
+                          ),
+                          Total = (
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Noche) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Dia) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Noche) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Dia) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Noche) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? PS.Qty * Convert.ToDecimal(CL.Dia) :
+                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? PS.Qty * Convert.ToDecimal(CL.Noche) :
+
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
+                          ),
+                          PesadoEntre = (
+                            PS.Cedula4 != "0" ? 4 :
+                            PS.Cedula3 != "0" ? 3 :
+                            PS.Cedula2 != "0" ? 2 : 1
+                          )
+
+                      };
+            return con.Count() > 0 ? Ok(con) : NoContent();
+        }
+
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
         public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
         {
