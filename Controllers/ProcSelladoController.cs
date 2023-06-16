@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using Microsoft.OpenApi.Any;
 
 namespace BagproWebAPI.Controllers
 {
@@ -290,9 +292,7 @@ namespace BagproWebAPI.Controllers
             
         }
 
-        /** Obtener Info por OT y NomStatus */
-
-        /** Sellado */
+        /** Obtener Info por OT y NomStatus Sellado */
         [HttpGet("ObtenerDatosOTxSellado/{OT}")]
         public ActionResult<ProcSellado> GetObtenerStatusSellado(string OT)
         {
@@ -340,7 +340,6 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-
 
         /** Wiketiado */
         [HttpGet("ObtenerDatosOTxWiketiado/{OT}")]
@@ -422,6 +421,85 @@ namespace BagproWebAPI.Controllers
             }
         }
 
+        // Consulta la nomina de los operarios de Sellado, esta consulta será acumulada por Items
+        [HttpGet("getNominaSelladoAcumuladaItem/{fechaInicio}/{fechaFin}")]
+        public ActionResult GetNominaSelladoAcumuladaItem(DateTime fechaInicio, DateTime fechaFin)
+        {
+            var con = from PS in _context.Set<ProcSellado>()
+                      join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
+                      where PS.FechaEntrada >= fechaInicio
+                            && PS.FechaEntrada <= fechaFin
+                            && PS.EnvioZeus == "1"
+                      group new { PS, CL } by new
+                      {
+                          PS.Cedula,
+                          PS.Cedula2,
+                          PS.Cedula3,
+                          PS.Cedula4,
+                          PS.Operario,
+                          PS.Operario2,
+                          PS.Operario3,
+                          PS.Operario4,
+                          PS.Referencia,
+                          PS.Unidad,
+                          PS.Turnos,
+                          CL.Dia,
+                          CL.Noche
+                      } into PS
+                      select new
+                      {
+                          PS.Key.Cedula,
+                          PS.Key.Cedula2,
+                          PS.Key.Cedula3,
+                          PS.Key.Cedula4,
+                          PS.Key.Operario,
+                          PS.Key.Operario2,
+                          PS.Key.Operario3,
+                          PS.Key.Operario4,
+                          PS.Key.Referencia,
+                          Cantidad = (
+                            PS.Key.Cedula4 != "0" ? PS.Sum(x => x.PS.Qty) / 4 : 
+                            PS.Key.Cedula3 != "0" ? PS.Sum(x => x.PS.Qty) / 3 :
+                            PS.Key.Cedula2 != "0" ? PS.Sum(x => x.PS.Qty) / 2 :
+                            PS.Sum(x => x.PS.Qty)
+                          ),
+                          CantidadTotal = PS.Sum(x => x.PS.Qty),
+                          PS.Key.Unidad,
+                          PS.Key.Turnos,
+                          PS.Key.Dia,
+                          PS.Key.Noche,
+                          Total = (
+                            PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Noche)
+                          ),
+                          Registros = PS.Count(),
+                          PesadoEntre = (
+                            PS.Key.Cedula4 != "0" ? 4 :
+                            PS.Key.Cedula3 != "0" ? 3 :
+                            PS.Key.Cedula2 != "0" ? 2 :
+                            1
+                          )
+
+                      };
+            var result = new List<object>();
+            foreach (var item in con)
+            {
+                string data = $"Referencia: {item.Referencia.Trim()}, Registros: {item.Registros}, Pesado_Entre : {Convert.ToDecimal(item.PesadoEntre)}, CantidadTotal : {Convert.ToDecimal(item.CantidadTotal)}, Cantidad : {Convert.ToDecimal(item.Cantidad)}, Presentacion: {item.Unidad.Trim()} PrecioDia: {Convert.ToDecimal(item.Dia)}, Turno: {item.Turnos.Trim()}, PrecioNoche: {Convert.ToDecimal(item.Noche)}, PagoTotal: {Convert.ToDecimal(item.Total)}";
+                result.Add($"Cedula: {item.Cedula.Trim()}, Operario: {item.Operario.Trim()}, {data}");
+                if (item.Cedula2 != "0") result.Add($"Cedula: {item.Cedula2}, Operario: {item.Operario2}, {data}");
+                if (item.Cedula3 != "0") result.Add($"Cedula: {item.Cedula3}, Operario: {item.Operario3}, {data}");
+                if (item.Cedula4 != "0") result.Add($"Cedula: {item.Cedula4}, Operario: {item.Operario4}, {data}");
+            }
+
+            return result.Count() > 0 ? Ok(result) : NoContent();
+        }
+
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
         public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
         {
@@ -440,7 +518,5 @@ namespace BagproWebAPI.Controllers
 
             return Ok(procSellado);
         }
-
-
     }
 }

@@ -308,9 +308,7 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
-        /** Consultas INFO por NomStatus y OT*/
-
-        /** Extrusión */
+        /** Consultas INFO por NomStatus y OT Extrusión */
         [HttpGet("ObtenerDatosOTxExtrusion/{OT}")]
         public ActionResult<ProcExtrusion> GetObtenerStatusExtrusion(string OT)
         {
@@ -346,7 +344,6 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-
 
         /** Impresion */
         [HttpGet("ObtenerDatosOTxImpresion/{OT}")]
@@ -385,7 +382,6 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
         /** Rotog. */
         [HttpGet("ObtenerDatosOTxRotograbado/{OT}")]
         public ActionResult<ProcExtrusion> GetObtenerStatusRotograbado(string OT)
@@ -422,7 +418,6 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-
 
         /** Doblado */
         [HttpGet("ObtenerDatosOTxDoblado/{OT}")]
@@ -461,7 +456,6 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
         /** Laminado */
         [HttpGet("ObtenerDatosOTxLaminado/{OT}")]
         public ActionResult<ProcExtrusion> GetObtenerStatusLaminado(string OT)
@@ -497,7 +491,6 @@ namespace BagproWebAPI.Controllers
                 return Ok(prSellado);
             }
         }
-
 
         /** Corte */
         [HttpGet("ObtenerDatosOTxCorte/{OT}")]
@@ -535,7 +528,6 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
         /** Empaque */
         [HttpGet("ObtenerDatosOTxEmpaque/{OT}")]
         public ActionResult<ProcExtrusion> GetObtenerStatusEmpaque(string OT)
@@ -572,9 +564,7 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
         /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
-
         [HttpGet("MostrarDatosConsolidados_ProcExtrusion/{OT}/{Proceso}")]
         public ActionResult<ProcExtrusion> GetObtenerInfoConsolidadaProcExtrusion(string OT, string Proceso)
         {
@@ -638,13 +628,14 @@ namespace BagproWebAPI.Controllers
 
         // Consulta los rollos pesados en bagpro de los procesos de Extrusion, Empaque y Sellado
         [HttpGet("getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}")]
-        public ActionResult GetRollosExtrusion_Empaque_Sellado(DateTime fechaInicial, DateTime fechaFinal, string proceso, string? ot = "")
+        public ActionResult GetRollosExtrusion_Empaque_Sellado(DateTime fechaInicial, DateTime fechaFinal, string proceso, string? ot = "", string? rollo = "")
         {
             var extrusion = from pe in _context.Set<ProcExtrusion>()
                             where pe.NomStatus == proceso
                                   && pe.Fecha >= fechaInicial
                                   && pe.Fecha <= fechaFinal
                                   && pe.Ot.Contains(ot)
+                                  && Convert.ToString(pe.Item).Contains(rollo)
                             select new
                             {
                                 Orden = Convert.ToString(pe.Ot),
@@ -653,7 +644,7 @@ namespace BagproWebAPI.Controllers
                                 Rollo = Convert.ToString(pe.Item),
                                 Cantidad = Convert.ToString(pe.Extnetokg),
                                 Presentacion = Convert.ToString("Kg"),
-                                Proceso = Convert.ToString(pe.NomStatus)
+                                Proceso = Convert.ToString(pe.NomStatus),
                             };
 
             var sellado = from ps in _context.Set<ProcSellado>()
@@ -661,6 +652,7 @@ namespace BagproWebAPI.Controllers
                                 && ps.FechaEntrada >= fechaInicial
                                 && ps.FechaEntrada <= fechaFinal
                                 && ps.Ot.Contains(ot)
+                                && Convert.ToString(ps.Item).Contains(rollo)
                           select new
                           {
                               Orden = Convert.ToString(ps.Ot),
@@ -669,15 +661,13 @@ namespace BagproWebAPI.Controllers
                               Rollo = Convert.ToString(ps.Item),
                               Cantidad = Convert.ToString(ps.Qty),
                               Presentacion = Convert.ToString(ps.Unidad),
-                              Proceso = Convert.ToString(ps.NomStatus)
+                              Proceso = Convert.ToString(ps.NomStatus),
                           };
 
             return Ok(extrusion.Concat(sellado));
         }
 
         // PUT: api/ProcExtrusion/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
         {
@@ -708,7 +698,6 @@ namespace BagproWebAPI.Controllers
         }
 
         // POST: api/ProcExtrusion
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ProcExtrusion>> PostProcExtrusion(ProcExtrusion procExtrusion)
         {
