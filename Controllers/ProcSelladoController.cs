@@ -490,11 +490,11 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"Referencia: {item.Referencia.Trim()}, Registros: {item.Registros}, Pesado_Entre : {Convert.ToDecimal(item.PesadoEntre)}, CantidadTotal : {Convert.ToDecimal(item.CantidadTotal)}, Cantidad : {Convert.ToDecimal(item.Cantidad)}, Presentacion: {item.Unidad.Trim()} PrecioDia: {Convert.ToDecimal(item.Dia)}, Turno: {item.Turnos.Trim()}, PrecioNoche: {Convert.ToDecimal(item.Noche)}, PagoTotal: {Convert.ToDecimal(item.Total)}";
-                result.Add($"Cedula: {item.Cedula.Trim()}, Operario: {item.Operario.Trim()}, {data}");
-                if (item.Cedula2 != "0") result.Add($"Cedula: {item.Cedula2}, Operario: {item.Operario2}, {data}");
-                if (item.Cedula3 != "0") result.Add($"Cedula: {item.Cedula3}, Operario: {item.Operario3}, {data}");
-                if (item.Cedula4 != "0") result.Add($"Cedula: {item.Cedula4}, Operario: {item.Operario4}, {data}");
+                string data = $"'Referencia': '{item.Referencia.Trim()}', 'Registros': '{item.Registros}', 'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', 'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', 'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', 'Presentacion': '{item.Unidad.Trim()}', 'PrecioDia': '{Convert.ToDecimal(item.Dia)}', 'Turno': '{item.Turnos.Trim()}', 'PrecioNoche': '{Convert.ToDecimal(item.Noche)}', 'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
+                result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                if (item.Cedula2 != "0") result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
+                if (item.Cedula3 != "0") result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
+                if (item.Cedula4 != "0") result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
             }
 
             return result.Count() > 0 ? Ok(result) : NoContent();
