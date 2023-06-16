@@ -429,7 +429,6 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin
-                            && PS.EnvioZeus == "1"
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -444,7 +443,9 @@ namespace BagproWebAPI.Controllers
                           PS.Unidad,
                           PS.Turnos,
                           CL.Dia,
-                          CL.Noche
+                          CL.Noche,
+                          PS.EnvioZeus,
+                          PS.NomStatus
                       } into PS
                       select new
                       {
@@ -466,31 +467,46 @@ namespace BagproWebAPI.Controllers
                           CantidadTotal = PS.Sum(x => x.PS.Qty),
                           PS.Key.Unidad,
                           PS.Key.Turnos,
-                          PS.Key.Dia,
-                          PS.Key.Noche,
+                          PS.Key.NomStatus,
+                          PrecioDia = (
+                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Dia) : 
+                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
+                          ),
+                          PrecioNoche = (
+                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
+                          ),
                           Total = (
-                            PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Noche)
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Noche) :
+
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
                           ),
                           Registros = PS.Count(),
                           PesadoEntre = (
                             PS.Key.Cedula4 != "0" ? 4 :
                             PS.Key.Cedula3 != "0" ? 3 :
-                            PS.Key.Cedula2 != "0" ? 2 :
-                            1
+                            PS.Key.Cedula2 != "0" ? 2 : 1
                           )
 
                       };
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Referencia': '{item.Referencia.Trim()}', 'Registros': '{item.Registros}', 'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', 'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', 'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', 'Presentacion': '{item.Unidad.Trim()}', 'PrecioDia': '{Convert.ToDecimal(item.Dia)}', 'Turno': '{item.Turnos.Trim()}', 'PrecioNoche': '{Convert.ToDecimal(item.Noche)}', 'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
+                string data = $"'Referencia': '{item.Referencia.Trim()}', 'Registros': '{item.Registros}', 'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', 'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', 'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', 'Presentacion': '{item.Unidad.Trim()}', 'Proceso': '{item.NomStatus.Trim()}', 'Turno': '{item.Turnos.Trim()}', 'PrecioDia': '{Convert.ToDecimal(item.PrecioDia)}', 'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', 'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
                 result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
                 if (item.Cedula2 != "0") result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
                 if (item.Cedula3 != "0") result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
