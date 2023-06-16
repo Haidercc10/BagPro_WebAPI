@@ -506,7 +506,18 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Referencia': '{item.Referencia.Trim()}', 'Registros': '{item.Registros}', 'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', 'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', 'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', 'Presentacion': '{item.Unidad.Trim()}', 'Proceso': '{item.NomStatus.Trim()}', 'Turno': '{item.Turnos.Trim()}', 'PrecioDia': '{Convert.ToDecimal(item.PrecioDia)}', 'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', 'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
+                string data = $"'Referencia': '{item.Referencia.Trim()}', " +
+                    $"'Registros': '{item.Registros}', " +
+                    $"'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', " +
+                    $"'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', " +
+                    $"'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', " +
+                    $"'Presentacion': '{item.Unidad.Trim()}', " +
+                    $"'Proceso': '{item.NomStatus.Trim()}', " +
+                    $"'Turno': '{item.Turnos.Trim()}', " +
+                    $"'PrecioDia': '{Convert.ToDecimal(item.PrecioDia)}', " +
+                    $"'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', " +
+                    $"'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
+
                 result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
                 if (item.Cedula2 != "0") result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
                 if (item.Cedula3 != "0") result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
@@ -528,7 +539,6 @@ namespace BagproWebAPI.Controllers
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
                       select new
                       {
-                          PS.Item,
                           PS.Cedula,
                           PS.Cedula2,
                           PS.Cedula3,
@@ -537,7 +547,11 @@ namespace BagproWebAPI.Controllers
                           PS.Operario2,
                           PS.Operario3,
                           PS.Operario4,
+
+                          PS.FechaEntrada,
+                          PS.Hora,
                           PS.Referencia,
+                          PS.Item,
                           Cantidad = (
                             PS.Cedula4 != "0" ? PS.Qty / 4 :
                             PS.Cedula3 != "0" ? PS.Qty / 3 :
@@ -546,15 +560,15 @@ namespace BagproWebAPI.Controllers
                           ),
                           CantidadTotal = PS.Qty,
                           PS.Unidad,
+                          PS.Maquina,
+                          PS.Peso,
                           PS.Turnos,
                           PS.NomStatus,
-                          PrecioDia = (
-                            PS.NomStatus == "SELLADO" ? Convert.ToDecimal(CL.Dia) :
-                            PS.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
-                          ),
-                          PrecioNoche = (
-                            PS.NomStatus == "SELLADO" ? Convert.ToDecimal(CL.Noche) :
-                            PS.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
+                          Precio = (
+                            PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? Convert.ToDecimal(CL.Dia) :
+                            PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? Convert.ToDecimal(CL.Noche) :
+                            PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
                           ),
                           Total = (
                             PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
@@ -582,7 +596,30 @@ namespace BagproWebAPI.Controllers
                           )
 
                       };
-            return con.Count() > 0 ? Ok(con) : NoContent();
+            var result = new List<object>();
+            foreach (var item in con)
+            {
+                string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
+                    $"'Bulto': '{item.Item}'," +
+                    $"'Referencia': '{item.Referencia.Trim()}'," +
+                    $"'Cantidad_Total': '{item.CantidadTotal}'," +
+                    $"'Cantidad': '{item.Cantidad}'," +
+                    $"'Presentacion': '{item.Unidad.Trim()}'," +
+                    $"'Maquina': '{item.Maquina.Trim()}'," +
+                    $"'Peso': '{item.Peso}'," +
+                    $"'Turno': '{item.Turnos.Trim()}'," +
+                    $"'Proceso': '{item.NomStatus.Trim()}'," +
+                    $"'Precio': '{item.Precio}'," +
+                    $"'Valor_Total': '{item.Total}'," +
+                    $"'Pesado_Entre': '{item.PesadoEntre}' ";
+
+                if (item.Cedula == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                if (item.Cedula2 == persona) result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
+                if (item.Cedula3 == persona) result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
+                if (item.Cedula4 == persona) result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
+            }
+
+            return result.Count() > 0 ? Ok(result) : NoContent();
         }
 
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
