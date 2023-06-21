@@ -440,6 +440,7 @@ namespace BagproWebAPI.Controllers
                           PS.Operario3,
                           PS.Operario4,
                           PS.Referencia,
+                          PS.NomReferencia,
                           PS.Unidad,
                           PS.Turnos,
                           CL.Dia,
@@ -458,6 +459,7 @@ namespace BagproWebAPI.Controllers
                           PS.Key.Operario3,
                           PS.Key.Operario4,
                           PS.Key.Referencia,
+                          PS.Key.NomReferencia,
                           Cantidad = (
                             PS.Key.Cedula4 != "0" ? PS.Sum(x => x.PS.Qty) / 4 : 
                             PS.Key.Cedula3 != "0" ? PS.Sum(x => x.PS.Qty) / 3 :
@@ -551,6 +553,7 @@ namespace BagproWebAPI.Controllers
                           PS.FechaEntrada,
                           PS.Hora,
                           PS.Referencia,
+                          PS.NomReferencia,
                           PS.Item,
                           Cantidad = (
                             PS.Cedula4 != "0" ? PS.Qty / 4 :
