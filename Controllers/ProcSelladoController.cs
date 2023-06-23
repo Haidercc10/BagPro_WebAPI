@@ -509,6 +509,7 @@ namespace BagproWebAPI.Controllers
             foreach (var item in con)
             {
                 string data = $"'Referencia': '{item.Referencia.Trim()}', " +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
                     $"'Registros': '{item.Registros}', " +
                     $"'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', " +
                     $"'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', " +
@@ -605,7 +606,7 @@ namespace BagproWebAPI.Controllers
                 string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
-                    $"'Nombre_Referencia': '{item.NomReferencia.Trim()}'," +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
                     $"'Cantidad_Total': '{item.CantidadTotal}'," +
                     $"'Cantidad': '{item.Cantidad}'," +
                     $"'Presentacion': '{item.Unidad.Trim()}'," +
