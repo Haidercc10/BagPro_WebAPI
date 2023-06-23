@@ -605,6 +605,7 @@ namespace BagproWebAPI.Controllers
                 string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Trim()}'," +
                     $"'Cantidad_Total': '{item.CantidadTotal}'," +
                     $"'Cantidad': '{item.Cantidad}'," +
                     $"'Presentacion': '{item.Unidad.Trim()}'," +
@@ -633,6 +634,7 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin
+                      //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
                           PS.Cedula,
@@ -647,6 +649,7 @@ namespace BagproWebAPI.Controllers
                           PS.FechaEntrada,
                           PS.Hora,
                           PS.Referencia,
+                          PS.NomReferencia,
                           PS.Item,
                           Cantidad = (
                             PS.Cedula4 != "0" ? PS.Qty / 4 :
@@ -698,6 +701,7 @@ namespace BagproWebAPI.Controllers
                 string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`') }'," +
                     $"'Cantidad_Total': '{item.CantidadTotal}'," +
                     $"'Cantidad': '{item.Cantidad}'," +
                     $"'Presentacion': '{item.Unidad.Trim()}'," +
