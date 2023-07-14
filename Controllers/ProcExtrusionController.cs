@@ -667,6 +667,47 @@ namespace BagproWebAPI.Controllers
             return Ok(extrusion.Concat(sellado));
         }
 
+
+        // Consulta los rollos pesados en bagpro de los procesos de Extrusion, Empaque y Sellado
+        [HttpGet("getProcExtrusion_ProcSellado/{fechaInicial}/{fechaFinal}")]
+        public ActionResult GetProcExtrusion_ProcSellado(DateTime fechaInicial, DateTime fechaFinal, string? ot = "", string? rollo = "")
+        {
+            var extrusion = from pe in _context.Set<ProcExtrusion>()
+                            where pe.Fecha >= fechaInicial
+                                  && pe.Fecha <= fechaFinal
+                                  && pe.Ot.Contains(ot)
+                                  && Convert.ToString(pe.Item).Contains(rollo)
+                            select new
+                            {
+                                Orden = Convert.ToString(pe.Ot),
+                                Id_Producto = Convert.ToString(pe.ClienteItem),
+                                Producto = Convert.ToString(pe.ClienteItemNombre),
+                                Rollo = Convert.ToString(pe.Item),
+                                Cantidad = Convert.ToString(pe.Extnetokg),
+                                Presentacion = Convert.ToString("Kg"),
+                                Proceso = Convert.ToString(pe.NomStatus),
+                            };
+
+            var sellado = from ps in _context.Set<ProcSellado>()
+                          where ps.FechaEntrada >= fechaInicial
+                                && ps.FechaEntrada <= fechaFinal
+                                && ps.Ot.Contains(ot)
+                                && Convert.ToString(ps.Item).Contains(rollo)
+                          select new
+                          {
+                              Orden = Convert.ToString(ps.Ot),
+                              Id_Producto = Convert.ToString(ps.Referencia),
+                              Producto = Convert.ToString(ps.NomReferencia),
+                              Rollo = Convert.ToString(ps.Item),
+                              Cantidad = Convert.ToString(ps.Qty),
+                              Presentacion = Convert.ToString(ps.Unidad),
+                              Proceso = Convert.ToString(ps.NomStatus),
+                          };
+
+            if (extrusion.Concat(sellado) != null) return Ok(extrusion.Concat(sellado));
+            else return BadRequest("No se han encontrado la información solicitada");
+        }
+
         // PUT: api/ProcExtrusion/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
@@ -732,11 +773,11 @@ namespace BagproWebAPI.Controllers
         }
 
         //Eliminar Rollo del ingreso
-        [HttpDelete("EliminarRollExtrusion/{rollo}")]
+        [HttpDelete("EliminarRolloProcExtrusion/{rollo}")]
         public ActionResult EliminarRolloIngresados(int rollo)
         {
             var x = (from y in _context.Set<ProcExtrusion>()
-                     where y.Item == rollo && y.NomStatus == "EXTRUSION"
+                     where y.Item == rollo
                      orderby y.Item descending
                      select y).FirstOrDefault();
 
@@ -750,6 +791,8 @@ namespace BagproWebAPI.Controllers
 
             return NoContent();
         }
+
+
 
         private bool ProcExtrusionExists(int id)
         {
