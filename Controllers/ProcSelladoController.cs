@@ -450,6 +450,7 @@ namespace BagproWebAPI.Controllers
                           PS.Operario2,
                           PS.Operario3,
                           PS.Operario4,
+                          PS.Ot,
                           PS.Referencia,
                           PS.NomReferencia,
                           PS.Unidad,
@@ -469,6 +470,7 @@ namespace BagproWebAPI.Controllers
                           PS.Key.Operario2,
                           PS.Key.Operario3,
                           PS.Key.Operario4,
+                          PS.Key.Ot,
                           PS.Key.Referencia,
                           PS.Key.NomReferencia,
                           Cantidad = (
@@ -520,6 +522,7 @@ namespace BagproWebAPI.Controllers
             {
                 string data = $"'Referencia': '{item.Referencia.Trim()}', " +
                     $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
+                    $"'Ot': '{item.Ot}', " +
                     $"'Registros': '{item.Registros}', " +
                     $"'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', " +
                     $"'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', " +
@@ -570,7 +573,7 @@ namespace BagproWebAPI.Controllers
                           PS.Operario2,
                           PS.Operario3,
                           PS.Operario4,
-
+                          PS.Ot,
                           PS.FechaEntrada,
                           PS.Hora,
                           PS.Referencia,
@@ -625,6 +628,7 @@ namespace BagproWebAPI.Controllers
             foreach (var item in con)
             {
                 string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
+                    $"'Ot': '{item.Ot}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
                     $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
@@ -676,7 +680,7 @@ namespace BagproWebAPI.Controllers
                           PS.Operario2,
                           PS.Operario3,
                           PS.Operario4,
-
+                          PS.Ot,
                           PS.FechaEntrada,
                           PS.Hora,
                           PS.Referencia,
@@ -732,6 +736,7 @@ namespace BagproWebAPI.Controllers
             {
                 string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Bulto': '{item.Item}'," +
+                    $"'Ot': '{item.Ot}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
                     $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`') }'," +
                     $"'Cantidad_Total': '{item.CantidadTotal}'," +
