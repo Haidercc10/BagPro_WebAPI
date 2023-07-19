@@ -9,6 +9,7 @@ using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.OpenApi.Any;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BagproWebAPI.Controllers
 {
@@ -425,10 +426,20 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getNominaSelladoAcumuladaItem/{fechaInicio}/{fechaFin}")]
         public ActionResult GetNominaSelladoAcumuladaItem(DateTime fechaInicio, DateTime fechaFin)
         {
+#pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
+
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin
+                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
+                                          where (PS2.Hora.StartsWith("07") ||
+                                                PS2.Hora.StartsWith("08") ||
+                                                PS2.Hora.StartsWith("09") ||
+                                                !PS2.Hora.StartsWith("0")) &&
+                                                PS2.FechaEntrada == fechaFin
+                                          orderby PS2.Item ascending
+                                          select PS2.Item).FirstOrDefault()
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -503,7 +514,6 @@ namespace BagproWebAPI.Controllers
                             PS.Key.Cedula3 != "0" ? 3 :
                             PS.Key.Cedula2 != "0" ? 2 : 1
                           )
-
                       };
             var result = new List<object>();
             foreach (var item in con)
@@ -528,18 +538,28 @@ namespace BagproWebAPI.Controllers
             }
 
             return result.Count() > 0 ? Ok(result) : NoContent();
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
         // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por Items y Personas
         [HttpGet("getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}")]
         public ActionResult GetNominaSelladoDetalladaItemPersona(DateTime fechaInicio, DateTime fechaFin, string producto, string persona)
         {
+#pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
+                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
+                                          where (PS2.Hora.StartsWith("07") ||
+                                                PS2.Hora.StartsWith("08") ||
+                                                PS2.Hora.StartsWith("09") ||
+                                                !PS2.Hora.StartsWith("0")) &&
+                                                PS2.FechaEntrada == fechaFin
+                                          orderby PS2.Item ascending
+                                          select PS2.Item).FirstOrDefault()
                       select new
                       {
                           PS.Cedula,
@@ -600,6 +620,7 @@ namespace BagproWebAPI.Controllers
                           )
 
                       };
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
             foreach (var item in con)
             {
@@ -631,10 +652,19 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getNominaSelladoDetalladaxBulto/{fechaInicio}/{fechaFin}")]
         public ActionResult GetNominaSelladoDetalladaxBulto(DateTime fechaInicio, DateTime fechaFin)
         {
+#pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin
+                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
+                                          where (PS2.Hora.StartsWith("07") ||
+                                                PS2.Hora.StartsWith("08") ||
+                                                PS2.Hora.StartsWith("09") ||
+                                                !PS2.Hora.StartsWith("0")) &&
+                                                PS2.FechaEntrada == fechaFin
+                                          orderby PS2.Item ascending
+                                          select PS2.Item).FirstOrDefault()
                       //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
@@ -696,6 +726,7 @@ namespace BagproWebAPI.Controllers
                           )
 
                       };
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
             foreach (var item in con)
             {
@@ -723,6 +754,13 @@ namespace BagproWebAPI.Controllers
             return result.Count() > 0 ? Ok(result) : NoContent();
         }
 
+        [HttpGet("getPrueba/{fechaFin}")]
+        public ActionResult getPrueba(DateTime fechaFin)
+        {
+            DateTime Fecha = fechaFin.AddDays(1);
+
+            return Ok(Fecha);
+        }
 
         /** Eliminar bultos de procsellado*/
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
