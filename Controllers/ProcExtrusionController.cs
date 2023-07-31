@@ -564,6 +564,61 @@ namespace BagproWebAPI.Controllers
             }
         }
 
+        /** Obtener datos por procesos de la tabla procextrusion y procsellado */
+        [HttpGet("getObtenerDatosxProcesos/{OT}/{status}")]
+        public ActionResult<ProcExtrusion> GetObtenerDatosxProcesos(string OT, string status)
+        {
+            var query = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == status)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProExtru => new
+                                                 {
+                                                     Rollo = ProExtru.Item,
+                                                     OT = ProExtru.Ot,
+                                                     Id_Cliente = ProExtru.Cliente.Trim(),
+                                                     Cliente = ProExtru.ClienteNombre,
+                                                     Item = ProExtru.ClienteItem.Trim(),
+                                                     Referencia = ProExtru.ClienteItemNombre,
+                                                     Peso1 = ProExtru.Extnetokg,
+                                                     Peso2 = ProExtru.Extnetokg,
+                                                     Unidad = Convert.ToString("Kg"),
+                                                     Operario = ProExtru.Operador,
+                                                     Maquina = Convert.ToString(ProExtru.Maquina),
+                                                     Fecha = Convert.ToString(ProExtru.Fecha),
+                                                     Hora  = ProExtru.Hora.Trim(),
+                                                     Proceso =  ProExtru.NomStatus,
+                                                     Turno = ProExtru.Turno.Trim(),
+                                                     EnviadoZeus = ProExtru.EnvioZeus.Trim()
+                                                 }).ToList();
+
+            var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == status)
+                                                 .OrderByDescending(proExt => proExt.Item)
+                                                 .Select(ProSella => new
+                                                 {
+                                                     Rollo = ProSella.Item,
+                                                     OT = ProSella.Ot.Trim(),
+                                                     Id_Cliente = ProSella.CodCliente.Trim(),
+                                                     Cliente = ProSella.Cliente,
+                                                     Item = ProSella.Referencia.Trim(),
+                                                     Referencia = ProSella.NomReferencia,
+                                                     Peso1 = ProSella.Peso,
+                                                     Peso2 = ProSella.Qty,
+                                                     Unidad = Convert.ToString(ProSella.Unidad),
+                                                     Operario = ProSella.Operario,
+                                                     Maquina = Convert.ToString(ProSella.Maquina).Trim(),
+                                                     Fecha = Convert.ToString(ProSella.FechaEntrada),
+                                                     Hora = ProSella.Hora,
+                                                     Proceso = ProSella.NomStatus,
+                                                     Turno = ProSella.Turnos.Trim(),
+                                                     EnviadoZeus = ProSella.EnvioZeus.Trim(),
+                                                 }).ToList();
+
+
+            if (query == null && query2 == null) return BadRequest("No se encontraron registros en este proceso de la OT seleccionada");
+            else return Ok(query.Concat(query2));
+        }
+
         /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
         [HttpGet("MostrarDatosConsolidados_ProcExtrusion/{OT}/{Proceso}")]
         public ActionResult<ProcExtrusion> GetObtenerInfoConsolidadaProcExtrusion(string OT, string Proceso)
@@ -590,6 +645,44 @@ namespace BagproWebAPI.Controllers
             {
                 return Ok(prSellado);
             }
+        }
+
+        /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
+        [HttpGet("getDatosConsolidados/{OT}/{Proceso}")]
+        public ActionResult<ProcExtrusion> GetDatosConsolidados(string OT, string Proceso)
+        {
+            var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
+                                                       && prExt.NomStatus == Proceso)
+                                                 .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
+                                                 .Select(ProEx => new
+                                                 {
+                                                     SumaCantidad1 = ProEx.Sum(ProSel => ProSel.Extnetokg),
+                                                     SumaCantidad2 = ProEx.Sum(ProSel => ProSel.Extnetokg),
+                                                     Ot = ProEx.Key.Ot,
+                                                     Referencia = ProEx.Key.ClienteItemNombre,
+                                                     Operario = ProEx.Key.Operador,
+                                                     Fecha = Convert.ToString(ProEx.Key.Fecha),
+                                                     Proceso = ProEx.Key.NomStatus,
+                                                     Registros = ProEx.Count(),
+                                                 }).ToList();
+
+            var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
+                                                      && prExt.NomStatus == Proceso)
+                                                .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus })
+                                                .Select(ProSella => new
+                                                {
+                                                    SumaCantidad1 = ProSella.Sum(ProSel => ProSel.Peso),
+                                                    SumaCantidad2 = ProSella.Sum(ProSel => ProSel.Qty),
+                                                    Ot = ProSella.Key.Ot,
+                                                    Referencia = ProSella.Key.NomReferencia,
+                                                    Operario = ProSella.Key.Operario,
+                                                    Fecha = Convert.ToString(ProSella.Key.FechaEntrada),
+                                                    Proceso = ProSella.Key.NomStatus,
+                                                    Registros = ProSella.Count(),
+                                                }).ToList();
+
+            if (query1 == null && query2 == null) return BadRequest("No se encontraron rollos consolidados para mostrar");
+            else return Ok(query1.Concat(query2));
         }
 
         //Consultar toda la informacion de un rollo
