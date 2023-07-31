@@ -62,7 +62,9 @@ namespace BagproWebAPI.Controllers
 
             var ClientesOT = _context.ClientesOts.Where(clot => clot.FechaCrea >= fecha).Select(Id => Id.Cliente.ToString()).ToList();
 
+#pragma warning disable CS8604 // Posible argumento de referencia nulo
             var cliente = _context.Clientes.Where(P => ClientesOT.Contains(P.CodBagpro)).Select(c => new { c.NombreComercial }).ToList();
+#pragma warning restore CS8604 // Posible argumento de referencia nulo
 
 
             if (cliente == null)

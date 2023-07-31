@@ -31,7 +31,9 @@ namespace PlasticaribeAPI.Controllers
             
             if (user.Id_Usuario == 1234568879 && user.Contrasena == "123456879")
             {
+#pragma warning disable CS8604 // Posible argumento de referencia nulo
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]));
+#pragma warning restore CS8604 // Posible argumento de referencia nulo
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
                     issuer: ConfigurationManager.AppSetting["JWT:ValidIssuer"],

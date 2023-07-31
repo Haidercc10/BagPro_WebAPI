@@ -38,14 +38,20 @@ namespace BagproWebAPI.Controllers
         [HttpGet("OT/{ot}")]
         public ActionResult<ProcSellado> GetOT(string ot)
         {
-            var procExtrusion = _context.ProcSellados.Where(prExt => prExt.Ot == ot).ToList();
+            var con = from ps in _context.Set<ProcSellado>()
+                      where ps.Ot == ot
+                      group ps by new
+                      {
+                          ps.NomStatus,
+                      } into ps
+                      select new
+                      {
+                          Proceso = ps.Key.NomStatus,
+                          TotalPeso = ps.Sum(x => x.Peso),
+                          TotalUnd = ps.Sum(x => x.Qty)
+                      };
 
-            if (procExtrusion == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(procExtrusion);
+            return Ok(con);
         }
 
         [HttpGet("RollosOT/{ot}")]

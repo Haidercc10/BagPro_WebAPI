@@ -53,14 +53,20 @@ namespace BagproWebAPI.Controllers
         [HttpGet("OT/{ot}")]
         public ActionResult<ProcExtrusion> GetOT(string ot)
         {
-            var procExtrusion = _context.ProcExtrusions.Where(prExt => prExt.Ot == ot).ToList();
+            var con = from pe in _context.Set<ProcExtrusion>()
+                      where pe.Ot == ot
+                      group pe by new
+                      {
+                          pe.NomStatus,
+                          pe.Ot
+                      } into pe
+                      select new
+                      {
+                          Proceso = pe.Key.NomStatus,
+                          Total = pe.Sum(x => x.Extnetokg),
+                      };
 
-            if (procExtrusion == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(procExtrusion);
+            return Ok(con);
         }
 
         [HttpGet("Fechas/{fechaini}/{fechafin}")]
@@ -723,6 +729,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}")]
         public ActionResult GetRollosExtrusion_Empaque_Sellado(DateTime fechaInicial, DateTime fechaFinal, string proceso, string? ot = "", string? rollo = "")
         {
+#pragma warning disable CS8604 // Posible argumento de referencia nulo
             var extrusion = from pe in _context.Set<ProcExtrusion>()
                             where pe.NomStatus == proceso
                                   && pe.Fecha >= fechaInicial
@@ -758,6 +765,7 @@ namespace BagproWebAPI.Controllers
                           };
 
             return Ok(extrusion.Concat(sellado));
+#pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
 
 
@@ -765,6 +773,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getProcExtrusion_ProcSellado/{fechaInicial}/{fechaFinal}")]
         public ActionResult GetProcExtrusion_ProcSellado(DateTime fechaInicial, DateTime fechaFinal, string? ot = "", string? rollo = "")
         {
+#pragma warning disable CS8604 // Posible argumento de referencia nulo
             var extrusion = from pe in _context.Set<ProcExtrusion>()
                             where pe.Fecha >= fechaInicial
                                   && pe.Fecha <= fechaFinal
@@ -799,6 +808,7 @@ namespace BagproWebAPI.Controllers
 
             if (extrusion.Concat(sellado) != null) return Ok(extrusion.Concat(sellado));
             else return BadRequest("No se han encontrado la información solicitada");
+#pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
 
         // PUT: api/ProcExtrusion/5
