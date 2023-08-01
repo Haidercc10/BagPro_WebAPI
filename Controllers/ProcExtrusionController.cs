@@ -50,6 +50,7 @@ namespace BagproWebAPI.Controllers
             return procExtrusion;
         }
 
+        // Consulta por OT agrupada por proceso
         [HttpGet("OT/{ot}")]
         public ActionResult<ProcExtrusion> GetOT(string ot)
         {
@@ -66,68 +67,6 @@ namespace BagproWebAPI.Controllers
                           Total = pe.Sum(x => x.Extnetokg),
                       };
 
-            return Ok(con);
-        }
-
-        [HttpGet("MostrarRollos/{Rollo}/{item}")]
-        public ActionResult GetRollosOT(int Rollo, string item)
-        {
-
-
-            
-
-            var procExtrusion = from sc2 in _context.Set<ProcExtrusion>()
-                                 where sc2.Item == Rollo && sc2.ClienteItem == item
-                                 select new
-                                 {
-                                    Rollo = Convert.ToString(sc2.Item),
-                                    Cod_BagPro = Convert.ToString(sc2.Cliente),
-                                    NombreCliente = Convert.ToString(sc2.ClienteNombre),
-                                    Item = Convert.ToString(sc2.ClienteItem),
-                                    NombreItem = Convert.ToString(sc2.ClienteItemNombre)
-                                 };
-
-
-   
-
-            var procesoSellado = from sc3 in _context.Set<ProcSellado>()
-                                 where sc3.Item == Rollo && sc3.Referencia == item
-                                 select new
-                                 {
-                                     Rollo = Convert.ToString(sc3.Item),
-                                     Cod_BagPro = Convert.ToString(sc3.CodCliente),
-                                     NombreCliente = Convert.ToString(sc3.Cliente),
-                                     Item =Convert.ToString( sc3.Referencia),
-                                     NombreItem = Convert.ToString(sc3.NomReferencia)
-
-                                 };
-
-                return Ok(procExtrusion.Concat(procesoSellado));
-            
-        }
-
-        [HttpGet("RollosOT/{ot}")]
-        public ActionResult<ProcExtrusion> Get(string ot)
-        {
-            var con = from ext in _context.Set<ProcExtrusion>()
-                      from cli in _context.Set<Cliente>()
-                      where ext.Ot == ot
-                            && (cli.CodBagpro == ext.Cliente || cli.NombreComercial == ext.ClienteNombre)
-                      /*&& ext.NomStatus == "EMPAQUE" 
-                      && ext.NomStatus == "EXTRUSION"*/
-                      select new
-                      {
-                          ext.Ot,
-                          ext.Item,
-                          cli.IdentNro,
-                          cli.NombreComercial,
-                          ext.ClienteItem,
-                          ext.ClienteItemNombre,
-                          ext.Extnetokg,
-                          unidad = "Kg",
-                          ext.NomStatus,
-                          ext.Fecha
-                      };
             return Ok(con);
         }
 

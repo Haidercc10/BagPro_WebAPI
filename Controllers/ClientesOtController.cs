@@ -51,7 +51,6 @@ namespace BagproWebAPI.Controllers
             return clientesOt;
         }
 
-
         /** Obtener costos de clientes OT*/
         [HttpGet("CostosOT/{Item}")]
         public IActionResult GetCostostOt(int Item)
@@ -87,44 +86,7 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-
-        [HttpGet("BetweenFechas/")]
-        public IActionResult GetEntreFechas(DateTime FechaInicial, DateTime FechaFinal)
-        {
-            if (_context.ClientesOts == null)
-            {
-                return NotFound();
-            }
-            var OT = _context.ClientesOts.Where(CO => CO.FechaCrea >= FechaInicial && CO.FechaCrea <= FechaFinal)
-                                          .Select(COT => new {
-                                              COT.Item,
-                                              COT.ClienteNom,
-                                              COT.ClienteItems,
-                                              COT.ClienteItemsNom,
-                                              COT.PtPresentacionNom,
-                                              COT.DatoscantKg,
-                                              COT.DatosmargenKg,
-                                              COT.DatosotKg,
-                                              COT.DatoscantBolsa,
-                                              COT.DatosvalorBolsa,
-                                              COT.DatosValorKg,
-                                              COT.DatosvalorOt,
-                                              COT.FechaCrea,
-                                              COT.UsrCrea,
-                                              COT.Estado
-                                          }).ToList();
-            if (OT == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok(OT);
-            }
-        }
-
         // GET: api/ClientesOt/5
-
         [HttpGet("OT/{item}")]
         public ActionResult<ClientesOt> GetOt(int item)
         {
@@ -138,6 +100,7 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
+        /**Consulta por item y presentación*/
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
         public ActionResult GetItemUltOT(int ClienteItems, string PtPresentacionNom)
         {
@@ -150,6 +113,7 @@ namespace BagproWebAPI.Controllers
             return NotFound();
         }
 
+        /** Consultar ultima OT*/
         [HttpGet("UltimaOT/")]
         public ActionResult<ClientesOt> GetUltimaOt()
         {
@@ -163,6 +127,7 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
+        /** Consultar el primer item en el rango de fechas elegido y que tenga un precio igual al ingresado */
         [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
         public ActionResult consultarItem(DateTime fecha1, DateTime fecha2, int item, decimal precio)
         {

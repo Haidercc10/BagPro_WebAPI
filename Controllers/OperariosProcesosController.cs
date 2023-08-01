@@ -44,7 +44,7 @@ namespace BagproWebAPI.Controllers
 
         /** Cargar nombre de Operarios */
         [HttpGet("NombreOperarios")]
-        public ActionResult GetNombreOperariosProceso(int id)
+        public ActionResult GetNombreOperariosProceso()
         {
             var Proceso = "EXTRUSION";
             var operariosProceso = _context.OperariosProcesos.Where(P => P.Planta == Proceso)
