@@ -92,7 +92,7 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
-                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
+                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -206,24 +206,28 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
-        private IQueryable<int> RollosPesadosHoy(DateTime fechaFin)
+        // Funcion que devolverá todos los rollos pesados en el día que se le pase y los ordenará de manera descendente
+        private IQueryable<int> UltimosRolloPesado(DateTime fecha)
         {
             return from PS2 in _context.Set<ProcSellado>()
-                   where PS2.FechaEntrada == fechaFin
+                   where PS2.FechaEntrada == fecha
                    orderby PS2.Item descending
                    select PS2.Item;
         }
 
-        private IQueryable<int> pesadosHoy(DateTime fechaFin)
+        // Funcion que devolverá todos los rollos que hayan sido pesados en la fecha que se le pase y que sean solamente de las horas 7, 8 y 9
+        private IQueryable<int> RollosPesadosMadrugada(DateTime fecha)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS2 in _context.Set<ProcSellado>()
                    where (PS2.Hora.StartsWith("07") ||
                          PS2.Hora.StartsWith("08") ||
                          PS2.Hora.StartsWith("09") ||
                          !PS2.Hora.StartsWith("0")) &&
-                         PS2.FechaEntrada == fechaFin
+                         PS2.FechaEntrada == fecha
                    orderby PS2.Item ascending
                    select PS2.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por Items y Personas
@@ -237,7 +241,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
-                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
+                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       select new
                       {
                           PS.Cedula,
@@ -345,7 +349,7 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
-                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
+                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
