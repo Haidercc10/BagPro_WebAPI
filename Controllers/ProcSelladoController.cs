@@ -202,7 +202,7 @@ namespace BagproWebAPI.Controllers
                 if (item.Cedula4 != "0") result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
             }
 
-            return result.Count() > 0 ? Ok(result) : NoContent();
+            return result.Count() > 0 ? Ok(result) : NotFound();
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
@@ -333,7 +333,7 @@ namespace BagproWebAPI.Controllers
                 if (item.Cedula4 == persona) result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
             }
 
-            return result.Count() > 0 ? Ok(result) : NoContent();
+            return result.Count() > 0 ? Ok(result) : NotFound();
         }
 
         // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por bulto
@@ -442,7 +442,7 @@ namespace BagproWebAPI.Controllers
                 if (item.Cedula4 != "0") result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
             }
 
-            return result.Count() > 0 ? Ok(result) : NoContent();
+            return result.Count() > 0 ? Ok(result) : NotFound();
         }
 
         /** Eliminar bultos de procsellado*/
