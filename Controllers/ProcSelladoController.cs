@@ -14,7 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace BagproWebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
+    [ApiController]
     public class ProcSelladoController : ControllerBase
     {
         private readonly plasticaribeContext _context;
@@ -91,15 +91,8 @@ namespace BagproWebAPI.Controllers
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
-                            && PS.FechaEntrada <= fechaFin
-                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
-                                          where (PS2.Hora.StartsWith("07") ||
-                                                PS2.Hora.StartsWith("08") ||
-                                                PS2.Hora.StartsWith("09") ||
-                                                !PS2.Hora.StartsWith("0")) &&
-                                                PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
-                                          select PS2.Item).FirstOrDefault()
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -213,6 +206,26 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
+        private IQueryable<int> RollosPesadosHoy(DateTime fechaFin)
+        {
+            return from PS2 in _context.Set<ProcSellado>()
+                   where PS2.FechaEntrada == fechaFin
+                   orderby PS2.Item descending
+                   select PS2.Item;
+        }
+
+        private IQueryable<int> pesadosHoy(DateTime fechaFin)
+        {
+            return from PS2 in _context.Set<ProcSellado>()
+                   where (PS2.Hora.StartsWith("07") ||
+                         PS2.Hora.StartsWith("08") ||
+                         PS2.Hora.StartsWith("09") ||
+                         !PS2.Hora.StartsWith("0")) &&
+                         PS2.FechaEntrada == fechaFin
+                   orderby PS2.Item ascending
+                   select PS2.Item;
+        }
+
         // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por Items y Personas
         [HttpGet("getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}")]
         public ActionResult GetNominaSelladoDetalladaItemPersona(DateTime fechaInicio, DateTime fechaFin, string producto, string persona)
@@ -221,17 +234,10 @@ namespace BagproWebAPI.Controllers
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
-                            && PS.FechaEntrada <= fechaFin
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
-                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
-                                          where (PS2.Hora.StartsWith("07") ||
-                                                PS2.Hora.StartsWith("08") ||
-                                                PS2.Hora.StartsWith("09") ||
-                                                !PS2.Hora.StartsWith("0")) &&
-                                                PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
-                                          select PS2.Item).FirstOrDefault()
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
                       select new
                       {
                           PS.Cedula,
@@ -338,15 +344,8 @@ namespace BagproWebAPI.Controllers
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
-                            && PS.FechaEntrada <= fechaFin
-                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
-                                          where (PS2.Hora.StartsWith("07") ||
-                                                PS2.Hora.StartsWith("08") ||
-                                                PS2.Hora.StartsWith("09") ||
-                                                !PS2.Hora.StartsWith("0")) &&
-                                                PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
-                                          select PS2.Item).FirstOrDefault()
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && (pesadosHoy(fechaFin.AddDays(1)).Any() ? PS.Item < pesadosHoy(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= RollosPesadosHoy(fechaFin).FirstOrDefault())
                       //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
@@ -444,14 +443,6 @@ namespace BagproWebAPI.Controllers
             }
 
             return result.Count() > 0 ? Ok(result) : NoContent();
-        }
-
-        [HttpGet("getPrueba/{fechaFin}")]
-        public ActionResult getPrueba(DateTime fechaFin)
-        {
-            DateTime Fecha = fechaFin.AddDays(1);
-
-            return Ok(Fecha);
         }
 
         /** Eliminar bultos de procsellado*/
