@@ -88,18 +88,20 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
 
+            var nuevo1 = (from PS2 in _context.Set<ProcSellado>()
+                          where (!PS2.Hora.StartsWith("07") ||
+                                !PS2.Hora.StartsWith("08") ||
+                                !PS2.Hora.StartsWith("09") ||
+                                !PS2.Hora.StartsWith("0")) &&
+                                PS2.FechaEntrada == fechaFin.AddDays(1)
+                          orderby PS2.Item
+                          select PS2.Item);
+
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
-                            && PS.FechaEntrada <= fechaFin
-                            && PS.Item < (from PS2 in _context.Set<ProcSellado>()
-                                          where (PS2.Hora.StartsWith("07") ||
-                                                PS2.Hora.StartsWith("08") ||
-                                                PS2.Hora.StartsWith("09") ||
-                                                !PS2.Hora.StartsWith("0")) &&
-                                                PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
-                                          select PS2.Item).FirstOrDefault()
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && !nuevo1.Contains(PS.Item)
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -230,7 +232,7 @@ namespace BagproWebAPI.Controllers
                                                 PS2.Hora.StartsWith("09") ||
                                                 !PS2.Hora.StartsWith("0")) &&
                                                 PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
+                                          orderby PS2.Item descending
                                           select PS2.Item).FirstOrDefault()
                       select new
                       {
@@ -345,7 +347,7 @@ namespace BagproWebAPI.Controllers
                                                 PS2.Hora.StartsWith("09") ||
                                                 !PS2.Hora.StartsWith("0")) &&
                                                 PS2.FechaEntrada == fechaFin
-                                          orderby PS2.Item ascending
+                                          orderby PS2.Item descending
                                           select PS2.Item).FirstOrDefault()
                       //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new

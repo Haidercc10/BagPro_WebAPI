@@ -123,45 +123,7 @@ namespace BagproWebAPI.Controllers
 
             if (query == null && query2 == null) return BadRequest("No se encontraron registros en este proceso de la OT seleccionada");
             else return Ok(query.Concat(query2));
-        }
-
-        /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
-        [HttpGet("getDatosConsolidados/{OT}/{Proceso}")]
-        public ActionResult<ProcExtrusion> GetDatosConsolidados(string OT, string Proceso)
-        {
-            var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
-                                                       && prExt.NomStatus == Proceso)
-                                                 .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
-                                                 .Select(ProEx => new
-                                                 {
-                                                     SumaCantidad1 = ProEx.Sum(ProSel => ProSel.Extnetokg),
-                                                     SumaCantidad2 = ProEx.Sum(ProSel => ProSel.Extnetokg),
-                                                     Ot = ProEx.Key.Ot,
-                                                     Referencia = ProEx.Key.ClienteItemNombre,
-                                                     Operario = ProEx.Key.Operador,
-                                                     Fecha = Convert.ToString(ProEx.Key.Fecha),
-                                                     Proceso = ProEx.Key.NomStatus,
-                                                     Registros = ProEx.Count(),
-                                                 }).ToList();
-
-            var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
-                                                      && prExt.NomStatus == Proceso)
-                                                .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus })
-                                                .Select(ProSella => new
-                                                {
-                                                    SumaCantidad1 = ProSella.Sum(ProSel => ProSel.Peso),
-                                                    SumaCantidad2 = ProSella.Sum(ProSel => ProSel.Qty),
-                                                    Ot = ProSella.Key.Ot,
-                                                    Referencia = ProSella.Key.NomReferencia,
-                                                    Operario = ProSella.Key.Operario,
-                                                    Fecha = Convert.ToString(ProSella.Key.FechaEntrada),
-                                                    Proceso = ProSella.Key.NomStatus,
-                                                    Registros = ProSella.Count(),
-                                                }).ToList();
-
-            if (query1 == null && query2 == null) return BadRequest("No se encontraron rollos consolidados para mostrar");
-            else return Ok(query1.Concat(query2));
-        }
+        }       
 
         //Consultar toda la informacion de un rollo
         [HttpGet("consultarRollo/{rollo}")]
