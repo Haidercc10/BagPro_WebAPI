@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace BagproWebAPI.Controllers
 {
@@ -256,6 +257,27 @@ namespace BagproWebAPI.Controllers
             if (extrusion.Concat(sellado) != null) return Ok(extrusion.Concat(sellado));
             else return BadRequest("No se han encontrado la información solicitada");
 #pragma warning restore CS8604 // Posible argumento de referencia nulo
+        }
+
+        // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
+        [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
+        public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            List<string> procesos = new List<string>();
+            foreach (var item in proceso.Split("|"))
+            {
+                procesos.Add(item);
+            }
+
+            var extrusion = from ext in _context.Set<ProcExtrusion>()
+                            where ext.Ot == orden &&
+                                  procesos.Contains(ext.NomStatus.Trim())
+                            select ext;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
+            return Ok(extrusion);
         }
 
         // PUT: api/ProcExtrusion/5

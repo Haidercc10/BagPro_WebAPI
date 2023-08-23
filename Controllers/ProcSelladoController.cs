@@ -449,6 +449,24 @@ namespace BagproWebAPI.Controllers
             return result.Count() > 0 ? Ok(result) : NotFound();
         }
 
+        // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
+        [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
+        public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
+        {
+#pragma warning disable CS8604 // Possible null reference argument
+            List<string> procesos = new List<string>();
+            foreach (var item in proceso.Split("|"))
+            {
+                procesos.Add(item);
+            }
+            var sellado = from sel in _context.Set<ProcSellado>()
+                          where sel.Ot == orden &&
+                                procesos.Contains(sel.NomStatus)
+                          select sel;
+#pragma warning restore CS8604 // Possible null reference argument.
+            return Ok(sellado);
+        }
+
         /** Eliminar bultos de procsellado*/
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
         public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
