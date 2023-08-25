@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
 
 namespace BagproWebAPI.Controllers
 {
@@ -264,6 +265,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
 
+
         // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
         [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
         public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
@@ -283,6 +285,70 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8604 // Possible null reference argument.
             return extrusion.Any() ? Ok(extrusion) : BadRequest();
+        }
+
+
+        [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
+        public ActionResult<ProcExtrusion> GetOtControlCalidadExtrusion(string OT, string status)
+        {
+            var query = from cl in _context.Set<ClientesOt>()
+                        from pe in _context.Set<ProcExtrusion>()
+                        where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
+                        pe.Ot == OT &&
+                        Convert.ToString(cl.Item) == OT &&
+                        pe.NomStatus == status
+                        select new
+                        {
+                            Rollo = pe.Item,
+                            OT = cl.Item,
+                            Id_Cliente = cl.Cliente,
+                            Cliente = cl.ClienteNom,
+                            Item = cl.ClienteItems,
+                            Referencia = cl.ClienteItemsNom,
+                            Maquina = Convert.ToString(pe.Maquina),
+                            Proceso = Convert.ToString(pe.NomStatus),
+                            Turno = Convert.ToString(pe.Turno).Trim(),
+                            PigmentoId = cl.ExtPigmento.Trim(),
+                            Pigmento = cl.ExtPigmentoNom.Trim(),
+                            Calibre = cl.ExtCalibre,
+                            Ancho = cl.PtAnchopt,
+                            Largo = cl.PtLargopt,
+                            CantBolsasxPaq = cl.PtQtyPquete, 
+                            AnchoFuelle_Derecha = cl.ExtAcho1,
+                            AnchoFuelle_Izquierda = cl.ExtAcho2,
+                            AnchoFuelle_Abajo = cl.ExtAcho3,
+                        };
+
+            var query2 = from cl in _context.Set<ClientesOt>()
+                        from ps in _context.Set<ProcSellado>()
+                        where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
+                        ps.Ot == OT &&
+                        Convert.ToString(cl.Item) == OT &&
+                        ps.NomStatus == status
+                        select new
+                        {
+                            Rollo = ps.Item,
+                            OT = cl.Item,
+                            Id_Cliente = cl.Cliente,
+                            Cliente = cl.ClienteNom,
+                            Item = cl.ClienteItems,
+                            Referencia = cl.ClienteItemsNom,
+                            Maquina = Convert.ToString(ps.Maquina),
+                            Proceso = Convert.ToString(ps.NomStatus),
+                            Turno = Convert.ToString(ps.Turnos).Trim(),
+                            PigmentoId = cl.ExtPigmento.Trim(),
+                            Pigmento = cl.ExtPigmentoNom.Trim(),
+                            Calibre = cl.ExtCalibre,
+                            Ancho = cl.PtAnchopt,
+                            Largo = cl.PtLargopt,
+                            CantBolsasxPaq = cl.PtQtyPquete,
+                            AnchoFuelle_Derecha = cl.ExtAcho1,
+                            AnchoFuelle_Izquierda = cl.ExtAcho2,
+                            AnchoFuelle_Abajo = cl.ExtAcho3,
+                        };
+
+            if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
+            return Ok(query.Concat(query2));
         }
 
         // PUT: api/ProcExtrusion/5
