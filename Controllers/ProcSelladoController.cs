@@ -464,7 +464,7 @@ namespace BagproWebAPI.Controllers
                                 procesos.Contains(sel.NomStatus)
                           select sel;
 #pragma warning restore CS8604 // Possible null reference argument.
-            return Ok(sellado);
+            return sellado.Any() ? Ok(sellado) : BadRequest();
         }
 
         /** Eliminar bultos de procsellado*/

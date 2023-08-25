@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
 
 namespace BagproWebAPI.Controllers
 {
@@ -75,6 +69,9 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getObtenerDatosxProcesos/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetObtenerDatosxProcesos(string OT, string status)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
                                                        && prExt.NomStatus == status)
                                                  .OrderByDescending(proExt => proExt.Item)
@@ -124,12 +121,17 @@ namespace BagproWebAPI.Controllers
 
             if (query == null && query2 == null) return BadRequest("No se encontraron registros en este proceso de la OT seleccionada");
             else return Ok(query.Concat(query2));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
         [HttpGet("getDatosConsolidados/{OT}/{Proceso}")]
         public ActionResult<ProcExtrusion> GetDatosConsolidados(string OT, string Proceso)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
                                                        && prExt.NomStatus == Proceso)
                                                  .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
@@ -160,8 +162,11 @@ namespace BagproWebAPI.Controllers
                                                     Registros = ProSella.Count(),
                                                 }).ToList();
 
+
             if (query1 == null && query2 == null) return BadRequest("No se encontraron rollos consolidados para mostrar");
             else return Ok(query1.Concat(query2));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         //Consultar toda la informacion de un rollo
@@ -277,7 +282,7 @@ namespace BagproWebAPI.Controllers
                             select ext;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8604 // Possible null reference argument.
-            return Ok(extrusion);
+            return extrusion.Any() ? Ok(extrusion) : BadRequest();
         }
 
         // PUT: api/ProcExtrusion/5
