@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Drawing;
+using System.Linq;
 
 namespace BagproWebAPI.Controllers
 {
@@ -317,9 +318,12 @@ namespace BagproWebAPI.Controllers
                             AnchoFuelle_Derecha = cl.ExtAcho1,
                             AnchoFuelle_Izquierda = cl.ExtAcho2,
                             AnchoFuelle_Abajo = cl.ExtAcho3,
+                            TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
+                            Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
+                            Impresion = Convert.ToString(cl.Impresion).Trim(),
                         };
 
-            var query2 = from cl in _context.Set<ClientesOt>()
+            var query2 = (from cl in _context.Set<ClientesOt>()
                         from ps in _context.Set<ProcSellado>()
                         where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
                         ps.Ot == OT &&
@@ -345,7 +349,10 @@ namespace BagproWebAPI.Controllers
                             AnchoFuelle_Derecha = cl.ExtAcho1,
                             AnchoFuelle_Izquierda = cl.ExtAcho2,
                             AnchoFuelle_Abajo = cl.ExtAcho3,
-                        };
+                            TratadoId = Convert.ToString("No aplica"),
+                            Tratado = Convert.ToString("No aplica"),
+                            Impresion = Convert.ToString(cl.Impresion).Trim(),
+                        }).Take(1);
 
             if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
             return Ok(query.Concat(query2));
