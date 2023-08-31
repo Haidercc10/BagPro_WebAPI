@@ -293,7 +293,7 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-            var query = from cl in _context.Set<ClientesOt>()
+            var query = (from cl in _context.Set<ClientesOt>()
                         from pe in _context.Set<ProcExtrusion>()
                         where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
                         pe.Ot == OT &&
@@ -322,7 +322,7 @@ namespace BagproWebAPI.Controllers
                             TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
                             Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
                             Impresion = Convert.ToString(cl.Impresion).Trim(),
-                        };
+                        }).Take(5);
 
             var query2 = (from cl in _context.Set<ClientesOt>()
                         from ps in _context.Set<ProcSellado>()
