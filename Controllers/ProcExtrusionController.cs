@@ -266,7 +266,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
 
-
         // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
         [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
         public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
@@ -292,6 +291,8 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetOtControlCalidadExtrusion(string OT, string status)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
             var query = from cl in _context.Set<ClientesOt>()
                         from pe in _context.Set<ProcExtrusion>()
                         where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
@@ -356,6 +357,8 @@ namespace BagproWebAPI.Controllers
 
             if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
             return Ok(query.Concat(query2));
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // PUT: api/ProcExtrusion/5

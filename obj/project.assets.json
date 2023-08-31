@@ -12528,11 +12528,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\BagproWebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Sistemas\\Documents\\GitHub\\BagPro_API\\BagproWebAPI.csproj",
       "projectName": "BagproWebAPI",
-      "projectPath": "C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\BagproWebAPI.csproj",
+      "projectPath": "C:\\Users\\Sistemas\\Documents\\GitHub\\BagPro_API\\BagproWebAPI.csproj",
       "packagesPath": "C:\\Users\\Sistemas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\obj\\",
+      "outputPath": "C:\\Users\\Sistemas\\Documents\\GitHub\\BagPro_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -12655,16 +12655,10 @@
   },
   "logs": [
     {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema al leer el archivo de caché C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    },
-    {
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "El paquete \"Intercom.Dotnet.Client 2.1.1\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
+      "message": "Package 'Intercom.Dotnet.Client 2.1.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
       "libraryId": "Intercom.Dotnet.Client",
       "targetGraphs": [
         "net7.0"
