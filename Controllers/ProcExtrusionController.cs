@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BagproWebAPI.Models;
+﻿using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Drawing;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BagproWebAPI.Controllers
 {
@@ -22,10 +20,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProcExtrusion>>> GetProcExtrusions()
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             return await _context.ProcExtrusions.ToListAsync();
         }
 
@@ -33,10 +31,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProcExtrusion>> GetProcExtrusion(int id)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             var procExtrusion = await _context.ProcExtrusions.FindAsync(id);
 
             if (procExtrusion == null)
@@ -67,6 +65,31 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        [HttpGet("FechaFinOT/{ot}")]
+        public ActionResult<ProcExtrusion> GetFechaFinOT(string ot)
+        {
+            var procExtrusion = (from ProcExt in _context.Set<ProcExtrusion>()
+                                 where ProcExt.Ot == ot
+                                       && ProcExt.NomStatus == "EMPAQUE"
+                                 orderby ProcExt.Item descending
+                                 select new
+                                 {
+                                     ProcExt.Item,
+                                     ProcExt.Ot,
+                                     ProcExt.Fecha,
+                                     ProcExt.NomStatus,
+                                 }).FirstOrDefault();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procExtrusion);
+            }
+        }
+
         /** Obtener datos por procesos de la tabla procextrusion y procsellado */
         [HttpGet("getObtenerDatosxProcesos/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetObtenerDatosxProcesos(string OT, string status)
@@ -91,8 +114,8 @@ namespace BagproWebAPI.Controllers
                                                      Operario = ProExtru.Operador,
                                                      Maquina = Convert.ToString(ProExtru.Maquina),
                                                      Fecha = Convert.ToString(ProExtru.Fecha),
-                                                     Hora  = ProExtru.Hora.Trim(),
-                                                     Proceso =  ProExtru.NomStatus,
+                                                     Hora = ProExtru.Hora.Trim(),
+                                                     Proceso = ProExtru.NomStatus,
                                                      Turno = ProExtru.Turno.Trim(),
                                                      EnviadoZeus = ProExtru.EnvioZeus.Trim()
                                                  }).ToList();
@@ -294,66 +317,66 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
             var query = (from cl in _context.Set<ClientesOt>()
-                        from pe in _context.Set<ProcExtrusion>()
-                        where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
-                        pe.Ot == OT &&
-                        Convert.ToString(cl.Item) == OT &&
-                        pe.NomStatus == status
-                        select new
-                        {
-                            Rollo = pe.Item,
-                            OT = cl.Item,
-                            Id_Cliente = cl.Cliente,
-                            Cliente = cl.ClienteNom,
-                            Item = cl.ClienteItems,
-                            Referencia = cl.ClienteItemsNom,
-                            Maquina = Convert.ToString(pe.Maquina),
-                            Proceso = Convert.ToString(pe.NomStatus),
-                            Turno = Convert.ToString(pe.Turno).Trim(),
-                            PigmentoId = cl.ExtPigmento.Trim(),
-                            Pigmento = cl.ExtPigmentoNom.Trim(),
-                            Calibre = cl.ExtCalibre,
-                            Ancho = cl.PtAnchopt,
-                            Largo = cl.PtLargopt,
-                            CantBolsasxPaq = cl.PtQtyPquete, 
-                            AnchoFuelle_Derecha = cl.ExtAcho1,
-                            AnchoFuelle_Izquierda = cl.ExtAcho2,
-                            AnchoFuelle_Abajo = cl.ExtAcho3,
-                            TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
-                            Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
-                            Impresion = Convert.ToString(cl.Impresion).Trim(),
-                        }).Take(5);
+                         from pe in _context.Set<ProcExtrusion>()
+                         where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
+                         pe.Ot == OT &&
+                         Convert.ToString(cl.Item) == OT &&
+                         pe.NomStatus == status
+                         select new
+                         {
+                             Rollo = pe.Item,
+                             OT = cl.Item,
+                             Id_Cliente = cl.Cliente,
+                             Cliente = cl.ClienteNom,
+                             Item = cl.ClienteItems,
+                             Referencia = cl.ClienteItemsNom,
+                             Maquina = Convert.ToString(pe.Maquina),
+                             Proceso = Convert.ToString(pe.NomStatus),
+                             Turno = Convert.ToString(pe.Turno).Trim(),
+                             PigmentoId = cl.ExtPigmento.Trim(),
+                             Pigmento = cl.ExtPigmentoNom.Trim(),
+                             Calibre = cl.ExtCalibre,
+                             Ancho = cl.PtAnchopt,
+                             Largo = cl.PtLargopt,
+                             CantBolsasxPaq = cl.PtQtyPquete,
+                             AnchoFuelle_Derecha = cl.ExtAcho1,
+                             AnchoFuelle_Izquierda = cl.ExtAcho2,
+                             AnchoFuelle_Abajo = cl.ExtAcho3,
+                             TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
+                             Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
+                             Impresion = Convert.ToString(cl.Impresion).Trim(),
+                         }).Take(5);
 
             var query2 = (from cl in _context.Set<ClientesOt>()
-                        from ps in _context.Set<ProcSellado>()
-                        where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
-                        ps.Ot == OT &&
-                        Convert.ToString(cl.Item) == OT &&
-                        ps.NomStatus == status
-                        select new
-                        {
-                            Rollo = ps.Item,
-                            OT = cl.Item,
-                            Id_Cliente = cl.Cliente,
-                            Cliente = cl.ClienteNom,
-                            Item = cl.ClienteItems,
-                            Referencia = cl.ClienteItemsNom,
-                            Maquina = Convert.ToString(ps.Maquina),
-                            Proceso = Convert.ToString(ps.NomStatus),
-                            Turno = Convert.ToString(ps.Turnos).Trim(),
-                            PigmentoId = cl.ExtPigmento.Trim(),
-                            Pigmento = cl.ExtPigmentoNom.Trim(),
-                            Calibre = cl.ExtCalibre,
-                            Ancho = cl.PtAnchopt,
-                            Largo = cl.PtLargopt,
-                            CantBolsasxPaq = cl.PtQtyPquete,
-                            AnchoFuelle_Derecha = cl.ExtAcho1,
-                            AnchoFuelle_Izquierda = cl.ExtAcho2,
-                            AnchoFuelle_Abajo = cl.ExtAcho3,
-                            TratadoId = Convert.ToString("No aplica"),
-                            Tratado = Convert.ToString("No aplica"),
-                            Impresion = Convert.ToString(cl.Impresion).Trim(),
-                        }).Take(1);
+                          from ps in _context.Set<ProcSellado>()
+                          where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
+                          ps.Ot == OT &&
+                          Convert.ToString(cl.Item) == OT &&
+                          ps.NomStatus == status
+                          select new
+                          {
+                              Rollo = ps.Item,
+                              OT = cl.Item,
+                              Id_Cliente = cl.Cliente,
+                              Cliente = cl.ClienteNom,
+                              Item = cl.ClienteItems,
+                              Referencia = cl.ClienteItemsNom,
+                              Maquina = Convert.ToString(ps.Maquina),
+                              Proceso = Convert.ToString(ps.NomStatus),
+                              Turno = Convert.ToString(ps.Turnos).Trim(),
+                              PigmentoId = cl.ExtPigmento.Trim(),
+                              Pigmento = cl.ExtPigmentoNom.Trim(),
+                              Calibre = cl.ExtCalibre,
+                              Ancho = cl.PtAnchopt,
+                              Largo = cl.PtLargopt,
+                              CantBolsasxPaq = cl.PtQtyPquete,
+                              AnchoFuelle_Derecha = cl.ExtAcho1,
+                              AnchoFuelle_Izquierda = cl.ExtAcho2,
+                              AnchoFuelle_Abajo = cl.ExtAcho3,
+                              TratadoId = Convert.ToString("No aplica"),
+                              Tratado = Convert.ToString("No aplica"),
+                              Impresion = Convert.ToString(cl.Impresion).Trim(),
+                          }).Take(1);
 
             if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
             return Ok(query.Concat(query2));
@@ -395,10 +418,10 @@ namespace BagproWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ProcExtrusion>> PostProcExtrusion(ProcExtrusion procExtrusion)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
+            }
             _context.ProcExtrusions.Add(procExtrusion);
             await _context.SaveChangesAsync();
 
