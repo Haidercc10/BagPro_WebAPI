@@ -79,6 +79,18 @@ namespace BagproWebAPI.Controllers
             }
         }
 
+        //Consultar através de un LIKE 
+        [HttpGet("likeReferencia/{referencia}")]
+        public IActionResult LikeReferencia(string referencia)
+        {
+            var nombreItem = (from c in _context.Set<ClientesOtItem>()
+                              where c.ClienteItemsNom.StartsWith(referencia)
+                              select new { Item = c.ClienteItems, Referencia = c.ClienteItemsNom, PrecioKg = c.DatosValorKg, }).Take(50);
+
+            if (nombreItem == null) return NotFound();
+            else return Ok(nombreItem);
+        }
+
         // PUT: api/ClientesOtItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

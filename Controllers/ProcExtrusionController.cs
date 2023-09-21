@@ -293,7 +293,7 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-            var query = (from cl in _context.Set<ClientesOt>()
+            var query = from cl in _context.Set<ClientesOt>()
                         from pe in _context.Set<ProcExtrusion>()
                         where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
                         pe.Ot == OT &&
@@ -322,39 +322,39 @@ namespace BagproWebAPI.Controllers
                             TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
                             Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
                             Impresion = Convert.ToString(cl.Impresion).Trim(),
-                        }).Take(5);
+                        };
 
-            var query2 = (from cl in _context.Set<ClientesOt>()
-                        from ps in _context.Set<ProcSellado>()
-                        where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
-                        ps.Ot == OT &&
-                        Convert.ToString(cl.Item) == OT &&
-                        ps.NomStatus == status
-                        select new
-                        {
-                            Rollo = ps.Item,
-                            OT = cl.Item,
-                            Id_Cliente = cl.Cliente,
-                            Cliente = cl.ClienteNom,
-                            Item = cl.ClienteItems,
-                            Referencia = cl.ClienteItemsNom,
-                            Maquina = Convert.ToString(ps.Maquina),
-                            Proceso = Convert.ToString(ps.NomStatus),
-                            Turno = Convert.ToString(ps.Turnos).Trim(),
-                            PigmentoId = cl.ExtPigmento.Trim(),
-                            Pigmento = cl.ExtPigmentoNom.Trim(),
-                            Calibre = cl.ExtCalibre,
-                            Ancho = cl.PtAnchopt,
-                            Largo = cl.PtLargopt,
-                            CantBolsasxPaq = cl.PtQtyPquete,
-                            AnchoFuelle_Derecha = cl.ExtAcho1,
-                            AnchoFuelle_Izquierda = cl.ExtAcho2,
-                            AnchoFuelle_Abajo = cl.ExtAcho3,
-                            TratadoId = Convert.ToString("No aplica"),
-                            Tratado = Convert.ToString("No aplica"),
-                            Impresion = Convert.ToString(cl.Impresion).Trim(),
-                        }).Take(1);
-
+            var query2 = from cl in _context.Set<ClientesOt>()
+                         from ps in _context.Set<ProcSellado>()
+                         where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
+                         ps.Ot == OT &&
+                         Convert.ToString(cl.Item) == OT &&
+                         ps.NomStatus == status
+                         select new
+                         {
+                             Rollo = ps.Item,
+                             OT = cl.Item,
+                             Id_Cliente = cl.Cliente,
+                             Cliente = cl.ClienteNom,
+                             Item = cl.ClienteItems,
+                             Referencia = cl.ClienteItemsNom,
+                             Maquina = Convert.ToString(ps.Maquina),
+                             Proceso = Convert.ToString(ps.NomStatus),
+                             Turno = Convert.ToString(ps.Turnos).Trim(),
+                             PigmentoId = cl.ExtPigmento.Trim(),
+                             Pigmento = cl.ExtPigmentoNom.Trim(),
+                             Calibre = cl.ExtCalibre,
+                             Ancho = cl.PtAnchopt,
+                             Largo = cl.PtLargopt,
+                             CantBolsasxPaq = cl.PtQtyPquete,
+                             AnchoFuelle_Derecha = cl.ExtAcho1,
+                             AnchoFuelle_Izquierda = cl.ExtAcho2,
+                             AnchoFuelle_Abajo = cl.ExtAcho3,
+                             TratadoId = Convert.ToString("No aplica"),
+                             Tratado = Convert.ToString("No aplica"),
+                             Impresion = Convert.ToString(cl.Impresion).Trim(),
+                         };
+            
             if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
             return Ok(query.Concat(query2));
 #pragma warning restore CS8604 // Possible null reference argument.
