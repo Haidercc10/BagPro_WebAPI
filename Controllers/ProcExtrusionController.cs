@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BagproWebAPI.Models;
+﻿using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Drawing;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BagproWebAPI.Controllers
 {
@@ -22,10 +20,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProcExtrusion>>> GetProcExtrusions()
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             return await _context.ProcExtrusions.ToListAsync();
         }
 
@@ -33,10 +31,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProcExtrusion>> GetProcExtrusion(int id)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             var procExtrusion = await _context.ProcExtrusions.FindAsync(id);
 
             if (procExtrusion == null)
@@ -67,6 +65,31 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        [HttpGet("FechaFinOT/{ot}")]
+        public ActionResult<ProcExtrusion> GetFechaFinOT(string ot)
+        {
+            var procExtrusion = (from ProcExt in _context.Set<ProcExtrusion>()
+                                 where ProcExt.Ot == ot
+                                       && ProcExt.NomStatus == "EMPAQUE"
+                                 orderby ProcExt.Item descending
+                                 select new
+                                 {
+                                     ProcExt.Item,
+                                     ProcExt.Ot,
+                                     ProcExt.Fecha,
+                                     ProcExt.NomStatus,
+                                 }).FirstOrDefault();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procExtrusion);
+            }
+        }
+
         /** Obtener datos por procesos de la tabla procextrusion y procsellado */
         [HttpGet("getObtenerDatosxProcesos/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetObtenerDatosxProcesos(string OT, string status)
@@ -91,8 +114,8 @@ namespace BagproWebAPI.Controllers
                                                      Operario = ProExtru.Operador,
                                                      Maquina = Convert.ToString(ProExtru.Maquina),
                                                      Fecha = Convert.ToString(ProExtru.Fecha),
-                                                     Hora  = ProExtru.Hora.Trim(),
-                                                     Proceso =  ProExtru.NomStatus,
+                                                     Hora = ProExtru.Hora.Trim(),
+                                                     Proceso = ProExtru.NomStatus,
                                                      Turno = ProExtru.Turno.Trim(),
                                                      EnviadoZeus = ProExtru.EnvioZeus.Trim()
                                                  }).ToList();
@@ -395,10 +418,10 @@ namespace BagproWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ProcExtrusion>> PostProcExtrusion(ProcExtrusion procExtrusion)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
+            }
             _context.ProcExtrusions.Add(procExtrusion);
             await _context.SaveChangesAsync();
 
