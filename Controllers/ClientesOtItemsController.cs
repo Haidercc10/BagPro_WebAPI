@@ -66,6 +66,7 @@ namespace BagproWebAPI.Controllers
                                      cliOT.Cliente,
                                      cliOT.ClienteNom,
                                      cliOT.PtPresentacionNom,
+                                     cliOT.DatosValorKg,
                                      ven.NombreCompleto
                                  };
 
@@ -84,7 +85,7 @@ namespace BagproWebAPI.Controllers
         public IActionResult LikeReferencia(string referencia)
         {
             var nombreItem = (from c in _context.Set<ClientesOtItem>()
-                              where c.ClienteItemsNom.StartsWith(referencia)
+                              where c.ClienteItemsNom.Contains(referencia)
                               select new { Item = c.ClienteItems, Referencia = c.ClienteItemsNom, PrecioKg = c.DatosValorKg, }).Take(50);
 
             if (nombreItem == null) return NotFound();
