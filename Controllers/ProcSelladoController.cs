@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BagproWebAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 using System.Data;
-using Microsoft.OpenApi.Any;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BagproWebAPI.Controllers
 {
@@ -28,10 +20,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProcSellado>>> GetProcExtrusions()
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             return await _context.ProcSellados.ToListAsync();
         }
 
@@ -59,7 +51,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("FechaFinOT/{ot}")]
         public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
         {
-             var nomStatus = "SELLADO";
+            var nomStatus = "SELLADO";
             var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot &&
                                                           prSella.NomStatus == nomStatus)
                                                        .OrderByDescending(x => x.FechaEntrada)
@@ -127,7 +119,7 @@ namespace BagproWebAPI.Controllers
                           PS.Key.Referencia,
                           PS.Key.NomReferencia,
                           Cantidad = (
-                            PS.Key.Cedula4 != "0" ? PS.Sum(x => x.PS.Qty) / 4 : 
+                            PS.Key.Cedula4 != "0" ? PS.Sum(x => x.PS.Qty) / 4 :
                             PS.Key.Cedula3 != "0" ? PS.Sum(x => x.PS.Qty) / 3 :
                             PS.Key.Cedula2 != "0" ? PS.Sum(x => x.PS.Qty) / 2 :
                             PS.Sum(x => x.PS.Qty)
@@ -137,7 +129,7 @@ namespace BagproWebAPI.Controllers
                           PS.Key.Turnos,
                           PS.Key.NomStatus,
                           PrecioDia = (
-                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Dia) : 
+                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Dia) :
                             PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
                           ),
                           PrecioNoche = (
@@ -428,7 +420,7 @@ namespace BagproWebAPI.Controllers
                     $"'Bulto': '{item.Item}'," +
                     $"'Ot': '{item.Ot}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
-                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`') }'," +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
                     $"'Cantidad_Total': '{item.CantidadTotal}'," +
                     $"'Cantidad': '{item.Cantidad}'," +
                     $"'Presentacion': '{item.Unidad.Trim()}'," +

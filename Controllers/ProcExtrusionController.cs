@@ -310,7 +310,6 @@ namespace BagproWebAPI.Controllers
             return extrusion.Any() ? Ok(extrusion) : BadRequest();
         }
 
-
         [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetOtControlCalidadExtrusion(string OT, string status)
         {
@@ -338,7 +337,7 @@ namespace BagproWebAPI.Controllers
                             Calibre = cl.ExtCalibre,
                             Ancho = cl.PtAnchopt,
                             Largo = cl.PtLargopt,
-                            CantBolsasxPaq = cl.PtQtyPquete, 
+                            CantBolsasxPaq = cl.PtQtyPquete,
                             AnchoFuelle_Derecha = cl.ExtAcho1,
                             AnchoFuelle_Izquierda = cl.ExtAcho2,
                             AnchoFuelle_Abajo = cl.ExtAcho3,
@@ -377,11 +376,71 @@ namespace BagproWebAPI.Controllers
                              Tratado = Convert.ToString("No aplica"),
                              Impresion = Convert.ToString(cl.Impresion).Trim(),
                          };
-            
+
             if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
             return Ok(query.Concat(query2));
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        // Consulta que devolverá la información de las cantidades producidas por cada ara en cada uno de los meses del año que le sea pasado
+        [HttpGet("getProduccionAreas/{anio}")]
+        public ActionResult GetProduccionAreas(int anio)
+        {
+#pragma warning disable CS8629 // Nullable value type may be null.
+            var producidoExt = from pe in _context.Set<ProcExtrusion>()
+                               where pe.Fecha.Value.Year == anio
+                               orderby pe.Fecha.Value.Year descending, pe.Fecha.Value.Month descending
+                               group pe by new
+                               {
+                                   Area = Convert.ToString(pe.NomStatus),
+                                   Mes = Convert.ToInt32(pe.Fecha.Value.Month),
+                                   Anio = Convert.ToInt32(pe.Fecha.Value.Year),
+                               } into pe
+                               select new
+                               {
+                                   pe.Key.Area,
+                                   pe.Key.Mes,
+                                   pe.Key.Anio,
+                                   Producido = pe.Sum(x => x.Extnetokg),
+                               };
+
+            var producidoSell = from ps in _context.Set<ProcSellado>()
+                                where ps.FechaEntrada.Year == anio
+                                orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
+                                group ps by new
+                                {
+                                    Area = Convert.ToString(ps.NomStatus),
+                                    Mes = Convert.ToInt32(ps.FechaEntrada.Month),
+                                    Anio = Convert.ToInt32(ps.FechaEntrada.Year),
+                                } into ps
+                                select new
+                                {
+                                    ps.Key.Area,
+                                    ps.Key.Mes,
+                                    ps.Key.Anio,
+                                    Producido = ps.Sum(x => x.Qty),
+                                };
+
+            var desperdicios = from desp in _context.Set<Procdesperdicio>()
+                               where desp.Fecha.Value.Year == anio
+                               orderby desp.Fecha.Value.Year descending, desp.Fecha.Value.Month descending
+                               group desp by new
+                               {
+                                   Area = Convert.ToString(desp.NomStatus),
+                                   Mes = Convert.ToInt32(desp.Fecha.Value.Month),
+                                   Anio = Convert.ToInt32(desp.Fecha.Value.Year),
+                               } into desp
+                               select new
+                               {
+                                   desp.Key.Area,
+                                   desp.Key.Mes,
+                                   desp.Key.Anio,
+                                   Producido = desp.Sum(x => x.Extnetokg),
+                               };
+
+            return Ok(producidoExt.Concat(producidoSell).Concat(desperdicios));
+#pragma warning restore CS8629 // Nullable value type may be null.
         }
 
         // PUT: api/ProcExtrusion/5
