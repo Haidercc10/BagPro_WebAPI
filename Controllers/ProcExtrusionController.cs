@@ -419,7 +419,7 @@ namespace BagproWebAPI.Controllers
                                     ps.Key.Area,
                                     ps.Key.Mes,
                                     ps.Key.Anio,
-                                    Producido = ps.Sum(x => x.Qty),
+                                    Producido = ps.Sum(x => x.Peso),
                                 };
 
             var desperdicios = from desp in _context.Set<Procdesperdicio>()
