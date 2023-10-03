@@ -103,7 +103,8 @@ namespace BagproWebAPI.Controllers
                           CL.Dia,
                           CL.Noche,
                           PS.EnvioZeus,
-                          PS.NomStatus
+                          PS.NomStatus,
+                          PS.Maquina
                       } into PS
                       select new
                       {
@@ -129,40 +130,62 @@ namespace BagproWebAPI.Controllers
                           PS.Key.Turnos,
                           PS.Key.NomStatus,
                           PrecioDia = (
+                            PS.Key.Maquina == "9" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.Maquina == "50" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
                             PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Dia) :
                             PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
                           ),
                           PrecioNoche = (
+                            PS.Key.Maquina == "9" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.Maquina == "50" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
                             PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
+                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : 0
                           ),
                           Total = (
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Noche) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Dia) :
-                            PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * Convert.ToDecimal(PS.Key.Noche) :
 
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "DIA" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
 
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
-                            PS.Key.EnvioZeus == "0" && PS.Key.NomStatus == "Wiketiado" && PS.Key.Turnos == "NOCHE" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : 0
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula4 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula3 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Cedula2 != "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? PS.Sum(x => x.PS.Qty) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : 0
                           ),
                           Registros = PS.Count(),
                           PesadoEntre = (
@@ -263,45 +286,66 @@ namespace BagproWebAPI.Controllers
                           PS.Turnos,
                           PS.NomStatus,
                           Precio = (
+                            PS.Maquina == "9" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.Maquina == "50" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.Maquina == "9" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.Maquina == "50" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
                             PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? Convert.ToDecimal(CL.Dia) :
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
                             PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? Convert.ToDecimal(CL.Noche) :
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
                           ),
                           Total = (
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? PS.Qty * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? PS.Qty * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? PS.Qty * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? PS.Qty * Convert.ToDecimal(CL.Noche) :
 
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
 
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
                           ),
                           PesadoEntre = (
                             PS.Cedula4 != "0" ? 4 :
                             PS.Cedula3 != "0" ? 3 :
                             PS.Cedula2 != "0" ? 2 : 1
                           )
-
                       };
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
@@ -372,45 +416,66 @@ namespace BagproWebAPI.Controllers
                           PS.Turnos,
                           PS.NomStatus,
                           Precio = (
+                            PS.Maquina == "9" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.Maquina == "50" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.Maquina == "9" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.Maquina == "50" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
                             PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? Convert.ToDecimal(CL.Dia) :
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
                             PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? Convert.ToDecimal(CL.Noche) :
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
                           ),
                           Total = (
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Noche) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? PS.Qty * Convert.ToDecimal(CL.Dia) :
-                            PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? PS.Qty * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? PS.Qty * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? PS.Qty * Convert.ToDecimal(CL.Noche) :
 
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "DIA" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "DIA" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
 
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
-                            PS.EnvioZeus == "0" && PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "1" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "DIA" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "DIA" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() :
+
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula4 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 4) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula3 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 3) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Cedula2 != "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / 2) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
+                            PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? PS.Qty * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
                           ),
                           PesadoEntre = (
                             PS.Cedula4 != "0" ? 4 :
                             PS.Cedula3 != "0" ? 3 :
                             PS.Cedula2 != "0" ? 2 : 1
                           )
-
                       };
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
