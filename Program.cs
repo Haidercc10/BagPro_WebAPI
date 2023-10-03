@@ -35,7 +35,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddDbContext<plasticaribeContext>(options =>
 { options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlServerOptionsAction: SqlOptions => { SqlOptions.EnableRetryOnFailure(); }); });
-builder.Services.AddAuthentication(opt => {
+builder.Services.AddAuthentication(opt =>
+{
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
@@ -60,7 +61,7 @@ builder.Services.AddCors(options =>
 
         builder =>
         {
-            builder.WithOrigins("http://192.168.0.194:4600", "http://192.168.0.85:4700", "http://192.168.0.194:4700", "http://localhost:4200", "http://192.168.0.190:9090")
+            builder.WithOrigins("http://192.168.0.193:4600", "http://192.168.0.85:4700", "http://192.168.0.193:4700", "http://localhost:4200", "http://192.168.0.190:9090")
             .AllowAnyMethod()
             .AllowAnyHeader();
         });
