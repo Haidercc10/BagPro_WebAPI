@@ -363,6 +363,17 @@ namespace BagproWebAPI.Controllers
             }
         }
 
+        //Consulta que devolerá la ultima presentación que tuvo un Item 
+        [HttpGet("getPresentacionItem/{item}")]
+        public ActionResult GetPresentacionItem(int item)
+        {
+            var presentacion = (from ot in _context.Set<ClientesOt>()
+                                where ot.ClienteItems == item
+                                orderby ot.Item descending
+                                select ot).FirstOrDefault();
+            return Ok(presentacion);
+        }
+
         // PUT: api/ClientesOt/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
