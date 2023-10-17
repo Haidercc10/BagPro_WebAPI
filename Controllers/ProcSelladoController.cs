@@ -84,6 +84,7 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       group new { PS, CL } by new
                       {
@@ -232,13 +233,31 @@ namespace BagproWebAPI.Controllers
                     $"'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
 
                 result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2 != "0") result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
-                if (item.Cedula3 != "0") result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
-                if (item.Cedula4 != "0") result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
+                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
+        }
+
+        //funcion que devolverá el primer rollo pesado
+        private IQueryable<int> PrimerRolloPesado(DateTime fecha)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return from PS in _context.Set<ProcSellado>()
+                   where PS.FechaEntrada == fecha && 
+                         !PS.Hora.StartsWith("00") &&
+                         !PS.Hora.StartsWith("01") &&
+                         !PS.Hora.StartsWith("02") &&
+                         !PS.Hora.StartsWith("03") &&
+                         !PS.Hora.StartsWith("04") &&
+                         !PS.Hora.StartsWith("05") &&
+                         !PS.Hora.StartsWith("06")
+                   orderby PS.Item ascending
+                   select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // Funcion que devolverá todos los rollos pesados en el día que se le pase y los ordenará de manera descendente
@@ -276,6 +295,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       select new
                       {
@@ -407,10 +427,10 @@ namespace BagproWebAPI.Controllers
                     $"'Valor_Total': '{item.Total}'," +
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
 
-                if (item.Cedula == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2 == persona) result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
-                if (item.Cedula3 == persona) result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
-                if (item.Cedula4 == persona) result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
+                if (item.Cedula.Trim() == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                if (item.Cedula2.Trim() == persona) result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                if (item.Cedula3.Trim() == persona) result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                if (item.Cedula4.Trim() == persona) result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
@@ -425,6 +445,7 @@ namespace BagproWebAPI.Controllers
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
@@ -558,9 +579,9 @@ namespace BagproWebAPI.Controllers
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
 
                 result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2 != "0") result.Add($"'Cedula': '{item.Cedula2}', 'Operario': '{item.Operario2}', {data}");
-                if (item.Cedula3 != "0") result.Add($"'Cedula': '{item.Cedula3}', 'Operario': '{item.Operario3}', {data}");
-                if (item.Cedula4 != "0") result.Add($"'Cedula': '{item.Cedula4}', 'Operario': '{item.Operario4}', {data}");
+                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
