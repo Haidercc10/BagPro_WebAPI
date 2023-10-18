@@ -1,8 +1,10 @@
 ﻿//using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
+using Intercom.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace BagproWebAPI.Controllers
 {
@@ -299,13 +301,183 @@ namespace BagproWebAPI.Controllers
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
         public ActionResult GetItemUltOT(int ClienteItems, string PtPresentacionNom)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var con = from ot in _context.Set<ClientesOtItem>()
                       where ot.ClienteItems == ClienteItems
                             && ot.PtPresentacionNom == PtPresentacionNom
-                      select ot;
+                      select new
+                      {
+                          //DATOS ORDEN
+                          ot.ClienteItems,
+                          ot.ClienteItemsNom,
+                          ot.DatoscantBolsa,
+                          ot.DatosvalorBolsa,
+                          ot.DatoscantKg,
+                          ot.DatosmargenKg,
+                          ot.DatosotKg,
+                          ot.DatosValorKg,
+                          ot.DatosvalorOt,
+                          Cyrel = ot.Cyrel.Trim(),
+                          Observacion = ot.Observacion.Trim(),
 
-            if (con != null) return Ok(con);
-            return NotFound();
+                          //EXTRUSION
+                          Extrusion = ot.Extrusion.Trim(),
+                          ExtMaterial = ot.ExtMaterial.Trim(),
+                          ExtMaterialNom = ot.ExtMaterialNom.Trim(),
+                          ExtFormato = ot.ExtFormato.Trim(),
+                          ExtFormatoNom = ot.ExtFormatoNom.Trim(),
+                          ExtPigmento = ot.ExtPigmento.Trim(),
+                          ExtPigmentoNom = ot.ExtPigmentoNom.Trim(),
+                          ExtUnidades = ot.ExtUnidades.Trim(),
+                          ExtUnidadesNom = ot.ExtUnidadesNom.Trim(),
+                          ot.ExtCalibre,
+                          ot.ExtPeso,
+                          ot.ExtAcho1,
+                          ot.ExtAcho2,
+                          ot.ExtAcho3,
+                          ExtTratado = ot.ExtTratado.Trim(),
+                          ExtTratadoNom = ot.ExtTratadoNom.Trim(),
+
+                          //IMPRESION
+                          Laminado2 = ot.Laminado2.Trim(),
+                          Impresion = ot.Impresion.Trim(),
+                          ImpFlexo = ot.ImpFlexo.Trim(),
+                          ImpFlexoNom = ot.ImpFlexoNom.Trim(),
+                          ot.ImpRodillo,
+                          ot.ImpPista,
+                          ImpTinta1 = ot.ImpTinta1.Trim(),
+                          ImpTinta1Nom = ot.ImpTinta1Nom.Trim(),
+                          ImpTinta2 = ot.ImpTinta2.Trim(),
+                          ImpTinta2Nom = ot.ImpTinta2Nom.Trim(),
+                          ImpTinta3 = ot.ImpTinta3.Trim(),
+                          ImpTinta3Nom = ot.ImpTinta3Nom.Trim(),
+                          ImpTinta4 = ot.ImpTinta4.Trim(),
+                          ImpTinta4Nom = ot.ImpTinta4Nom.Trim(),
+                          ImpTinta5 = ot.ImpTinta5.Trim(),
+                          ImpTinta5Nom = ot.ImpTinta5Nom.Trim(),
+                          ImpTinta6 = ot.ImpTinta6.Trim(),
+                          ImpTinta6Nom = ot.ImpTinta6Nom.Trim(),
+                          ImpTinta7 = ot.ImpTinta7.Trim(),
+                          ImpTinta7Nom = ot.ImpTinta7Nom.Trim(),
+                          ImpTinta8 = ot.ImpTinta8.Trim(),
+                          ImpTinta8Nom = ot.ImpTinta8Nom.Trim(),
+
+                          //LAMINADO
+                          Lamiando = ot.Lamiando.Trim(),
+                          LamCapa1 = ot.LamCapa1.Trim(),
+                          LamCapa1Nom = ot.LamCapa1Nom.Trim(),
+                          ot.LamCalibre1,
+                          ot.Cant1,
+                          LamCapa2 = ot.LamCapa2.Trim(),
+                          LamCapa2Nom = ot.LamCapa2Nom.Trim(),
+                          ot.LamCalibre2,
+                          ot.Cant2,
+                          LamCapa3 = ot.LamCapa3.Trim(),
+                          LamCapa3Nom = ot.LamCapa3Nom.Trim(),
+                          ot.LamCalibre3,
+                          ot.Cant3,
+
+                          //PRODUCTO TERMINADO - SELLADO - CORTE
+                          Pterminado = ot.Pterminado.Trim(),
+                          Corte = ot.Corte.Trim(),
+                          PtFormatopt = ot.PtFormatopt.Trim(),
+                          PtFormatoptNom = ot.PtFormatoptNom.Trim(),
+                          ot.PtPesopt,
+                          ot.PtMargen,
+                          ot.PtPesoMillar,
+                          ot.PtPesoRollo,
+                          ot.PtQtyBulto,
+                          PesoBulto = ot.PesoBulto.Trim(),
+                          PtPresentacion = ot.PtPresentacion.Trim(),
+                          PtPresentacionNom = ot.PtPresentacionNom.Trim(),
+                          ot.PtQtyPquete,
+                          Pesopaquete = ot.Pesopaquete.Trim(),
+                          PtSelladoPt = ot.PtSelladoPt.Trim(),
+                          PtSelladoPtNom = ot.PtSelladoPtNom.Trim(),
+                          ot.PtAnchopt,
+                          ot.PtLargopt,
+                          ot.PtFuelle,
+                          Etiqueta = ot.Etiqueta.Trim(),
+                          EtiquetaLargo = ot.EtiquetaLargo.Trim(),
+                          EtiquetaFuelle = ot.EtiquetaFuelle.Trim(),
+                          Dia = ot.Dia.Trim(),
+                          Noche = ot.Noche.Trim(),
+                          Wik_Dia_MQ_50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Dia).First(),
+                          Wik_Noche_MQ_50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Noche).First(),
+                          Wik_Dia_MQ_9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
+                          Wik_Noche_MQ_9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
+
+                          //MEZCLA
+                          Mezcla = ot.Mezcla.Trim(),
+                          MezModo = ot.MezModo.Trim(),
+                          MezModoNom = ot.MezModoNom.Trim(),
+                          ot.Ncapas,
+                          //Capa 1
+                          ot.Mezporc1,
+                          Mezprod1cap1 = ot.Mezprod1cap1.Trim(),
+                          Mezprod1cap1Nom = ot.Mezprod1cap1Nom.Trim(),
+                          ot.Porc1cap1,
+                          Mezprod2cap1 = ot.Mezprod2cap1.Trim(),
+                          Mezprod2cap1Nom = ot.Mezprod2cap1Nom.Trim(),
+                          ot.Porc2cap1,
+                          Mezprod3cap1 = ot.Mezprod3cap1.Trim(),
+                          Mezprod3cap1Nom = ot.Mezprod4cap1Nom.Trim(),
+                          ot.Porc3cap1,
+                          Mezprod4cap1 = ot.Mezprod4cap1.Trim(),
+                          Mezprod4cap1Nom = ot.Mezprod4cap1Nom.Trim(),
+                          ot.Porc4cap1,
+                          Mezpigm1cap1 = ot.Mezpigm1cap1.Trim(),
+                          Mezpigm1cap1Nom = ot.Mezpigm1cap1Nom.Trim(),
+                          ot.Porcpig1cap1,
+                          Mezpigm2cap1 = ot.Mezpigm2cap1.Trim(),
+                          Mezpigm2cap1Nom = ot.Mezpigm2cap1Nom.Trim(),
+                          ot.Porcpig2cap1,
+                          //Capa 2
+                          ot.Mezporc2,
+                          Mezprod1cap2 = ot.Mezprod1cap2.Trim(),
+                          Mezprod1cap2Nom = ot.Mezprod1cap2Nom.Trim(),
+                          ot.Porc1cap2,
+                          Mezprod2cap2 = ot.Mezprod2cap2.Trim(),
+                          Mezprod2cap2Nom = ot.Mezprod2cap2Nom.Trim(),
+                          ot.Porc2cap2,
+                          Mezprod3cap2 = ot.Mezprod3cap2.Trim(),
+                          Mezprod3cap2Nom = ot.Mezprod4cap2Nom.Trim(),
+                          ot.Porc3cap2,
+                          Mezprod4cap2 = ot.Mezprod4cap2.Trim(),
+                          Mezprod4cap2Nom = ot.Mezprod4cap2Nom.Trim(),
+                          ot.Porc4cap2,
+                          Mezpigm1cap2 = ot.Mezpigm1cap2.Trim(),
+                          Mezpigm1cap2Nom = ot.Mezpigm1cap2Nom.Trim(),
+                          ot.Porcpig1cap2,
+                          Mezpigm2cap2 = ot.Mezpigm2cap2.Trim(),
+                          Mezpigm2cap2Nom = ot.Mezpigm2cap2Nom.Trim(),
+                          ot.Porcpig2cap2,
+                          //Capa 3
+                          ot.Mezporc3,
+                          Mezprod1cap3 = ot.Mezprod1cap3.Trim(),
+                          Mezprod1cap3Nom = ot.Mezprod1cap3Nom.Trim(),
+                          ot.Porc1cap3,
+                          Mezprod2cap3 = ot.Mezprod2cap3.Trim(),
+                          Mezprod2cap3Nom = ot.Mezprod2cap3Nom.Trim(),
+                          ot.Porc2cap3,
+                          Mezprod3cap3 = ot.Mezprod3cap3.Trim(),
+                          Mezprod3cap3Nom = ot.Mezprod4cap3Nom.Trim(),
+                          ot.Porc3cap3,
+                          Mezprod4cap3 = ot.Mezprod4cap3.Trim(),
+                          Mezprod4cap3Nom = ot.Mezprod4cap3Nom.Trim(),
+                          ot.Porc4cap3,
+                          Mezpigm1cap3 = ot.Mezpigm1cap3.Trim(),
+                          Mezpigm1cap3Nom = ot.Mezpigm1cap3Nom.Trim(),
+                          ot.Porcpig1cap3,
+                          Mezpigm2cap3 = ot.Mezpigm2cap3.Trim(),
+                          Mezpigm2cap3Nom = ot.Mezpigm2cap3Nom.Trim(),
+                          ot.Porcpig2cap3,
+
+
+                      };
+
+            return con.Any() ? Ok(con) : NotFound();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /** Consultar ultima OT*/
