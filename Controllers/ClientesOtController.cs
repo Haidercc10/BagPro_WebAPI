@@ -1,10 +1,8 @@
 ﻿//using Microsoft.EntityFrameworkCore;
 using BagproWebAPI.Models;
-using Intercom.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace BagproWebAPI.Controllers
 {
@@ -339,7 +337,7 @@ namespace BagproWebAPI.Controllers
                           ExtTratadoNom = ot.ExtTratadoNom.Trim(),
 
                           //IMPRESION
-                          Laminado2 = ot.Laminado2.Trim(),
+                          Lamiando = ot.Lamiando.Trim(),
                           Impresion = ot.Impresion.Trim(),
                           ImpFlexo = ot.ImpFlexo.Trim(),
                           ImpFlexoNom = ot.ImpFlexoNom.Trim(),
@@ -363,7 +361,7 @@ namespace BagproWebAPI.Controllers
                           ImpTinta8Nom = ot.ImpTinta8Nom.Trim(),
 
                           //LAMINADO
-                          Lamiando = ot.Lamiando.Trim(),
+                          Laminado2 = ot.Laminado2.Trim(),
                           LamCapa1 = ot.LamCapa1.Trim(),
                           LamCapa1Nom = ot.LamCapa1Nom.Trim(),
                           ot.LamCalibre1,
