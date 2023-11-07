@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BagproWebAPI.Controllers
 {
@@ -441,6 +443,86 @@ namespace BagproWebAPI.Controllers
 
             return Ok(producidoExt.Concat(producidoSell).Concat(desperdicios));
 #pragma warning restore CS8629 // Nullable value type may be null.
+        }
+
+        // Consulta que devolverá la producción de las áreas en un rango de fechas
+        [HttpGet("getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}")]
+        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "")
+        {
+#pragma warning disable IDE0075 // Simplify conditional expression
+#pragma warning disable CS8629 // Nullable value type may be null.
+#pragma warning disable CS8604 // Possible null reference argument.
+
+            List<string> turnosDia = new List<string>();
+            turnosDia.Add("DIA");
+            turnosDia.Add("RD"); 
+
+            List<string> turnosNoche = new List<string>();
+            turnosNoche.Add("NOCHE");
+            turnosNoche.Add("RN");
+
+            var ProcExt = from ext in _context.Set<ProcExtrusion>()
+                          where ext.Fecha >= fechaInicio &&
+                                ext.Fecha <= fechaFin &&
+                                (orden != "" ? ext.Ot.Trim() == orden : true) &&
+                                (proceso != "" ? ext.NomStatus == proceso : true) &&
+                                (cliente != "" ? ext.Cliente == cliente : true) &&
+                                (producto != "" ? ext.ClienteItem == producto : true) &&
+                                (turno != "" ? turno == "DIA" ? turnosDia.Contains(ext.Turno) : turno == "NOCHE" ? turnosNoche.Contains(ext.Turno) : true : true) &&
+                                (envioZeus != "" ? envioZeus == ext.EnvioZeus : true)
+                          select new
+                          {
+                              Rollo = Convert.ToInt32(ext.Item),
+                              Orden = Convert.ToInt32(ext.Ot),
+                              IdCliente = Convert.ToString(ext.Cliente),
+                              Cliente = Convert.ToString(ext.ClienteNombre),
+                              Item = Convert.ToString(ext.ClienteItem),
+                              Referencia = Convert.ToString(ext.ClienteItemNombre),
+                              Cantidad = Convert.ToDecimal(ext.ExtBruto),
+                              Peso = Convert.ToDecimal(ext.Extnetokg),
+                              Presentacion = Convert.ToString("KLS"),
+                              Turno = Convert.ToString(ext.Turno),
+                              Fecha = ext.Fecha.Value,
+                              Hora = Convert.ToString(ext.Hora),
+                              Maquina = Convert.ToInt16(ext.Maquina),
+                              EnvioZeus = Convert.ToString(ext.EnvioZeus),
+                              Proceso = ext.NomStatus,
+                          };
+
+            var ProcSel = from sel in _context.Set<ProcSellado>()
+                          where sel.FechaEntrada >= fechaInicio &&
+                                sel.FechaEntrada <= fechaFin &&
+                                (orden != "" ? sel.Ot.Trim() == orden : true) &&
+                                (proceso != "" ? sel.NomStatus == proceso : true) &&
+                                (cliente != "" ? sel.Cliente == cliente : true) &&
+                                (producto != "" ? sel.Referencia == producto : true) &&
+                                (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
+                                (envioZeus != "" ? envioZeus == sel.EnvioZeus : true)
+                          select new
+                          {
+                              Rollo = Convert.ToInt32(sel.Item),
+                              Orden = Convert.ToInt32(sel.Ot),
+                              IdCliente = Convert.ToString(sel.CodCliente),
+                              Cliente = Convert.ToString(sel.Cliente),
+                              Item = Convert.ToString(sel.Referencia),
+                              Referencia = Convert.ToString(sel.NomReferencia),
+                              Cantidad = Convert.ToDecimal(sel.Qty),
+                              Peso = Convert.ToDecimal(sel.Peso),
+                              Presentacion = Convert.ToString(sel.Unidad),
+                              Turno = Convert.ToString(sel.Turnos),
+                              Fecha =sel.FechaEntrada,
+                              Hora = Convert.ToString(sel.Hora),
+                              Maquina = Convert.ToInt16(sel.Maquina),
+                              EnvioZeus = Convert.ToString(sel.EnvioZeus),
+                              Proceso = sel.NomStatus,
+                          };
+
+            var procesos = ProcExt.Concat(ProcSel);
+            return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
+
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8629 // Nullable value type may be null.
+#pragma warning restore IDE0075 // Simplify conditional expression
         }
 
         // PUT: api/ProcExtrusion/5
