@@ -559,7 +559,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        public IQueryable EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
+        public async Task<ActionResult> EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
         {
             string today = DateTime.Today.ToString("yyyy-MM-dd");
             SoapRequestAction request = new SoapRequestAction();
