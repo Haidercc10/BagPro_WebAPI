@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using ServiceReference1;
-using StackExchange.Redis;
-using System.Linq;
 using System.ServiceModel;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BagproWebAPI.Controllers
 {
@@ -533,13 +529,14 @@ namespace BagproWebAPI.Controllers
         public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             int count = 0;
             foreach(var rollo in rollos)
             {
                 var datos = (from pro in _context.Set<ProcExtrusion>()
                              join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                              where pro.Item == rollo &&
-                                   pro.EnvioZeus == "0"
+                                   pro.EnvioZeus.Trim() == "0"
                              select new
                              {
                                  Orden = pro.Ot,
@@ -550,12 +547,14 @@ namespace BagproWebAPI.Controllers
                                  Costo = ot.DatoscantKg
                              }).FirstOrDefault();
 
-                EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                PutEnvioZeus(datos.Rollo);
                 count++;
                 if (count == rollos.Count) return Ok();
             }
 
             return Ok();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -688,6 +687,27 @@ namespace BagproWebAPI.Controllers
             }
 
             return NoContent();
+        }
+
+        public async Task<IActionResult> PutEnvioZeus(int rollo)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == rollo select pro).FirstOrDefault();
+            procExtrusion.EnvioZeus = "1";
+            _context.Entry(procExtrusion).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProcExtrusionExists(rollo)) return NotFound();
+                else throw;
+            }
+
+            return NoContent();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // POST: api/ProcExtrusion

@@ -635,7 +635,7 @@ namespace BagproWebAPI.Controllers
                 var datos = (from pro in _context.Set<ProcSellado>()
                              join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                              where pro.Item == rollo &&
-                                   pro.EnvioZeus == "0"
+                                   pro.EnvioZeus.Trim() == "0"
                              select new
                              {
                                  Orden = pro.Ot,
@@ -647,12 +647,32 @@ namespace BagproWebAPI.Controllers
                              }).FirstOrDefault();
 
                 ProcExtrusionController procExtrusionController = new ProcExtrusionController(_context);
-                procExtrusionController.EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                await procExtrusionController.EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                await PutEnvioZeus(datos.Rollo);
                 count++;
                 if (count == rollos.Count) return Ok();
             }
-
             return Ok();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        public async Task<IActionResult> PutEnvioZeus(int rollo)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefault();
+            procSellado.EnvioZeus = "1";
+            _context.Entry(procSellado).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return NoContent();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
