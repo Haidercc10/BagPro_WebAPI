@@ -2,7 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using ServiceReference1;
+using StackExchange.Redis;
 using System.Linq;
+using System.ServiceModel;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BagproWebAPI.Controllers
@@ -523,6 +527,137 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8629 // Nullable value type may be null.
 #pragma warning restore IDE0075 // Simplify conditional expression
+        }
+
+        [HttpPost("ajusteExistencia")]
+        public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            int count = 0;
+            foreach(var rollo in rollos)
+            {
+                var datos = (from pro in _context.Set<ProcExtrusion>()
+                             join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
+                             where pro.Item == rollo &&
+                                   pro.EnvioZeus == "0"
+                             select new
+                             {
+                                 Orden = pro.Ot,
+                                 Item = pro.ClienteItem,
+                                 Presentacion = ot.PtPresentacionNom,
+                                 Rollo = pro.Item,
+                                 Cantidad = pro.Extnetokg,
+                                 Costo = ot.DatoscantKg
+                             }).FirstOrDefault();
+
+                EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                count++;
+                if (count == rollos.Count) return Ok();
+            }
+
+            return Ok();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        public IQueryable EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
+        {
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            SoapRequestAction request = new SoapRequestAction();
+            request.User = "wsZeusInvProd";
+            request.Password = "wsZeusInvProd";
+            request.Body = $"<Ajuste>" +
+                                $"<Op>I</Op>" +
+                                $"<Cabecera>" +
+                                    $"<Detalle>{ordenTrabajo}</Detalle>" +
+                                    "<Concepto>001</Concepto>" +
+                                    "<Consecutivo>0</Consecutivo>" +
+                                    $"<Fecha>{today}</Fecha>" +
+                                    "<Estado></Estado>" +
+                                    "<Solicitante>7200000</Solicitante>" +
+                                    "<Aprueba></Aprueba>" +
+                                    "<Fuente>MA</Fuente>" +
+                                    "<Serie>00</Serie>" +
+                                    "<Usuario>zeussystem</Usuario>" +
+                                    "<Documento></Documento>" +
+                                    "<Documentorevertido></Documentorevertido>" +
+                                    "<Bodega>003</Bodega>" +
+                                    "<Grupo></Grupo>" +
+                                    "<Origen>I</Origen>" +
+                                    "<ConsecutivoRecosteo>0</ConsecutivoRecosteo>" +
+                                    "<TipoDocumentoExterno></TipoDocumentoExterno>" +
+                                    "<ConsecutivoExterno></ConsecutivoExterno>" +
+                                    "<EsAjustePorDistribucion></EsAjustePorDistribucion>" +
+                                    "<ItemsBodegaVirtual></ItemsBodegaVirtual>" +
+                                    "<Clasificaciones></Clasificaciones>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<EsInicioNIIF></EsInicioNIIF>" +
+                                    "<UtilizarZmlSpId></UtilizarZmlSpId>" +
+                                    "<DatoExterno1></DatoExterno1>" +
+                                    "<DatoExterno2></DatoExterno2>" +
+                                    "<DatoExterno3></DatoExterno3>" +
+                                    "<Moneda></Moneda>" +
+                                    "<TasaCambio>1</TasaCambio>" +
+                                    "<BU>Local</BU>" +
+                                "</Cabecera>" +
+                                "<Productos>" +
+                                    $"<CodigoArticulo>{articulo}</CodigoArticulo>" +
+                                    $"<Presentacion>{presentacion}</Presentacion>" +
+                                    "<CodigoLote>0</CodigoLote>" +
+                                    "<CodigoBodega>003</CodigoBodega>" +
+                                    "<CodigoUbicacion></CodigoUbicacion>" +
+                                    "<CodigoClasificacion>0</CodigoClasificacion>" +
+                                    "<CodigoReferencia></CodigoReferencia>" +
+            "<Serial>0</Serial>" +
+                                    $"<Detalle>{rollo}</Detalle>" +
+            $"<Cantidad>{cantidad}</Cantidad>" +
+                                    $"<PrecioUnidad>{costo}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{costo}</PrecioUnidad2>" +
+                                    "<Concepto_Codigo></Concepto_Codigo>" +
+                                    "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
+                                    "<Servicios>" +
+                                    "<CodigoServicios>001</CodigoServicios>" +
+                                    "<Referencia></Referencia>" +
+                                    "<Detalle></Detalle>" +
+                                    "<AuxiliarAbierto></AuxiliarAbierto>" +
+                                    "<CentroCosto>0202</CentroCosto>" +
+                                    "<Tercero>800188732</Tercero>" +
+                                    "<Proveedor></Proveedor>" +
+                                    "<TipoDocumentoCartera></TipoDocumentoCartera>" +
+                                    "<DocumentoCartera></DocumentoCartera>" +
+                                    "<Vencimiento></Vencimiento>" +
+                                    "<Cliente></Cliente>" +
+                                    "<Vendedor></Vendedor>" +
+                                    "<ItemsContable></ItemsContable>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<CuentaMovimiento></CuentaMovimiento>" +
+                                    "<Moneda></Moneda>" +
+                                    "<Moneda></Moneda>" +
+                                    "</Servicios>" +
+                                "</Productos>" +
+                            "</Ajuste>";
+            request.DynamicProperty = "4";
+            request.Action = "Inventario";
+            request.TypeSQL = "true";
+
+            var binding = new BasicHttpBinding()
+            {
+                Name = "BasicHttpBinding_IFakeService",
+                MaxBufferSize = 2147483647,
+                MaxReceivedMessageSize = 2147483647
+            };
+
+            var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
+            WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
+            SoapResponse response = await client.ExecuteActionSOAPAsync(request);
+            return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
         // PUT: api/ProcExtrusion/5

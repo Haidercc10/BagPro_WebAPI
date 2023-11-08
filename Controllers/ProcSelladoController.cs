@@ -624,5 +624,36 @@ namespace BagproWebAPI.Controllers
 
             return Ok(procSellado);
         }
+
+        [HttpPost("ajusteExistencia")]
+        public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            int count = 0;
+            foreach (var rollo in rollos)
+            {
+                var datos = (from pro in _context.Set<ProcSellado>()
+                             join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
+                             where pro.Item == rollo &&
+                                   pro.EnvioZeus == "0"
+                             select new
+                             {
+                                 Orden = pro.Ot,
+                                 Item = pro.Referencia,
+                                 Presentacion = ot.PtPresentacionNom,
+                                 Rollo = pro.Item,
+                                 Cantidad = pro.Qty,
+                                 Costo = ot.DatoscantKg
+                             }).FirstOrDefault();
+
+                ProcExtrusionController procExtrusionController = new ProcExtrusionController(_context);
+                procExtrusionController.EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                count++;
+                if (count == rollos.Count) return Ok();
+            }
+
+            return Ok();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
     }
 }
