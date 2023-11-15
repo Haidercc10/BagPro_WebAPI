@@ -338,13 +338,13 @@ namespace BagproWebAPI.Controllers
                           ValorUnidad = ot.DatosvalorBolsa,
 
                           // Información de Extrusión
-                          Id_Material = ot.ExtMaterial.Trim(),
+                          Id_Material = Convert.ToInt32(ot.ExtMaterial),
                           Material = ot.ExtMaterialNom.Trim(),
-                          Id_Pigmento_Extrusion = ot.ExtPigmento.Trim(),
+                          Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
                           Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
-                          Id_Formato_Extrusion = ot.ExtFormato.Trim(),
+                          Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato),
                           Formato_Extrusin = ot.ExtFormatoNom.Trim(),
-                          Id_Tratado = ot.ExtTratado.Trim(),
+                          Id_Tratado = Convert.ToInt32(ot.ExtTratado),
                           Tratado = ot.ExtTratadoNom.Trim(),
                           Calibre_Extrusion = ot.ExtCalibre,
                           Und_Extrusion = ot.ExtUnidadesNom.Trim(),
@@ -748,6 +748,44 @@ namespace BagproWebAPI.Controllers
                           peso = ot.Sum(x => x.DatosotKg)
                       };
             return Ok(con);
+        }
+
+        [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
+        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string cliente = "", string item = "", string material = "", string pigmento = "", string ancho = "", string largo = "", string fuelle = "", string calibre = "")
+        {
+#pragma warning disable IDE0075 // Simplify conditional expression
+            var ordenesTrabajo = from ot in _context.Set<ClientesOt>()
+                                 where ot.FechaCrea >= fechaInicial &&
+                                       ot.FechaCrea <= fechaFinal &&
+                                       (cliente != "" ? ot.ClienteNom == cliente : true) &&
+                                       (item != "" ? Convert.ToString(ot.ClienteItems) == item : true) &&
+                                       (material != "" ? ot.ExtMaterialNom == material : true) &&
+                                       (pigmento != "" ? ot.ExtPigmentoNom == pigmento : true) &&
+                                       (ancho != "" ? ot.PtAnchopt == Convert.ToDecimal(ancho) : true) &&
+                                       (largo != "" ? ot.PtLargopt == Convert.ToDecimal(largo) : true) &&
+                                       (fuelle != "" ? ot.PtFuelle == Convert.ToDecimal(fuelle) : true) &&
+                                       (calibre != "" ? ot.ExtCalibre == Convert.ToDecimal(calibre) : true)
+                                 select new
+                                 {
+                                     OrdenTrabajo = ot.Item,
+                                     FechaCreacion = ot.FechaCrea,
+                                     Cliente = ot.ClienteNom,
+                                     Item = ot.ClienteItems,
+                                     Referencia = ot.ClienteItemsNom,
+                                     Precio = ot.PtPresentacionNom == "Kilo" ? ot.DatosValorKg : ot.DatosvalorBolsa,
+                                     Existencia = 0,
+                                     Presentacion = ot.PtPresentacionNom,
+                                     Material = ot.ExtMaterialNom,
+                                     Pigmento = ot.ExtPigmentoNom,
+                                     UndExtrusion = ot.ExtUnidadesNom,
+                                     Calibre = ot.ExtCalibre,
+                                     Formato = ot.PtFormatoptNom,
+                                     Ancho = ot.PtAnchopt,
+                                     Largo = ot.PtLargopt,
+                                     Fuelle = ot.PtFuelle,
+                                 };
+            return Ok(ordenesTrabajo);
+#pragma warning restore IDE0075 // Simplify conditional expression
         }
 
         // POST: api/ClientesOt

@@ -648,7 +648,8 @@ namespace BagproWebAPI.Controllers
 
                 ProcExtrusionController procExtrusionController = new ProcExtrusionController(_context);
                 await procExtrusionController.EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
-                await PutEnvioZeus(datos.Rollo);
+                //await PutEnvioZeus(datos.Rollo);
+                CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
                 count++;
                 if (count == rollos.Count) return Ok();
             }
@@ -656,6 +657,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        [HttpPut("putEnvioZeus{rollo}")]
         public async Task<IActionResult> PutEnvioZeus(int rollo)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.

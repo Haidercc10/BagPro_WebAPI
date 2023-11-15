@@ -548,7 +548,8 @@ namespace BagproWebAPI.Controllers
                              }).FirstOrDefault();
 
                 await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
-                PutEnvioZeus(datos.Rollo);
+                //PutEnvioZeus(datos.Rollo);
+                CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
                 count++;
                 if (count == rollos.Count) return Ok();
             }
@@ -558,6 +559,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        [HttpGet("EnviarAjuste")]
         public async Task<ActionResult> EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
         {
             string today = DateTime.Today.ToString("yyyy-MM-dd");
@@ -689,6 +691,7 @@ namespace BagproWebAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("putEnvioZeus{rollo}")]
         public async Task<IActionResult> PutEnvioZeus(int rollo)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
