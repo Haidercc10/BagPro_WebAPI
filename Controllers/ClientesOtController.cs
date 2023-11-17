@@ -498,6 +498,212 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        /**Consulta por item y presentación*/
+        [HttpGet("getOrdenItemPresentacion/{orden}/{ClienteItems}/{PtPresentacionNom}")]
+        public ActionResult GetOt(int orden, int ClienteItems, string PtPresentacionNom)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
+                               from clot in _context.Set<ClientesOt>()
+                               where clot.Item == orden
+                                     && ot.ClienteItems == ClienteItems
+                                     && ot.PtPresentacionNom == PtPresentacionNom
+                                     && clot.ClienteItems == ot.ClienteItems
+                               select new
+                               {
+                                   Id_OT = clot.Id,
+                                   Numero_Orden = clot.Item,
+                                   Id_SedeCliente = "",
+                                   Id_Cliente = clot.Cliente,
+                                   Cliente = clot.ClienteNom.Trim(),
+                                   Ciudad = "",
+                                   Direccion = "",
+                                   Id_Producto = clot.ClienteItems,
+                                   Producto = clot.ClienteItemsNom.Trim(),
+                                   Id_Presentacion = clot.PtPresentacion,
+                                   Presentacion = clot.PtPresentacionNom.Trim(),
+                                   Margen = clot.PtMargen,
+                                   Fecha_Creacion = clot.FechaCrea,
+                                   Fecha_Entrega = clot.FechaCrea,
+                                   Estado_Orden = "",
+                                   Estado = "",
+                                   Id_Pedido = "",
+                                   Id_Vendedor = "",
+                                   Vendedor = "",
+                                   Observacion = clot.Observacion.Trim(),
+                                   Cyrel = clot.Cyrel.Trim() == "1" ? true : false,
+                                   Extrusion = clot.Extrusion.Trim() == "1" ? true : false,
+                                   Impresion = clot.Impresion.Trim() == "1" ? true : false,
+                                   Rotograbado = clot.Lamiando.Trim() == "1" ? true : false,
+                                   Laminado = clot.Laminado2.Trim() == "1" ? true : false,
+                                   Corte = clot.Corte.Trim() == "1" ? true : false,
+                                   Sellado = clot.Pterminado.Trim() == "1" ? true : false,
+                                   Cantidad_Pedida = clot.PtPresentacionNom == "Kilo" ? clot.DatoscantKg : clot.DatoscantBolsa,
+                                   Peso_Neto = clot.DatosotKg,
+                                   ValorKg = clot.DatosValorKg,
+                                   ValorUnidad = clot.DatosvalorBolsa,
+
+                                   // Información de Extrusión
+                                   Id_Material = Convert.ToInt32(clot.ExtMaterial),
+                                   Material = clot.ExtMaterialNom.Trim(),
+                                   Id_Pigmento_Extrusion = Convert.ToInt32(clot.ExtPigmento),
+                                   Pigmento_Extrusion = clot.ExtPigmentoNom.Trim(),
+                                   Id_Formato_Extrusion = Convert.ToInt32(clot.ExtFormato),
+                                   Formato_Extrusin = clot.ExtFormatoNom.Trim(),
+                                   Id_Tratado = Convert.ToInt32(clot.ExtTratado),
+                                   Tratado = clot.ExtTratadoNom.Trim(),
+                                   Calibre_Extrusion = clot.ExtCalibre,
+                                   Und_Extrusion = clot.ExtUnidadesNom.Trim(),
+                                   Ancho1_Extrusion = clot.ExtAcho1,
+                                   Ancho2_Extrusion = clot.ExtAcho2,
+                                   Ancho3_Extrusion = clot.ExtAcho3,
+                                   Peso_Extrusion = clot.ExtPeso,
+
+                                   // Información de Impresión
+                                   Id_Tipo_Imptesion = clot.ImpFlexo.Trim(),
+                                   Tipo_Impresion = clot.ImpFlexoNom.Trim(),
+                                   Rodillo = clot.ImpRodillo,
+                                   Pista = clot.ImpPista,
+                                   Id_Tinta1 = clot.ImpTinta1.Trim(),
+                                   Tinta1 = clot.ImpTinta1Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta1Nom.Trim(),
+                                   Id_Tinta2 = clot.ImpTinta2.Trim(),
+                                   Tinta2 = clot.ImpTinta2Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta2Nom.Trim(),
+                                   Id_Tinta3 = clot.ImpTinta3.Trim(),
+                                   Tinta3 = clot.ImpTinta3Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta3Nom.Trim(),
+                                   Id_Tinta4 = clot.ImpTinta4.Trim(),
+                                   Tinta4 = clot.ImpTinta4Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta4Nom.Trim(),
+                                   Id_Tinta5 = clot.ImpTinta5.Trim(),
+                                   Tinta5 = clot.ImpTinta5Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta5Nom.Trim(),
+                                   Id_Tinta6 = clot.ImpTinta6.Trim(),
+                                   Tinta6 = clot.ImpTinta6Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta6Nom.Trim(),
+                                   Id_Tinta7 = clot.ImpTinta7.Trim(),
+                                   Tinta7 = clot.ImpTinta7Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta7Nom.Trim(),
+                                   Id_Tinta8 = clot.ImpTinta8.Trim(),
+                                   Tinta8 = clot.ImpTinta8Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta8Nom.Trim(),
+
+                                   // Información de Laminado
+                                   Id_Capa1 = clot.LamCapa1.Trim(),
+                                   Laminado_Capa1 = clot.LamCapa1Nom.Trim(),
+                                   Calibre_Laminado_Capa1 = clot.LamCalibre1,
+                                   Cantidad_Laminado_Capa1 = clot.Cant1,
+                                   Id_Capa2 = clot.LamCapa2.Trim(),
+                                   Laminado_Capa2 = clot.LamCapa2Nom.Trim(),
+                                   Calibre_Laminado_Capa2 = clot.LamCalibre2,
+                                   Cantidad_Laminado_Capa2 = clot.Cant2,
+                                   Id_Capa3 = clot.LamCapa3.Trim(),
+                                   Laminado_Capa3 = clot.LamCapa3Nom.Trim(),
+                                   Calibre_Laminado_Capa3 = clot.LamCalibre3,
+                                   Cantidad_Laminado_Capa3 = clot.Cant3,
+
+                                   // Información de Sellado
+                                   Id_Formato_Producto = clot.PtFormatopt.Trim(),
+                                   Formato_Producto = clot.PtFormatoptNom.Trim(),
+                                   SelladoCorte_Ancho = clot.PtAnchopt,
+                                   SelladoCorte_Largo = clot.PtLargopt,
+                                   SelladoCorte_Fuelle = clot.PtFuelle,
+                                   SelladoCorte_Etiqueta_Ancho = clot.Etiqueta.Trim(),
+                                   SelladoCorte_Etiqueta_Largo = clot.EtiquetaLargo.Trim(),
+                                   SelladoCorte_Etiqueta_Fuelle = clot.EtiquetaFuelle.Trim(),
+                                   TpSellado_Id = clot.PtSelladoPt.Trim(),
+                                   TpSellados_Nombre = clot.PtSelladoPtNom.Trim(),
+                                   SelladoCorte_PesoMillar = clot.PtPesoMillar,
+                                   SelladoCorte_PesoBulto = clot.PesoBulto,
+                                   SelladoCorte_CantBolsasBulto = clot.PtQtyBulto,
+                                   SelladoCorte_CantBolsasPaquete = clot.Pesopaquete,
+                                   SelladoCorte_PesoPaquete = clot.PtQtyPquete,
+                                   SelladoCorte_PesoProducto = clot.PtPesopt,
+                                   SelladoCorte_PrecioSelladoDia = ot.Dia,
+                                   SelladoCorte_PrecioSelladoNoche = ot.Noche,
+                                   SelladoCorte_PrecioDia_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 50 select wik.Dia).First(),
+                                   SelladoCorte_PrecioNoche_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 50 select wik.Noche).First(),
+                                   SelladoCorte_PrecioDia_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
+                                   SelladoCorte_PrecioNoche_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
+
+                                   // Información de Mezclas
+                                   Mezcla_Id = clot.MezModo.Trim(),
+                                   Mezcla_Nombre = clot.MezModoNom.Trim(),
+                                   Mezcla_NroCapas = clot.Ncapas,
+                                   // Informacion Capa 1
+                                   Mezcla_PorcentajeCapa1 = clot.Mezporc1,
+                                   Mezcla_PorcentajeMaterial1_Capa1 = clot.Porc1cap1,
+                                   MezMaterial_Id1xCapa1 = clot.Mezprod1cap1.Trim(),
+                                   M1C1_nombre = clot.Mezprod1cap1Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial2_Capa1 = clot.Porc2cap1,
+                                   MezMaterial_Id2xCapa1 = clot.Mezprod2cap1.Trim(),
+                                   M2C1_nombre = clot.Mezprod2cap1Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial3_Capa1 = clot.Porc3cap1,
+                                   MezMaterial_Id3xCapa1 = clot.Mezprod3cap1.Trim(),
+                                   M3C1_nombre = clot.Mezprod3cap1Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial4_Capa1 = clot.Porc4cap1,
+                                   MezMaterial_Id4xCapa1 = clot.Mezprod4cap1.Trim(),
+                                   M4C1_nombre = clot.Mezprod4cap1Nom.Trim(),
+
+                                   Mezcla_PorcentajePigmto1_Capa1 = clot.Porcpig1cap1,
+                                   MezPigmto_Id1xCapa1 = clot.Mezpigm1cap1.Trim(),
+                                   P1C1_Nombre = clot.Mezpigm1cap1.Trim(),
+
+                                   Mezcla_PorcentajePigmto2_Capa1 = clot.Porcpig2cap1,
+                                   MezPigmto_Id2xCapa1 = clot.Mezpigm2cap1.Trim(),
+                                   P2C1_Nombre = clot.Mezpigm2cap1.Trim(),
+                                   //Informacion Capa 2
+                                   Mezcla_PorcentajeCapa2 = clot.Mezporc2,
+                                   Mezcla_PorcentajeMaterial1_Capa2 = clot.Porc1cap2,
+                                   MezMaterial_Id1xCapa2 = clot.Mezprod1cap2.Trim(),
+                                   M1C2_nombre = clot.Mezprod1cap2Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial2_Capa2 = clot.Porc2cap2,
+                                   MezMaterial_Id2xCapa2 = clot.Mezprod2cap2.Trim(),
+                                   M2C2_nombre = clot.Mezprod2cap2Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial3_Capa2 = clot.Porc3cap2,
+                                   MezMaterial_Id3xCapa2 = clot.Mezprod3cap2.Trim(),
+                                   M3C2_nombre = clot.Mezprod3cap2Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial4_Capa2 = clot.Porc4cap2,
+                                   MezMaterial_Id4xCapa2 = clot.Mezprod4cap2.Trim(),
+                                   M4C2_nombre = clot.Mezprod4cap2Nom.Trim(),
+
+                                   Mezcla_PorcentajePigmto1_Capa2 = clot.Porcpig1cap2,
+                                   MezPigmto_Id1xCapa2 = clot.Mezpigm1cap2.Trim(),
+                                   P1C2_Nombre = clot.Mezpigm1cap2.Trim(),
+
+                                   Mezcla_PorcentajePigmto2_Capa2 = clot.Porcpig2cap2,
+                                   MezPigmto_Id2xCapa2 = clot.Mezpigm2cap2.Trim(),
+                                   P2C2_Nombre = clot.Mezpigm2cap2.Trim(),
+                                   //Informacion Capa 3
+                                   Mezcla_PorcentajeCapa3 = clot.Mezporc3,
+                                   Mezcla_PorcentajeMaterial1_Capa3 = clot.Porc1cap3,
+                                   MezMaterial_Id1xCapa3 = clot.Mezprod1cap3.Trim(),
+                                   M1C3_nombre = clot.Mezprod1cap3Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial2_Capa3 = clot.Porc2cap3,
+                                   MezMaterial_Id2xCapa3 = clot.Mezprod2cap3.Trim(),
+                                   M2C3_nombre = clot.Mezprod2cap3Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial3_Capa3 = clot.Porc3cap3,
+                                   MezMaterial_Id3xCapa3 = clot.Mezprod3cap3.Trim(),
+                                   M3C3_nombre = clot.Mezprod3cap3Nom.Trim(),
+
+                                   Mezcla_PorcentajeMaterial4_Capa3 = clot.Porc4cap3,
+                                   MezMaterial_Id4xCapa3 = clot.Mezprod4cap3.Trim(),
+                                   M4C3_nombre = clot.Mezprod4cap3Nom.Trim(),
+
+                                   Mezcla_PorcentajePigmto1_Capa3 = clot.Porcpig1cap3,
+                                   MezPigmto_Id1xCapa3 = clot.Mezpigm1cap3.Trim(),
+                                   P1C3_Nombre = clot.Mezpigm1cap3.Trim(),
+
+                                   Mezcla_PorcentajePigmto2_Capa3 = clot.Porcpig2cap3,
+                                   MezPigmto_Id2xCapa3 = clot.Mezpigm2cap3.Trim(),
+                                   P2C3_Nombre = clot.Mezpigm2cap3.Trim(),
+                               };
+
+            return ordenTrabajo.Any() ? Ok(ordenTrabajo) : NotFound();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         /** Consultar ultima OT*/
         [HttpGet("UltimaOT/")]
         public ActionResult<ClientesOt> GetUltimaOt()
@@ -769,6 +975,10 @@ namespace BagproWebAPI.Controllers
                                  {
                                      OrdenTrabajo = ot.Item,
                                      FechaCreacion = ot.FechaCrea,
+                                     IdCliente = ot.Cliente,
+                                     NitCliente = (from cl in _context.Clientes
+                                                   where cl.CodBagpro == Convert.ToString(ot.Cliente)
+                                                   select cl.IdentNro).FirstOrDefault(),
                                      Cliente = ot.ClienteNom,
                                      Item = ot.ClienteItems,
                                      Referencia = ot.ClienteItemsNom,
