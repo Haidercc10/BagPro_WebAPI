@@ -342,7 +342,7 @@ namespace BagproWebAPI.Controllers
                           Material = ot.ExtMaterialNom.Trim(),
                           Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
                           Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
-                          Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato),
+                          Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato) == 5 ? 4 : Convert.ToInt32(ot.ExtFormato),
                           Formato_Extrusin = ot.ExtFormatoNom.Trim(),
                           Id_Tratado = Convert.ToInt32(ot.ExtTratado),
                           Tratado = ot.ExtTratadoNom.Trim(),
