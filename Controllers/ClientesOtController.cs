@@ -499,15 +499,13 @@ namespace BagproWebAPI.Controllers
         }
 
         /**Consulta por item y presentación*/
-        [HttpGet("getOrdenItemPresentacion/{orden}/{ClienteItems}/{PtPresentacionNom}")]
-        public ActionResult GetOt(int orden, int ClienteItems, string PtPresentacionNom)
+        [HttpGet("getOrdenDeTrabajo/{orden}")]
+        public ActionResult GetOrdenDeTrabajo(int orden)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
                                from clot in _context.Set<ClientesOt>()
                                where clot.Item == orden
-                                     && ot.ClienteItems == ClienteItems
-                                     && ot.PtPresentacionNom == PtPresentacionNom
                                      && clot.ClienteItems == ot.ClienteItems
                                select new
                                {
@@ -542,6 +540,9 @@ namespace BagproWebAPI.Controllers
                                    Peso_Neto = clot.DatosotKg,
                                    ValorKg = clot.DatosValorKg,
                                    ValorUnidad = clot.DatosvalorBolsa,
+                                   NitCliente = (from cl in _context.Clientes
+                                                 where cl.CodBagpro == Convert.ToString(clot.Cliente)
+                                                 select cl.IdentNro).FirstOrDefault(),
 
                                    // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
