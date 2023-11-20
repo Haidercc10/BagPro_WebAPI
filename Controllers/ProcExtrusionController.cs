@@ -661,6 +661,16 @@ namespace BagproWebAPI.Controllers
             return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
+        [HttpGet("getDatosRollosPesados/{orden}/{proceso}")]
+        public ActionResult GetDatosRollosPesados(string orden, string proceso)
+        {
+            var rollosPesados = from pe in _context.Set<ProcExtrusion>()
+                                where pe.Ot == orden &&
+                                      pe.NomStatus == proceso
+                                select pe;
+            return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
+        }
+
         // PUT: api/ProcExtrusion/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)

@@ -1314,3 +1314,4 @@ C:\Users\Sistemas\source\repos\Haidercc10\BagPro_WebAPI\bin\Release\net7.0\zh-Ha
 C:\Users\Sistemas\source\repos\Haidercc10\BagPro_WebAPI\bin\Release\net7.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
 C:\Users\Sistemas\source\repos\Haidercc10\BagPro_WebAPI\bin\Release\net7.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
 C:\Users\Sistemas\source\repos\Haidercc10\BagPro_WebAPI\bin\Release\net7.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+C:\Users\Sistemas\Documents\GitHub\BagPro_API\obj\Release\net7.0\BagproWebAPI.sourcelink.json
