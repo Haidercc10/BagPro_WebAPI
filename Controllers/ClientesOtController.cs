@@ -344,6 +344,9 @@ namespace BagproWebAPI.Controllers
                           Peso_Neto = ot.DatosotKg,
                           ValorKg = ot.DatosValorKg,
                           ValorUnidad = ot.DatosvalorBolsa,
+                          NitCliente = (from cl in _context.Clientes
+                                        where cl.CodBagpro == Convert.ToString(ot.Cliente)
+                                        select cl.IdentNro).FirstOrDefault(),
 
                           // Información de Extrusión
                           Id_Material = Convert.ToInt32(ot.ExtMaterial),
@@ -1071,7 +1074,6 @@ namespace BagproWebAPI.Controllers
                     using (var pdf = new PdfDocument(writer))
                     {
                         var doc = new Document(pdf);
-
                         doc.Add(new Paragraph("Hola mundo"));
                     }
                 }
