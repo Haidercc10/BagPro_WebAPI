@@ -1,8 +1,16 @@
 ﻿//using Microsoft.EntityFrameworkCore;
+
+using Aspose.Pdf.Facades;
 using BagproWebAPI.Models;
+using Intercom.Data;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BagproWebAPI.Controllers
 {
@@ -1051,6 +1059,25 @@ namespace BagproWebAPI.Controllers
         private bool ClientesOtExists(int id)
         {
             return (_context.ClientesOts?.Any(e => e.Item == id)).GetValueOrDefault();
+        }
+
+        [HttpGet("Prueba")]
+        public IActionResult GeneratePDF()
+        {
+            using (var stream = new System.IO.MemoryStream())
+            {
+                using (var writer = new PdfWriter(stream))
+                {
+                    using (var pdf = new PdfDocument(writer))
+                    {
+                        var doc = new Document(pdf);
+
+                        doc.Add(new Paragraph("Hola mundo"));
+                    }
+                }
+                Response.Headers.Add("content-disposition", "attachment; filename = test.pdf");
+                return File(stream.ToArray(), "application / pdf");
+            }    
         }
     }
 }
