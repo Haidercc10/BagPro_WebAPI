@@ -334,6 +334,7 @@ namespace BagproWebAPI.Controllers
                           Vendedor = "",
                           Observacion = ot.Observacion.Trim(),
                           Cyrel = ot.Cyrel.Trim() == "1" ? true : false,
+                          MotrarEmpresaEtiquetas = false,
                           Extrusion = ot.Extrusion.Trim() == "1" ? true : false,
                           Impresion = ot.Impresion.Trim() == "1" ? true : false,
                           Rotograbado = ot.Lamiando.Trim() == "1" ? true : false,
@@ -541,6 +542,7 @@ namespace BagproWebAPI.Controllers
                                    Vendedor = "",
                                    Observacion = clot.Observacion.Trim(),
                                    Cyrel = clot.Cyrel.Trim() == "1" ? true : false,
+                                   MotrarEmpresaEtiquetas = false,
                                    Extrusion = clot.Extrusion.Trim() == "1" ? true : false,
                                    Impresion = clot.Impresion.Trim() == "1" ? true : false,
                                    Rotograbado = clot.Lamiando.Trim() == "1" ? true : false,
@@ -551,9 +553,7 @@ namespace BagproWebAPI.Controllers
                                    Peso_Neto = clot.DatosotKg,
                                    ValorKg = clot.DatosValorKg,
                                    ValorUnidad = clot.DatosvalorBolsa,
-                                   NitCliente = (from cl in _context.Clientes
-                                                 where cl.CodBagpro == Convert.ToString(clot.Cliente)
-                                                 select cl.IdentNro).FirstOrDefault(),
+                                   NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(clot.Cliente) select cl.IdentNro).FirstOrDefault(),
 
                                    // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
