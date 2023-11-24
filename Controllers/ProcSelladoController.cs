@@ -677,5 +677,33 @@ namespace BagproWebAPI.Controllers
             return NoContent();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
+
+        [HttpGet("getProduccionSellado/{ot}")]
+        public ActionResult<ProcSellado> GetProduccionSellado(string ot)
+        {
+            var con = from ps in _context.Set<ProcSellado>()
+                      where ps.Ot == ot
+                      select new 
+                      { 
+                        Bulto = ps.Item, 
+                        Cedula1 = ps.Cedula,
+                        Operario1 = ps.Operario,
+                        Cedula2 = ps.Cedula2,
+                        Operario2 = ps.Operario2,
+                        Cedula3 = ps.Cedula3,
+                        Operario3 = ps.Operario3,
+                        Cedula4 = ps.Cedula4,
+                        Operario4 = ps.Operario4, 
+                        CantidadUnd = ps.Qty,
+                        Presentacion1 = ps.Unidad == "UND" ? "Und" : ps.Unidad == "KLS" ? "Kg" : ps.Unidad == "PAQ" ? "Paquete" : ps.Unidad,
+                        Peso = ps.Peso,
+                        Presentacion2 = "Kg",
+                        Fecha = ps.FechaEntrada.ToString("dd/MM/yyyy"),
+                        Hora = ps.Hora,
+                      };
+
+            if (con == null) return BadRequest("No existe producción en sellado para esta Orden de Trabajo.");
+            else return Ok(con);
+        }
     }
 }

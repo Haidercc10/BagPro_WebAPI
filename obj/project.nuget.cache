@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KM6GkxtfT130959jCcSCqOI2/yVCi9JeK3Q+YoJy2laHGuiAXdrmImNTwSFzhF+TzFH58uyb+DLfJfSkxqUFiQ==",
+  "dgSpecHash": "EZhjFM0LhxEhSqEzEw/So2/iW7QJ+YdaXoGipz0YulpT+o58bPlafCAyMesg1cqYHHPUWY9p3ibQclELqZ92BQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\BagproWebAPI.csproj",
   "expectedPackageFiles": [
@@ -313,12 +313,6 @@
     "C:\\Users\\Sistemas\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema al leer el archivo de caché C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    },
     {
       "code": "NU1701",
       "level": "Warning",

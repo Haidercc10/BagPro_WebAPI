@@ -554,6 +554,10 @@ namespace BagproWebAPI.Controllers
                                    NitCliente = (from cl in _context.Clientes
                                                  where cl.CodBagpro == Convert.ToString(clot.Cliente)
                                                  select cl.IdentNro).FirstOrDefault(),
+                                   Cantidad_Sellado = (from s in _context.ProcSellados
+                                                       where s.Ot == Convert.ToString(orden)
+                                                       && s.NomStatus == "SELLADO"
+                                                       select s.Qty == null ? 0 : s.Qty).Sum(),
 
                                    // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
