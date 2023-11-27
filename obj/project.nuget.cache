@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yWYGXwdAxOYosXTCWMDY5naognP6f2sfbOUzcyT+FJV3Y0CLV2ERubem4WXF6Q7N8zmhtNUpBpQBpps6lSLwig==",
+  "dgSpecHash": "EZhjFM0LhxEhSqEzEw/So2/iW7QJ+YdaXoGipz0YulpT+o58bPlafCAyMesg1cqYHHPUWY9p3ibQclELqZ92BQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Sistemas\\source\\repos\\Haidercc10\\BagPro_WebAPI\\BagproWebAPI.csproj",
+  "projectFilePath": "C:\\Users\\Sistemas\\Source\\Repos\\Haidercc10\\BagPro_WebAPI\\BagproWebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Sistemas\\.nuget\\packages\\aspose.pdf\\23.11.0\\aspose.pdf.23.11.0.nupkg.sha512",
     "C:\\Users\\Sistemas\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
@@ -313,12 +313,6 @@
     "C:\\Users\\Sistemas\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema al leer el archivo de caché C:\\Users\\Sistemas\\source\\repos\\Haidercc10\\BagPro_WebAPI\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    },
     {
       "code": "NU1701",
       "level": "Warning",

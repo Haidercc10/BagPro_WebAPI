@@ -1373,3 +1373,4 @@ C:\Users\Sistemas\Documents\GitHub\BagPro_API\bin\Release\net7.0\runtimes\win\li
 C:\Users\Sistemas\Documents\GitHub\BagPro_API\bin\Release\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Users\Sistemas\Documents\GitHub\BagPro_API\bin\Release\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Sistemas\Documents\GitHub\BagPro_API\bin\Release\net7.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Users\Sistemas\source\repos\Haidercc10\BagPro_WebAPI\obj\Release\net7.0\BagproWebAPI.sourcelink.json

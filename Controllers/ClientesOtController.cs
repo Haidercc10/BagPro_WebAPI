@@ -558,7 +558,7 @@ namespace BagproWebAPI.Controllers
                                                        && s.NomStatus == "SELLADO"
                                                        select s.Qty == null ? 0 : s.Qty).Sum(),
                                    NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(clot.Cliente) select cl.IdentNro).FirstOrDefault(),
-
+                                   
                                    // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
                                    Material = clot.ExtMaterialNom.Trim(),
