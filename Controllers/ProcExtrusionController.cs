@@ -612,9 +612,9 @@ namespace BagproWebAPI.Controllers
                                     "<CodigoUbicacion></CodigoUbicacion>" +
                                     "<CodigoClasificacion>0</CodigoClasificacion>" +
                                     "<CodigoReferencia></CodigoReferencia>" +
-            "<Serial>0</Serial>" +
+                                    "<Serial>0</Serial>" +
                                     $"<Detalle>{rollo}</Detalle>" +
-            $"<Cantidad>{cantidad}</Cantidad>" +
+                                    $"<Cantidad>{cantidad}</Cantidad>" +
                                     $"<PrecioUnidad>{costo}</PrecioUnidad>" +
                                     $"<PrecioUnidad2>{costo}</PrecioUnidad2>" +
                                     "<Concepto_Codigo></Concepto_Codigo>" +
