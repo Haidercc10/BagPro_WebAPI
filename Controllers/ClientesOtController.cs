@@ -309,202 +309,200 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
-                      where ot.ClienteItems == ClienteItems
-                            && ot.PtPresentacionNom == PtPresentacionNom
-                      select new
-                      {
-                          Id_OT = ot.Id,
-                          Numero_Orden = ot.Item,
-                          Id_SedeCliente = "",
-                          Id_Cliente = ot.Cliente,
-                          Cliente = ot.ClienteNom.Trim(),
-                          Ciudad = "",
-                          Direccion = "",
-                          Id_Producto = ot.ClienteItems,
-                          Producto = ot.ClienteItemsNom.Trim(),
-                          Id_Presentacion = ot.PtPresentacion,
-                          Presentacion = ot.PtPresentacionNom.Trim(),
-                          Margen = ot.PtMargen,
-                          Fecha_Creacion = ot.FechaCrea,
-                          Fecha_Entrega = ot.FechaCrea,
-                          Estado_Orden = "",
-                          Estado = "",
-                          Id_Pedido = "",
-                          Id_Vendedor = "",
-                          Vendedor = "",
-                          Observacion = ot.Observacion.Trim(),
-                          Cyrel = ot.Cyrel.Trim() == "1" ? true : false,
-                          MotrarEmpresaEtiquetas = false,
-                          Extrusion = ot.Extrusion.Trim() == "1" ? true : false,
-                          Impresion = ot.Impresion.Trim() == "1" ? true : false,
-                          Rotograbado = ot.Lamiando.Trim() == "1" ? true : false,
-                          Laminado = ot.Laminado2.Trim() == "1" ? true : false,
-                          Corte = ot.Corte.Trim() == "1" ? true : false,
-                          Sellado = ot.Pterminado.Trim() == "1" ? true : false,
-                          Cantidad_Pedida = ot.PtPresentacionNom == "Kilo" ? ot.DatoscantKg : ot.DatoscantBolsa,
-                          Peso_Neto = ot.DatosotKg,
-                          ValorKg = ot.DatosValorKg,
-                          ValorUnidad = ot.DatosvalorBolsa,
-                          NitCliente = (from cl in _context.Clientes
-                                        where cl.CodBagpro == Convert.ToString(ot.Cliente)
-                                        select cl.IdentNro).FirstOrDefault(),
+                               where ot.ClienteItems == ClienteItems
+                                     && ot.PtPresentacionNom == PtPresentacionNom
+                               select new
+                               {
+                                      Id_OT = ot.Id,
+                                      Numero_Orden = ot.Item,
+                                      Id_SedeCliente = "",
+                                      Id_Cliente = ot.Cliente,
+                                      Cliente = ot.ClienteNom.Trim(),
+                                      Ciudad = "",
+                                      Direccion = "",
+                                      Id_Producto = ot.ClienteItems,
+                                      Producto = ot.ClienteItemsNom.Trim(),
+                                      Id_Presentacion = ot.PtPresentacion,
+                                      Presentacion = ot.PtPresentacionNom.Trim(),
+                                      Margen = ot.PtMargen,
+                                      Fecha_Creacion = ot.FechaCrea,
+                                      Fecha_Entrega = ot.FechaCrea,
+                                      Estado_Orden = "",
+                                      Estado = "",
+                                      Id_Pedido = "",
+                                      Id_Vendedor = "",
+                                      Vendedor = "",
+                                      Observacion = ot.Observacion.Trim(),
+                                      Cyrel = ot.Cyrel.Trim() == "1" ? true : false,
+                                      MotrarEmpresaEtiquetas = false,
+                                      Extrusion = ot.Extrusion.Trim() == "1" ? true : false,
+                                      Impresion = ot.Impresion.Trim() == "1" ? true : false,
+                                      Rotograbado = ot.Lamiando.Trim() == "1" ? true : false,
+                                      Laminado = ot.Laminado2.Trim() == "1" ? true : false,
+                                      Corte = ot.Corte.Trim() == "1" ? true : false,
+                                      Sellado = ot.Pterminado.Trim() == "1" ? true : false,
+                                      Cantidad_Pedida = ot.PtPresentacionNom == "Kilo" ? ot.DatoscantKg : ot.DatoscantBolsa,
+                                      Peso_Neto = ot.DatosotKg,
+                                      ValorKg = ot.DatosValorKg,
+                                      ValorUnidad = ot.DatosvalorBolsa,
+                                      NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(ot.Cliente) select cl.IdentNro).FirstOrDefault(),
 
-                          // Información de Extrusión
-                          Id_Material = Convert.ToInt32(ot.ExtMaterial),
-                          Material = ot.ExtMaterialNom.Trim(),
-                          Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
-                          Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
-                          Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato) == 5 ? 4 : Convert.ToInt32(ot.ExtFormato),
-                          Formato_Extrusin = ot.ExtFormatoNom.Trim(),
-                          Id_Tratado = Convert.ToInt32(ot.ExtTratado),
-                          Tratado = ot.ExtTratadoNom.Trim(),
-                          Calibre_Extrusion = ot.ExtCalibre,
-                          Und_Extrusion = ot.ExtUnidadesNom.Trim(),
-                          Ancho1_Extrusion = ot.ExtAcho1,
-                          Ancho2_Extrusion = ot.ExtAcho2,
-                          Ancho3_Extrusion = ot.ExtAcho3,
-                          Peso_Extrusion = ot.ExtPeso,
+                                      // Información de Extrusión
+                                      Id_Material = Convert.ToInt32(ot.ExtMaterial),
+                                      Material = ot.ExtMaterialNom != null ? ot.ExtMaterialNom.Trim() : ot.ExtMaterialNom,
+                                      Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
+                                      Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
+                                      Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato) == 5 ? 4 : Convert.ToInt32(ot.ExtFormato),
+                                      Formato_Extrusin = ot.ExtFormatoNom.Trim(),
+                                      Id_Tratado = Convert.ToInt32(ot.ExtTratado),
+                                      Tratado = ot.ExtTratadoNom.Trim(),
+                                      Calibre_Extrusion = ot.ExtCalibre,
+                                      Und_Extrusion = ot.ExtUnidadesNom.Trim(),
+                                      Ancho1_Extrusion = ot.ExtAcho1,
+                                      Ancho2_Extrusion = ot.ExtAcho2,
+                                      Ancho3_Extrusion = ot.ExtAcho3,
+                                      Peso_Extrusion = ot.ExtPeso,
 
-                          // Información de Impresión
-                          Id_Tipo_Imptesion = ot.ImpFlexo.Trim(),
-                          Tipo_Impresion = ot.ImpFlexoNom.Trim(),
-                          Rodillo = ot.ImpRodillo,
-                          Pista = ot.ImpPista,
-                          Id_Tinta1 = ot.ImpTinta1.Trim(),
-                          Tinta1 = ot.ImpTinta1Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta1Nom.Trim(),
-                          Id_Tinta2 = ot.ImpTinta2.Trim(),
-                          Tinta2 = ot.ImpTinta2Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta2Nom.Trim(),
-                          Id_Tinta3 = ot.ImpTinta3.Trim(),
-                          Tinta3 = ot.ImpTinta3Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta3Nom.Trim(),
-                          Id_Tinta4 = ot.ImpTinta4.Trim(),
-                          Tinta4 = ot.ImpTinta4Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta4Nom.Trim(),
-                          Id_Tinta5 = ot.ImpTinta5.Trim(),
-                          Tinta5 = ot.ImpTinta5Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta5Nom.Trim(),
-                          Id_Tinta6 = ot.ImpTinta6.Trim(),
-                          Tinta6 = ot.ImpTinta6Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta6Nom.Trim(),
-                          Id_Tinta7 = ot.ImpTinta7.Trim(),
-                          Tinta7 = ot.ImpTinta7Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta7Nom.Trim(),
-                          Id_Tinta8 = ot.ImpTinta8.Trim(),
-                          Tinta8 = ot.ImpTinta8Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta8Nom.Trim(),
+                                      // Información de Impresión
+                                      Id_Tipo_Imptesion = ot.ImpFlexo.Trim(),
+                                      Tipo_Impresion = ot.ImpFlexoNom.Trim(),
+                                      Rodillo = ot.ImpRodillo,
+                                      Pista = ot.ImpPista,
+                                      Id_Tinta1 = ot.ImpTinta1.Trim(),
+                                      Tinta1 = ot.ImpTinta1Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta1Nom.Trim(),
+                                      Id_Tinta2 = ot.ImpTinta2.Trim(),
+                                      Tinta2 = ot.ImpTinta2Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta2Nom.Trim(),
+                                      Id_Tinta3 = ot.ImpTinta3.Trim(),
+                                      Tinta3 = ot.ImpTinta3Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta3Nom.Trim(),
+                                      Id_Tinta4 = ot.ImpTinta4.Trim(),
+                                      Tinta4 = ot.ImpTinta4Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta4Nom.Trim(),
+                                      Id_Tinta5 = ot.ImpTinta5.Trim(),
+                                      Tinta5 = ot.ImpTinta5Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta5Nom.Trim(),
+                                      Id_Tinta6 = ot.ImpTinta6.Trim(),
+                                      Tinta6 = ot.ImpTinta6Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta6Nom.Trim(),
+                                      Id_Tinta7 = ot.ImpTinta7.Trim(),
+                                      Tinta7 = ot.ImpTinta7Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta7Nom.Trim(),
+                                      Id_Tinta8 = ot.ImpTinta8.Trim(),
+                                      Tinta8 = ot.ImpTinta8Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta8Nom.Trim(),
 
-                          // Información de Laminado
-                          Id_Capa1 = ot.LamCapa1.Trim(),
-                          Laminado_Capa1 = ot.LamCapa1Nom.Trim(),
-                          Calibre_Laminado_Capa1 = ot.LamCalibre1,
-                          Cantidad_Laminado_Capa1 = ot.Cant1,
-                          Id_Capa2 = ot.LamCapa2.Trim(),
-                          Laminado_Capa2 = ot.LamCapa2Nom.Trim(),
-                          Calibre_Laminado_Capa2 = ot.LamCalibre2,
-                          Cantidad_Laminado_Capa2 = ot.Cant2,
-                          Id_Capa3 = ot.LamCapa3.Trim(),
-                          Laminado_Capa3 = ot.LamCapa3Nom.Trim(),
-                          Calibre_Laminado_Capa3 = ot.LamCalibre3,
-                          Cantidad_Laminado_Capa3 = ot.Cant3,
+                                      // Información de Laminado
+                                      Id_Capa1 = ot.LamCapa1.Trim(),
+                                      Laminado_Capa1 = ot.LamCapa1Nom.Trim(),
+                                      Calibre_Laminado_Capa1 = ot.LamCalibre1,
+                                      Cantidad_Laminado_Capa1 = ot.Cant1,
+                                      Id_Capa2 = ot.LamCapa2.Trim(),
+                                      Laminado_Capa2 = ot.LamCapa2Nom.Trim(),
+                                      Calibre_Laminado_Capa2 = ot.LamCalibre2,
+                                      Cantidad_Laminado_Capa2 = ot.Cant2,
+                                      Id_Capa3 = ot.LamCapa3.Trim(),
+                                      Laminado_Capa3 = ot.LamCapa3Nom.Trim(),
+                                      Calibre_Laminado_Capa3 = ot.LamCalibre3,
+                                      Cantidad_Laminado_Capa3 = ot.Cant3,
 
-                          // Información de Sellado
-                          Id_Formato_Producto = ot.PtFormatopt.Trim(),
-                          Formato_Producto = ot.PtFormatoptNom.Trim(),
-                          SelladoCorte_Ancho = ot.PtAnchopt,
-                          SelladoCorte_Largo = ot.PtLargopt,
-                          SelladoCorte_Fuelle = ot.PtFuelle,
-                          SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim(),
-                          SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim(),
-                          SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim(),
-                          TpSellado_Id = ot.PtSelladoPt.Trim(),
-                          TpSellados_Nombre = ot.PtSelladoPtNom.Trim(),
-                          SelladoCorte_PesoMillar = ot.PtPesoMillar,
-                          SelladoCorte_PesoBulto = ot.PesoBulto,
-                          SelladoCorte_CantBolsasBulto = ot.PtQtyBulto,
-                          SelladoCorte_CantBolsasPaquete = ot.Pesopaquete,
-                          SelladoCorte_PesoPaquete = ot.PtQtyPquete,
-                          SelladoCorte_PesoProducto = ot.PtPesopt,
-                          SelladoCorte_PrecioSelladoDia = ot.Dia,
-                          SelladoCorte_PrecioSelladoNoche = ot.Noche,
-                          SelladoCorte_PrecioDia_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Dia).First(),
-                          SelladoCorte_PrecioNoche_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Noche).First(),
-                          SelladoCorte_PrecioDia_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
-                          SelladoCorte_PrecioNoche_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
+                                      // Información de Sellado
+                                      Id_Formato_Producto = ot.PtFormatopt.Trim(),
+                                      Formato_Producto = ot.PtFormatoptNom.Trim(),
+                                      SelladoCorte_Ancho = ot.PtAnchopt,
+                                      SelladoCorte_Largo = ot.PtLargopt,
+                                      SelladoCorte_Fuelle = ot.PtFuelle,
+                                      SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim(),
+                                      SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim(),
+                                      SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim(),
+                                      TpSellado_Id = ot.PtSelladoPt.Trim(),
+                                      TpSellados_Nombre = ot.PtSelladoPtNom.Trim(),
+                                      SelladoCorte_PesoMillar = ot.PtPesoMillar,
+                                      SelladoCorte_PesoBulto = ot.PesoBulto,
+                                      SelladoCorte_CantBolsasBulto = ot.PtQtyBulto,
+                                      SelladoCorte_CantBolsasPaquete = ot.Pesopaquete,
+                                      SelladoCorte_PesoPaquete = ot.PtQtyPquete,
+                                      SelladoCorte_PesoProducto = ot.PtPesopt,
+                                      SelladoCorte_PrecioSelladoDia = ot.Dia,
+                                      SelladoCorte_PrecioSelladoNoche = ot.Noche,
+                                      SelladoCorte_PrecioDia_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Dia).First(),
+                                      SelladoCorte_PrecioNoche_Wik_Mq50 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 50 select wik.Noche).First(),
+                                      SelladoCorte_PrecioDia_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
+                                      SelladoCorte_PrecioNoche_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
 
-                          // Información de Mezclas
-                          Mezcla_Id = ot.MezModo.Trim(),
-                          Mezcla_Nombre = ot.MezModoNom.Trim(),
-                          Mezcla_NroCapas = ot.Ncapas,
-                          // Informacion Capa 1
-                          Mezcla_PorcentajeCapa1 = ot.Mezporc1,
-                          Mezcla_PorcentajeMaterial1_Capa1 = ot.Porc1cap1,
-                          MezMaterial_Id1xCapa1 = ot.Mezprod1cap1.Trim(),
-                          M1C1_nombre = ot.Mezprod1cap1Nom.Trim(),
+                                      // Información de Mezclas
+                                      Mezcla_Id = ot.MezModo.Trim(),
+                                      Mezcla_Nombre = ot.MezModoNom.Trim(),
+                                      Mezcla_NroCapas = ot.Ncapas,
+                                      // Informacion Capa 1
+                                      Mezcla_PorcentajeCapa1 = ot.Mezporc1,
+                                      Mezcla_PorcentajeMaterial1_Capa1 = ot.Porc1cap1,
+                                      MezMaterial_Id1xCapa1 = ot.Mezprod1cap1.Trim(),
+                                      M1C1_nombre = ot.Mezprod1cap1Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial2_Capa1 = ot.Porc2cap1,
-                          MezMaterial_Id2xCapa1 = ot.Mezprod2cap1.Trim(),
-                          M2C1_nombre = ot.Mezprod2cap1Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial2_Capa1 = ot.Porc2cap1,
+                                      MezMaterial_Id2xCapa1 = ot.Mezprod2cap1.Trim(),
+                                      M2C1_nombre = ot.Mezprod2cap1Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial3_Capa1 = ot.Porc3cap1,
-                          MezMaterial_Id3xCapa1 = ot.Mezprod3cap1.Trim(),
-                          M3C1_nombre = ot.Mezprod3cap1Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial3_Capa1 = ot.Porc3cap1,
+                                      MezMaterial_Id3xCapa1 = ot.Mezprod3cap1.Trim(),
+                                      M3C1_nombre = ot.Mezprod3cap1Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial4_Capa1 = ot.Porc4cap1,
-                          MezMaterial_Id4xCapa1 = ot.Mezprod4cap1.Trim(),
-                          M4C1_nombre = ot.Mezprod4cap1Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial4_Capa1 = ot.Porc4cap1,
+                                      MezMaterial_Id4xCapa1 = ot.Mezprod4cap1.Trim(),
+                                      M4C1_nombre = ot.Mezprod4cap1Nom.Trim(),
 
-                          Mezcla_PorcentajePigmto1_Capa1 = ot.Porcpig1cap1,
-                          MezPigmto_Id1xCapa1 = ot.Mezpigm1cap1.Trim(),
-                          P1C1_Nombre = ot.Mezpigm1cap1.Trim(),
+                                      Mezcla_PorcentajePigmto1_Capa1 = ot.Porcpig1cap1,
+                                      MezPigmto_Id1xCapa1 = ot.Mezpigm1cap1.Trim(),
+                                      P1C1_Nombre = ot.Mezpigm1cap1.Trim(),
 
-                          Mezcla_PorcentajePigmto2_Capa1 = ot.Porcpig2cap1,
-                          MezPigmto_Id2xCapa1 = ot.Mezpigm2cap1.Trim(),
-                          P2C1_Nombre = ot.Mezpigm2cap1.Trim(),
-                          //Informacion Capa 2
-                          Mezcla_PorcentajeCapa2 = ot.Mezporc2,
-                          Mezcla_PorcentajeMaterial1_Capa2 = ot.Porc1cap2,
-                          MezMaterial_Id1xCapa2 = ot.Mezprod1cap2.Trim(),
-                          M1C2_nombre = ot.Mezprod1cap2Nom.Trim(),
+                                      Mezcla_PorcentajePigmto2_Capa1 = ot.Porcpig2cap1,
+                                      MezPigmto_Id2xCapa1 = ot.Mezpigm2cap1.Trim(),
+                                      P2C1_Nombre = ot.Mezpigm2cap1.Trim(),
+                                      //Informacion Capa 2
+                                      Mezcla_PorcentajeCapa2 = ot.Mezporc2,
+                                      Mezcla_PorcentajeMaterial1_Capa2 = ot.Porc1cap2,
+                                      MezMaterial_Id1xCapa2 = ot.Mezprod1cap2.Trim(),
+                                      M1C2_nombre = ot.Mezprod1cap2Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial2_Capa2 = ot.Porc2cap2,
-                          MezMaterial_Id2xCapa2 = ot.Mezprod2cap2.Trim(),
-                          M2C2_nombre = ot.Mezprod2cap2Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial2_Capa2 = ot.Porc2cap2,
+                                      MezMaterial_Id2xCapa2 = ot.Mezprod2cap2.Trim(),
+                                      M2C2_nombre = ot.Mezprod2cap2Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial3_Capa2 = ot.Porc3cap2,
-                          MezMaterial_Id3xCapa2 = ot.Mezprod3cap2.Trim(),
-                          M3C2_nombre = ot.Mezprod3cap2Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial3_Capa2 = ot.Porc3cap2,
+                                      MezMaterial_Id3xCapa2 = ot.Mezprod3cap2.Trim(),
+                                      M3C2_nombre = ot.Mezprod3cap2Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial4_Capa2 = ot.Porc4cap2,
-                          MezMaterial_Id4xCapa2 = ot.Mezprod4cap2.Trim(),
-                          M4C2_nombre = ot.Mezprod4cap2Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial4_Capa2 = ot.Porc4cap2,
+                                      MezMaterial_Id4xCapa2 = ot.Mezprod4cap2.Trim(),
+                                      M4C2_nombre = ot.Mezprod4cap2Nom.Trim(),
 
-                          Mezcla_PorcentajePigmto1_Capa2 = ot.Porcpig1cap2,
-                          MezPigmto_Id1xCapa2 = ot.Mezpigm1cap2.Trim(),
-                          P1C2_Nombre = ot.Mezpigm1cap2.Trim(),
+                                      Mezcla_PorcentajePigmto1_Capa2 = ot.Porcpig1cap2,
+                                      MezPigmto_Id1xCapa2 = ot.Mezpigm1cap2.Trim(),
+                                      P1C2_Nombre = ot.Mezpigm1cap2.Trim(),
 
-                          Mezcla_PorcentajePigmto2_Capa2 = ot.Porcpig2cap2,
-                          MezPigmto_Id2xCapa2 = ot.Mezpigm2cap2.Trim(),
-                          P2C2_Nombre = ot.Mezpigm2cap2.Trim(),
-                          //Informacion Capa 3
-                          Mezcla_PorcentajeCapa3 = ot.Mezporc3,
-                          Mezcla_PorcentajeMaterial1_Capa3 = ot.Porc1cap3,
-                          MezMaterial_Id1xCapa3 = ot.Mezprod1cap3.Trim(),
-                          M1C3_nombre = ot.Mezprod1cap3Nom.Trim(),
+                                      Mezcla_PorcentajePigmto2_Capa2 = ot.Porcpig2cap2,
+                                      MezPigmto_Id2xCapa2 = ot.Mezpigm2cap2.Trim(),
+                                      P2C2_Nombre = ot.Mezpigm2cap2.Trim(),
+                                      //Informacion Capa 3
+                                      Mezcla_PorcentajeCapa3 = ot.Mezporc3,
+                                      Mezcla_PorcentajeMaterial1_Capa3 = ot.Porc1cap3,
+                                      MezMaterial_Id1xCapa3 = ot.Mezprod1cap3.Trim(),
+                                      M1C3_nombre = ot.Mezprod1cap3Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial2_Capa3 = ot.Porc2cap3,
-                          MezMaterial_Id2xCapa3 = ot.Mezprod2cap3.Trim(),
-                          M2C3_nombre = ot.Mezprod2cap3Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial2_Capa3 = ot.Porc2cap3,
+                                      MezMaterial_Id2xCapa3 = ot.Mezprod2cap3.Trim(),
+                                      M2C3_nombre = ot.Mezprod2cap3Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial3_Capa3 = ot.Porc3cap3,
-                          MezMaterial_Id3xCapa3 = ot.Mezprod3cap3.Trim(),
-                          M3C3_nombre = ot.Mezprod3cap3Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial3_Capa3 = ot.Porc3cap3,
+                                      MezMaterial_Id3xCapa3 = ot.Mezprod3cap3.Trim(),
+                                      M3C3_nombre = ot.Mezprod3cap3Nom.Trim(),
 
-                          Mezcla_PorcentajeMaterial4_Capa3 = ot.Porc4cap3,
-                          MezMaterial_Id4xCapa3 = ot.Mezprod4cap3.Trim(),
-                          M4C3_nombre = ot.Mezprod4cap3Nom.Trim(),
+                                      Mezcla_PorcentajeMaterial4_Capa3 = ot.Porc4cap3,
+                                      MezMaterial_Id4xCapa3 = ot.Mezprod4cap3.Trim(),
+                                      M4C3_nombre = ot.Mezprod4cap3Nom.Trim(),
 
-                          Mezcla_PorcentajePigmto1_Capa3 = ot.Porcpig1cap3,
-                          MezPigmto_Id1xCapa3 = ot.Mezpigm1cap3.Trim(),
-                          P1C3_Nombre = ot.Mezpigm1cap3.Trim(),
+                                      Mezcla_PorcentajePigmto1_Capa3 = ot.Porcpig1cap3,
+                                      MezPigmto_Id1xCapa3 = ot.Mezpigm1cap3.Trim(),
+                                      P1C3_Nombre = ot.Mezpigm1cap3.Trim(),
 
-                          Mezcla_PorcentajePigmto2_Capa3 = ot.Porcpig2cap3,
-                          MezPigmto_Id2xCapa3 = ot.Mezpigm2cap3.Trim(),
-                          P2C3_Nombre = ot.Mezpigm2cap3.Trim(),
-                      };
+                                      Mezcla_PorcentajePigmto2_Capa3 = ot.Porcpig2cap3,
+                                      MezPigmto_Id2xCapa3 = ot.Mezpigm2cap3.Trim(),
+                                      P2C3_Nombre = ot.Mezpigm2cap3.Trim(),
+                               };
 
             return ordenTrabajo.Any() ? Ok(ordenTrabajo) : NotFound();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -515,6 +513,7 @@ namespace BagproWebAPI.Controllers
         public ActionResult GetOrdenDeTrabajo(int orden)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
             var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
                                from clot in _context.Set<ClientesOt>()
                                where clot.Item == orden
@@ -553,10 +552,7 @@ namespace BagproWebAPI.Controllers
                                    Peso_Neto = clot.DatosotKg,
                                    ValorKg = clot.DatosValorKg,
                                    ValorUnidad = clot.DatosvalorBolsa,
-                                   Cantidad_Sellado = (from s in _context.ProcSellados
-                                                       where s.Ot == Convert.ToString(orden)
-                                                       && s.NomStatus == "SELLADO"
-                                                       select s.Qty == null ? 0 : s.Qty).Sum(),
+                                   Cantidad_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus == "SELLADO" select s.Qty == null ? 0 : s.Qty).Sum(),
                                    NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(clot.Cliente) select cl.IdentNro).FirstOrDefault(),
                                    
                                    // Información de Extrusión
@@ -717,6 +713,7 @@ namespace BagproWebAPI.Controllers
                                };
 
             return ordenTrabajo.Any() ? Ok(ordenTrabajo) : NotFound();
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -779,7 +776,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getPresentacionItem/{item}")]
         public ActionResult GetPresentacionItem(int item)
         {
-            var presentacion = (from ot in _context.Set<ClientesOt>()
+            var presentacion = (from ot in _context.Set<ClientesOtItem>()
                                 where ot.ClienteItems == item
                                 orderby ot.Item descending
                                 select ot).FirstOrDefault();
@@ -977,9 +974,10 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = from ot in _context.Set<ClientesOt>()
+                                 join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
-                                       (cliente != "" ? ot.ClienteNom == cliente : true) &&
+                                       (cliente != "" ? Convert.ToString(cli.IdentNro) == cliente : true) &&
                                        (item != "" ? Convert.ToString(ot.ClienteItems) == item : true) &&
                                        (material != "" ? ot.ExtMaterialNom == material : true) &&
                                        (pigmento != "" ? ot.ExtPigmentoNom == pigmento : true) &&
@@ -1013,6 +1011,32 @@ namespace BagproWebAPI.Controllers
                                  };
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression
+        }
+
+        [HttpPut("putOrdenTrabajo{orden}")]
+        public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
+        {
+            if (orden != clientesOt.Item)  return BadRequest();
+
+            _context.Entry(clientesOt).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClientesOtExists(orden))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // POST: api/ClientesOt
