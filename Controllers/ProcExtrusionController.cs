@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceReference1;
+using System.Linq;
 using System.ServiceModel;
 
 namespace BagproWebAPI.Controllers
