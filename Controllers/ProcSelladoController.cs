@@ -1,7 +1,10 @@
 ﻿using BagproWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using ServiceReference1;
 using System.Data;
+using System.ServiceModel;
 
 namespace BagproWebAPI.Controllers
 {
@@ -625,6 +628,7 @@ namespace BagproWebAPI.Controllers
             return Ok(procSellado);
         }
 
+        //
         [HttpPost("ajusteExistencia")]
         public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
         {
@@ -645,16 +649,121 @@ namespace BagproWebAPI.Controllers
                                  Cantidad = pro.Qty,
                                  Costo = ot.DatoscantKg
                              }).FirstOrDefault();
-
-                ProcExtrusionController procExtrusionController = new ProcExtrusionController(_context);
-                await procExtrusionController.EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
-                //await PutEnvioZeus(datos.Rollo);
-                CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
-                count++;
-                if (count == rollos.Count) return Ok();
+                if (datos != null)
+                {
+                    await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                    //CreatedAtAction("EnviarAjuste", new { ordenTrabajo = datos.Orden, articulo = datos.Item, presentacion = datos.Presentacion, rollo = datos.Rollo, cantidad = datos.Cantidad, costo = Convert.ToDecimal(datos.Costo) });
+                    //await PutEnvioZeus(datos.Rollo);
+                    CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
+                    count++;
+                    if (count == rollos.Count) return Ok();
+                }
+                else continue;
             }
             return Ok();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("EnviarAjuste")]
+        public async Task<ActionResult> EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
+        {
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            SoapRequestAction request = new SoapRequestAction();
+            request.User = "wsZeusInvProd";
+            request.Password = "wsZeusInvProd";
+            request.Body = $"<Ajuste>" +
+                                $"<Op>I</Op>" +
+                                $"<Cabecera>" +
+                                    $"<Detalle>{ordenTrabajo}</Detalle>" +
+                                    "<Concepto>001</Concepto>" +
+                                    "<Consecutivo>0</Consecutivo>" +
+                                    $"<Fecha>{today}</Fecha>" +
+                                    "<Estado></Estado>" +
+                                    "<Solicitante>7200000</Solicitante>" +
+                                    "<Aprueba></Aprueba>" +
+                                    "<Fuente>MA</Fuente>" +
+                                    "<Serie>00</Serie>" +
+                                    "<Usuario>zeussystem</Usuario>" +
+                                    "<Documento></Documento>" +
+                                    "<Documentorevertido></Documentorevertido>" +
+                                    "<Bodega>003</Bodega>" +
+                                    "<Grupo></Grupo>" +
+                                    "<Origen>I</Origen>" +
+                                    "<ConsecutivoRecosteo>0</ConsecutivoRecosteo>" +
+                                    "<TipoDocumentoExterno></TipoDocumentoExterno>" +
+                                    "<ConsecutivoExterno></ConsecutivoExterno>" +
+                                    "<EsAjustePorDistribucion></EsAjustePorDistribucion>" +
+                                    "<ItemsBodegaVirtual></ItemsBodegaVirtual>" +
+                                    "<Clasificaciones></Clasificaciones>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<EsInicioNIIF></EsInicioNIIF>" +
+                                    "<UtilizarZmlSpId></UtilizarZmlSpId>" +
+                                    "<DatoExterno1></DatoExterno1>" +
+                                    "<DatoExterno2></DatoExterno2>" +
+                                    "<DatoExterno3></DatoExterno3>" +
+                                    "<Moneda></Moneda>" +
+                                    "<TasaCambio>1</TasaCambio>" +
+                                    "<BU>Local</BU>" +
+                                "</Cabecera>" +
+                                "<Productos>" +
+                                    $"<CodigoArticulo>{articulo}</CodigoArticulo>" +
+                                    $"<Presentacion>{presentacion}</Presentacion>" +
+                                    "<CodigoLote>0</CodigoLote>" +
+                                    "<CodigoBodega>003</CodigoBodega>" +
+                                    "<CodigoUbicacion></CodigoUbicacion>" +
+                                    "<CodigoClasificacion>0</CodigoClasificacion>" +
+                                    "<CodigoReferencia></CodigoReferencia>" +
+                                    "<Serial>0</Serial>" +
+                                    $"<Detalle>{rollo}</Detalle>" +
+                                    $"<Cantidad>{cantidad}</Cantidad>" +
+                                    $"<PrecioUnidad>{costo}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{costo}</PrecioUnidad2>" +
+                                    "<Concepto_Codigo></Concepto_Codigo>" +
+                                    "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
+                                    "<Servicios>" +
+                                    "<CodigoServicios>001</CodigoServicios>" +
+                                    "<Referencia></Referencia>" +
+                                    "<Detalle></Detalle>" +
+                                    "<AuxiliarAbierto></AuxiliarAbierto>" +
+                                    "<CentroCosto>0202</CentroCosto>" +
+                                    "<Tercero>800188732</Tercero>" +
+                                    "<Proveedor></Proveedor>" +
+                                    "<TipoDocumentoCartera></TipoDocumentoCartera>" +
+                                    "<DocumentoCartera></DocumentoCartera>" +
+                                    "<Vencimiento></Vencimiento>" +
+                                    "<Cliente></Cliente>" +
+                                    "<Vendedor></Vendedor>" +
+                                    "<ItemsContable></ItemsContable>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<CuentaMovimiento></CuentaMovimiento>" +
+                                    "<Moneda></Moneda>" +
+                                    "<Moneda></Moneda>" +
+                                    "</Servicios>" +
+                                "</Productos>" +
+                            "</Ajuste>";
+            request.DynamicProperty = "4";
+            request.Action = "Inventario";
+            request.TypeSQL = "true";
+
+            var binding = new BasicHttpBinding()
+            {
+                Name = "BasicHttpBinding_IFakeService",
+                MaxBufferSize = 2147483647,
+                MaxReceivedMessageSize = 2147483647
+            };
+
+            var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
+            WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
+            SoapResponse response = await client.ExecuteActionSOAPAsync(request);
+            return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut("putEnvioZeus{rollo}")]
