@@ -934,18 +934,26 @@ namespace BagproWebAPI.Controllers
             else return Ok(con);
         }
 
-        [HttpGet("getEtiquetaBagpro/{rollo}")]
-        public ActionResult<ProcSellado> GetEtiquetaBagpro(string rollo)
+        [HttpGet("getEtiquetaBagpro/{rollo}/{reimpresion}")]
+        public ActionResult<ProcSellado> GetEtiquetaBagpro(int rollo, int reimpresion)
         {
-            var con = from ps in _context.Set<ProcSellado>()
-                      where ps.Observaciones == "Rollo #" + rollo + " en PBDD.dbo.Produccion_Procesos"
+            var con1 = from ps in _context.Set<ProcSellado>()
+                      where ps.Observaciones == "Rollo #" + Convert.ToString(rollo) + " en PBDD.dbo.Produccion_Procesos"
                       select new
                       {
                           Bulto = ps.Item,
                       };
 
-            if (con == null) return BadRequest("No existe el bulto.");
-            else return Ok(con);
+            var con2 = from ps in _context.Set<ProcSellado>()
+                       where ps.Item == rollo
+                       select new
+                       {
+                           Bulto = ps.Item,
+                       };
+
+            if (reimpresion == 0) return Ok(con1);
+            else if (reimpresion == 1) return Ok(con2);
+            else return BadRequest("No existe el bulto.");
         }
 
     }
