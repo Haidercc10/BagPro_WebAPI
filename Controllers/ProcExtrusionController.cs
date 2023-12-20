@@ -530,7 +530,6 @@ namespace BagproWebAPI.Controllers
         public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             int count = 0;
             foreach(var rollo in rollos)
             {
@@ -548,15 +547,18 @@ namespace BagproWebAPI.Controllers
                                  Costo = ot.DatoscantKg
                              }).FirstOrDefault();
 
-                await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
-                //PutEnvioZeus(datos.Rollo);
-                CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
-                count++;
-                if (count == rollos.Count) return Ok();
+                if (datos != null)
+                {
+                    await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                    //PutEnvioZeus(datos.Rollo);
+                    CreatedAtAction("PutEnvioZeus", new { rollo = datos.Rollo }, datos.Rollo);
+                    count++;
+                    if (count == rollos.Count) return Ok();
+                }
+                else continue;
             }
 
             return Ok();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
