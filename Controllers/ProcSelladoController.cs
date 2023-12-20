@@ -664,6 +664,125 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        [HttpGet("EnviarAjuste/{rollo}")]
+        public async Task<ActionResult> EnviarAjuste(int rollo)
+        {
+            var datos = (from pro in _context.Set<ProcSellado>()
+                         join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
+                         where pro.Item == rollo &&
+                               pro.EnvioZeus.Trim() == "0"
+                         select new
+                         {
+                             Orden = pro.Ot,
+                             Item = pro.Referencia,
+                             Presentacion = ot.PtPresentacionNom,
+                             Rollo = pro.Item,
+                             Cantidad = pro.Qty,
+                             Costo = ot.DatoscantKg
+                         }).FirstOrDefault();
+
+            if (datos == null) return Ok();
+
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            SoapRequestAction request = new SoapRequestAction();
+            request.User = "wsZeusInvProd";
+            request.Password = "wsZeusInvProd";
+            request.Body = $"<Ajuste>" +
+                                $"<Op>I</Op>" +
+                                $"<Cabecera>" +
+                                    $"<Detalle>{datos.Orden}</Detalle>" +
+                                    "<Concepto>001</Concepto>" +
+                                    "<Consecutivo>0</Consecutivo>" +
+                                    $"<Fecha>{today}</Fecha>" +
+                                    "<Estado></Estado>" +
+                                    "<Solicitante>7200000</Solicitante>" +
+                                    "<Aprueba></Aprueba>" +
+                                    "<Fuente>MA</Fuente>" +
+                                    "<Serie>00</Serie>" +
+                                    "<Usuario>zeussystem</Usuario>" +
+                                    "<Documento></Documento>" +
+                                    "<Documentorevertido></Documentorevertido>" +
+                                    "<Bodega>003</Bodega>" +
+                                    "<Grupo></Grupo>" +
+                                    "<Origen>I</Origen>" +
+                                    "<ConsecutivoRecosteo>0</ConsecutivoRecosteo>" +
+                                    "<TipoDocumentoExterno></TipoDocumentoExterno>" +
+                                    "<ConsecutivoExterno></ConsecutivoExterno>" +
+                                    "<EsAjustePorDistribucion></EsAjustePorDistribucion>" +
+                                    "<ItemsBodegaVirtual></ItemsBodegaVirtual>" +
+                                    "<Clasificaciones></Clasificaciones>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<EsInicioNIIF></EsInicioNIIF>" +
+                                    "<UtilizarZmlSpId></UtilizarZmlSpId>" +
+                                    "<DatoExterno1></DatoExterno1>" +
+                                    "<DatoExterno2></DatoExterno2>" +
+                                    "<DatoExterno3></DatoExterno3>" +
+                                    "<Moneda></Moneda>" +
+                                    "<TasaCambio>1</TasaCambio>" +
+                                    "<BU>Local</BU>" +
+                                "</Cabecera>" +
+                                "<Productos>" +
+                                    $"<CodigoArticulo>{datos.Item}</CodigoArticulo>" +
+                                    $"<Presentacion>{datos.Presentacion}</Presentacion>" +
+                                    "<CodigoLote>0</CodigoLote>" +
+                                    "<CodigoBodega>003</CodigoBodega>" +
+                                    "<CodigoUbicacion></CodigoUbicacion>" +
+                                    "<CodigoClasificacion>0</CodigoClasificacion>" +
+                                    "<CodigoReferencia></CodigoReferencia>" +
+                                    "<Serial>0</Serial>" +
+                                    $"<Detalle>{rollo}</Detalle>" +
+                                    $"<Cantidad>{datos.Cantidad}</Cantidad>" +
+                                    $"<PrecioUnidad>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad2>" +
+                                    "<Concepto_Codigo></Concepto_Codigo>" +
+                                    "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
+                                    "<Servicios>" +
+                                    "<CodigoServicios>001</CodigoServicios>" +
+                                    "<Referencia></Referencia>" +
+                                    "<Detalle></Detalle>" +
+                                    "<AuxiliarAbierto></AuxiliarAbierto>" +
+                                    "<CentroCosto>0202</CentroCosto>" +
+                                    "<Tercero>800188732</Tercero>" +
+                                    "<Proveedor></Proveedor>" +
+                                    "<TipoDocumentoCartera></TipoDocumentoCartera>" +
+                                    "<DocumentoCartera></DocumentoCartera>" +
+                                    "<Vencimiento></Vencimiento>" +
+                                    "<Cliente></Cliente>" +
+                                    "<Vendedor></Vendedor>" +
+                                    "<ItemsContable></ItemsContable>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<CuentaMovimiento></CuentaMovimiento>" +
+                                    "<Moneda></Moneda>" +
+                                    "<Moneda></Moneda>" +
+                                    "</Servicios>" +
+                                "</Productos>" +
+                            "</Ajuste>";
+            request.DynamicProperty = "4";
+            request.Action = "Inventario";
+            request.TypeSQL = "true";
+
+            var binding = new BasicHttpBinding()
+            {
+                Name = "BasicHttpBinding_IFakeService",
+                MaxBufferSize = 2147483647,
+                MaxReceivedMessageSize = 2147483647
+            };
+
+            var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
+            WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
+            SoapResponse response = await client.ExecuteActionSOAPAsync(request);
+            await PutEnvioZeus(datos.Rollo);
+            return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
+        }
+
         [HttpGet("EnviarAjuste")]
         public async Task<ActionResult> EnviarAjuste(string ordenTrabajo, string articulo, string presentacion, int rollo, decimal cantidad, decimal costo)
         {
