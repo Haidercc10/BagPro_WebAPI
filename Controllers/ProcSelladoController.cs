@@ -705,5 +705,20 @@ namespace BagproWebAPI.Controllers
             if (con == null) return BadRequest("No existe producción en sellado para esta Orden de Trabajo.");
             else return Ok(con);
         }
+
+        [HttpGet("getEtiquetaBagpro/{rollo}")]
+        public ActionResult<ProcSellado> GetEtiquetaBagpro(string rollo)
+        {
+            var con = from ps in _context.Set<ProcSellado>()
+                      where ps.Observaciones == "Rollo #" + rollo + " en PBDD.dbo.Produccion_Procesos"
+                      select new
+                      {
+                          Bulto = ps.Item,
+                      };
+
+            if (con == null) return BadRequest("No existe el bulto.");
+            else return Ok(con);
+        }
+
     }
 }
