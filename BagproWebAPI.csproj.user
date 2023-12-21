@@ -10,6 +10,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>BagproWebAPI.Models.plasticaribeContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <NameOfLastUsedPublishProfile>C:\Users\Sistemas\Source\Repos\Haidercc10\BagPro_WebAPI\Properties\PublishProfiles\API_Local.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\Sistemas\Documents\GitHub\BagPro_API\Properties\PublishProfiles\Servidor.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

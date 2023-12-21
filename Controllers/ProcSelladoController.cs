@@ -736,8 +736,8 @@ namespace BagproWebAPI.Controllers
                                     "<Serial>0</Serial>" +
                                     $"<Detalle>{rollo}</Detalle>" +
                                     $"<Cantidad>{datos.Cantidad}</Cantidad>" +
-                                    $"<PrecioUnidad>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad>" +
-                                    $"<PrecioUnidad2>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad2>" +
+                                    $"<PrecioUnidad>{Convert.ToString(datos.Costo)}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{Convert.ToString(datos.Costo)}</PrecioUnidad2>" +
                                     "<Concepto_Codigo></Concepto_Codigo>" +
                                     "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
                                     "<Servicios>" +

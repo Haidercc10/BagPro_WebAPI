@@ -571,12 +571,12 @@ namespace BagproWebAPI.Controllers
                                pro.EnvioZeus.Trim() == "0"
                          select new
                          {
-                             Orden = Convert.ToString(pro.Ot),
+                             Orden = pro.Ot,
                              Item = pro.ClienteItem,
-                             Presentacion = ot.PtPresentacionNom.ToString(),
-                             Rollo = Convert.ToInt64(pro.Item),
-                             Cantidad = Convert.ToDecimal(pro.Extnetokg),
-                             Costo = Convert.ToDecimal(ot.DatoscantKg)
+                             Presentacion = ot.PtPresentacionNom,
+                             Rollo = pro.Item,
+                             Cantidad = Convert.ToString(pro.Extnetokg),
+                             Costo = Convert.ToString(ot.DatoscantKg)
 
                          }).FirstOrDefault();
             if (datos == null) return Ok();
@@ -624,18 +624,18 @@ namespace BagproWebAPI.Controllers
                                     "<BU>Local</BU>" +
                                 "</Cabecera>" +
                                 "<Productos>" +
-                                    $"<CodigoArticulo>{Convert.ToString(datos.Item)}</CodigoArticulo>" +
-                                    $"<Presentacion>{Convert.ToString(datos.Presentacion)}</Presentacion>" +
+                                    $"<CodigoArticulo>{datos.Item}</CodigoArticulo>" +
+                                    $"<Presentacion>{datos.Presentacion}</Presentacion>" +
                                     "<CodigoLote>0</CodigoLote>" +
                                     "<CodigoBodega>003</CodigoBodega>" +
                                     "<CodigoUbicacion></CodigoUbicacion>" +
                                     "<CodigoClasificacion>0</CodigoClasificacion>" +
                                     "<CodigoReferencia></CodigoReferencia>" +
                                     "<Serial>0</Serial>" +
-                                    $"<Detalle>{Convert.ToInt32(datos.Rollo)}</Detalle>" +
-                                    $"<Cantidad>{Convert.ToDecimal(datos.Cantidad)}</Cantidad>" +
-                                    $"<PrecioUnidad>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad>" +
-                                    $"<PrecioUnidad2>{Convert.ToDecimal(datos.Costo)}</PrecioUnidad2>" +
+                                    $"<Detalle>{datos.Rollo}</Detalle>" +
+                                    $"<Cantidad>{datos.Cantidad}</Cantidad>" +
+                                    $"<PrecioUnidad>{datos.Costo}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{datos.Costo}</PrecioUnidad2>" +
                                     "<Concepto_Codigo></Concepto_Codigo>" +
                                     "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
                                     "<Servicios>" +
@@ -698,6 +698,26 @@ namespace BagproWebAPI.Controllers
                        where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos"
                        select pe;
             return data.Any() ? Ok(data) : BadRequest();
+        }
+
+        [HttpGet("getProductionByNumber/{production}")]
+        public ActionResult GetProductionByNumber(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Item == production &&
+                              pe.EnvioZeus.Trim() == "0"
+                        select pe;
+            if (datos == null)
+            {
+                var datos2 = from ps in _context.Set<ProcSellado>()
+                             where ps.Item == production &&
+                                   ps.EnvioZeus.Trim() == "0"
+                             select ps;
+                return Ok(datos2);
+            }
+            return Ok(datos);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // PUT: api/ProcExtrusion/5
