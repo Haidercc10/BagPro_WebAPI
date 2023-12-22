@@ -216,6 +216,9 @@ namespace BagproWebAPI.Controllers
                           SelladoCorte_PrecioSelladoNoche = (from c in _context.Set<ClientesOtItem>() where c.ClienteItems == ot.ClienteItems && c.PtPresentacionNom == ot.PtPresentacionNom select c.Noche).FirstOrDefault(),
                           SelladoCorte_PesoPaquete = ot.Pesopaquete,
                           SelladoCorte_PesoProducto = ot.PtPesopt,
+                          SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
+                          SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
+                          SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
 
                           // Información de Mezclas
                           Mezcla_Id = ot.MezModo,
@@ -613,9 +616,9 @@ namespace BagproWebAPI.Controllers
                                    SelladoCorte_Ancho = clot.PtAnchopt,
                                    SelladoCorte_Largo = clot.PtLargopt,
                                    SelladoCorte_Fuelle = clot.PtFuelle,
-                                   SelladoCorte_Etiqueta_Ancho = clot.Etiqueta.Trim(),
-                                   SelladoCorte_Etiqueta_Largo = clot.EtiquetaLargo.Trim(),
-                                   SelladoCorte_Etiqueta_Fuelle = clot.EtiquetaFuelle.Trim(),
+                                   SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
+                                   SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
+                                   SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
                                    TpSellado_Id = clot.PtSelladoPt.Trim(),
                                    TpSellados_Nombre = clot.PtSelladoPtNom.Trim(),
                                    SelladoCorte_PesoMillar = clot.PtPesoMillar,
