@@ -6636,7 +6636,7 @@ namespace BagproWebAPI.Models
 
             modelBuilder.Entity<Wiketiando>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("Wiketiando");
 
