@@ -463,6 +463,7 @@ namespace BagproWebAPI.Controllers
             turnosNoche.Add("RN");
 
             var ProcExt = from ext in _context.Set<ProcExtrusion>()
+                          join ot in _context.Set<ClientesOtItem>() on Convert.ToString(ext.ClienteItem) equals Convert.ToString(ot.ClienteItems)
                           where ext.Fecha >= fechaInicio &&
                                 ext.Fecha <= fechaFin &&
                                 (orden != "" ? ext.Ot.Trim() == orden : true) &&
@@ -481,7 +482,9 @@ namespace BagproWebAPI.Controllers
                               Referencia = Convert.ToString(ext.ClienteItemNombre),
                               Cantidad = Convert.ToDecimal(ext.ExtBruto),
                               Peso = Convert.ToDecimal(ext.Extnetokg),
-                              Presentacion = Convert.ToString("KLS"),
+                              Presentacion = Convert.ToString(ot.PtPresentacionNom),
+                              PesoTeorico = Convert.ToDecimal(0),
+                              Desviacion = Convert.ToDecimal(0),
                               Turno = Convert.ToString(ext.Turno),
                               Fecha = ext.Fecha.Value,
                               Hora = Convert.ToString(ext.Hora),
@@ -510,6 +513,8 @@ namespace BagproWebAPI.Controllers
                               Cantidad = Convert.ToDecimal(sel.Qty),
                               Peso = Convert.ToDecimal(sel.Peso),
                               Presentacion = Convert.ToString(sel.Unidad),
+                              PesoTeorico = Convert.ToDecimal(sel.Pesot),
+                              Desviacion = Convert.ToDecimal(sel.Desv),
                               Turno = Convert.ToString(sel.Turnos),
                               Fecha =sel.FechaEntrada,
                               Hora = Convert.ToString(sel.Hora),
@@ -722,6 +727,20 @@ namespace BagproWebAPI.Controllers
                 return Ok(datos2);
             }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("getNumberReelByNumberAndProcess/{number}/{process}")]
+        public ActionResult GetNumberReelByNumberAndProcess(int number, string process)
+        {
+            if (process == "WIKETIADO") process = "Wiketiado";
+
+            var itemPE = from pe in _context.Set<ProcExtrusion>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+
+            if (itemPE.Any()) return Ok(itemPE);
+            else {
+                var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+                return Ok(itemPS);
+            }
         }
 
         // PUT: api/ProcExtrusion/5

@@ -55,9 +55,7 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS0219 // Variable is assigned but its value is never used
-            var horario = (from h in _context.Set<Horario>()
-                           where h.Procesoplanta == proceso
-                           select h).FirstOrDefault();
+            var horario = (from h in _context.Set<Horario>() where h.Procesoplanta == proceso select h).FirstOrDefault();
             
             string horaActual = DateTime.Now.ToString("HH:mm");
             string horaInicio = $"{horario.Hora}:{horario.Minuto}";
