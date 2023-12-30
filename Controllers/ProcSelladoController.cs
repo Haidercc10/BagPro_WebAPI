@@ -88,6 +88,7 @@ namespace BagproWebAPI.Controllers
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
+                            && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       group new { PS, CL } by new
                       {
@@ -295,10 +296,11 @@ namespace BagproWebAPI.Controllers
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
-                            && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
+                            && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       select new
                       {
@@ -410,7 +412,6 @@ namespace BagproWebAPI.Controllers
                             PS.Cedula2 != "0" ? 2 : 1
                           )
                       };
-#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
             foreach (var item in con)
             {
@@ -435,8 +436,8 @@ namespace BagproWebAPI.Controllers
                 if (item.Cedula3.Trim() == persona) result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
                 if (item.Cedula4.Trim() == persona) result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
             }
-
             return result.Count() > 0 ? Ok(result) : NotFound();
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
         // Consulta la nomina de los operarios de Sellado, esta consulta será detallada por bulto
@@ -449,8 +450,9 @@ namespace BagproWebAPI.Controllers
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
+                            && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
-                      //orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
+                      orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
                           PS.Cedula,
@@ -561,7 +563,6 @@ namespace BagproWebAPI.Controllers
                             PS.Cedula2 != "0" ? 2 : 1
                           )
                       };
-#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
             var result = new List<object>();
             foreach (var item in con)
             {
@@ -588,6 +589,7 @@ namespace BagproWebAPI.Controllers
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
         // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico

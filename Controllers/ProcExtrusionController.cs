@@ -463,7 +463,6 @@ namespace BagproWebAPI.Controllers
             turnosNoche.Add("RN");
 
             var ProcExt = from ext in _context.Set<ProcExtrusion>()
-                          join ot in _context.Set<ClientesOtItem>() on Convert.ToString(ext.ClienteItem) equals Convert.ToString(ot.ClienteItems)
                           where ext.Fecha >= fechaInicio &&
                                 ext.Fecha <= fechaFin &&
                                 (orden != "" ? ext.Ot.Trim() == orden : true) &&
@@ -482,9 +481,9 @@ namespace BagproWebAPI.Controllers
                               Referencia = Convert.ToString(ext.ClienteItemNombre),
                               Cantidad = Convert.ToDecimal(ext.ExtBruto),
                               Peso = Convert.ToDecimal(ext.Extnetokg),
-                              Presentacion = Convert.ToString(ot.PtPresentacionNom),
-                              PesoTeorico = Convert.ToDecimal(0),
-                              Desviacion = Convert.ToDecimal(0),
+                              Presentacion = Convert.ToString("KLS"),
+                              //PesoTeorico = Convert.ToDecimal(0),
+                              //Desviacion = Convert.ToDecimal(0),
                               Turno = Convert.ToString(ext.Turno),
                               Fecha = ext.Fecha.Value,
                               Hora = Convert.ToString(ext.Hora),
@@ -513,8 +512,8 @@ namespace BagproWebAPI.Controllers
                               Cantidad = Convert.ToDecimal(sel.Qty),
                               Peso = Convert.ToDecimal(sel.Peso),
                               Presentacion = Convert.ToString(sel.Unidad),
-                              PesoTeorico = Convert.ToDecimal(sel.Pesot),
-                              Desviacion = Convert.ToDecimal(sel.Desv),
+                              //PesoTeorico = Convert.ToDecimal(sel.Pesot),
+                              //Desviacion = Convert.ToDecimal(sel.Desv),
                               Turno = Convert.ToString(sel.Turnos),
                               Fecha =sel.FechaEntrada,
                               Hora = Convert.ToString(sel.Hora),
@@ -713,16 +712,36 @@ namespace BagproWebAPI.Controllers
                         where pe.Item == production &&
                               pe.EnvioZeus.Trim() == "0" &&
                               pe.NomStatus == "EMPAQUE" && 
-                              pe.Observaciones != null
+                              pe.Observaciones.StartsWith("Rollo #")
                         select pe;
-            if (datos.Any()) return Ok(datos);
+            if (datos.Count() > 0) return Ok(datos);
             else 
             {
                 var datos2 = from ps in _context.Set<ProcSellado>()
                              where ps.Item == production &&
                                    ps.EnvioZeus.Trim() == "0" &&
-                                   ps.NomStatus == "SELLADO" &&
-                                   ps.Observaciones != null
+                                   ps.Observaciones.StartsWith("Rollo #")
+                             select ps;
+                return Ok(datos2);
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("getProductionForExitByNumber/{production}")]
+        public ActionResult GetProductionForExitByNumber(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Item == production &&
+                              pe.NomStatus == "EMPAQUE" &&
+                              pe.Observaciones.StartsWith("Rollo #")
+                        select pe;
+            if (datos.Count() > 0) return Ok(datos);
+            else
+            {
+                var datos2 = from ps in _context.Set<ProcSellado>()
+                             where ps.Item == production &&
+                                   ps.Observaciones.StartsWith("Rollo #")
                              select ps;
                 return Ok(datos2);
             }
