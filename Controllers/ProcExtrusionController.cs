@@ -462,17 +462,20 @@ namespace BagproWebAPI.Controllers
             turnosNoche.Add("NOCHE");
             turnosNoche.Add("RN");
 
-            var ProcExt = from ext in _context.Set<ProcExtrusion>()
-                          join ot in _context.Set<ClientesOtItem>() on Convert.ToString(ext.ClienteItem) equals Convert.ToString(ot.ClienteItems)
-                          where ext.Fecha >= fechaInicio &&
-                                ext.Fecha <= fechaFin &&
-                                (orden != "" ? ext.Ot.Trim() == orden : true) &&
-                                (proceso != "" ? ext.NomStatus == proceso : true) &&
-                                (cliente != "" ? ext.Cliente == cliente : true) &&
-                                (producto != "" ? ext.ClienteItem == producto : true) &&
-                                (turno != "" ? turno == "DIA" ? turnosDia.Contains(ext.Turno) : turno == "NOCHE" ? turnosNoche.Contains(ext.Turno) : true : true) &&
-                                (envioZeus != "" ? envioZeus == ext.EnvioZeus : true)
-                          select new
+            var ProcExt = (from ext in _context.Set<ProcExtrusion>()
+                           from cl in _context.Set<ClientesOt>()
+                           where ext.Fecha >= fechaInicio &&
+                                 ext.Fecha <= fechaFin.AddDays(1) &&
+                                 (orden != "" ? ext.Ot.Trim() == orden : true) &&
+                                 (proceso != "" ? ext.NomStatus == proceso : true) &&
+                                 (cliente != "" ? ext.Cliente == cliente : true) &&
+                                 (producto != "" ? ext.ClienteItem == producto : true) &&
+                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(ext.Turno) : turno == "NOCHE" ? turnosNoche.Contains(ext.Turno) : true : true) &&
+                                 (envioZeus != "" ? envioZeus == ext.EnvioZeus : true) &&
+                                 (Convert.ToInt32(ext.Ot.Trim()) == cl.Item) &&
+                                 ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
+                                 (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) 
+                           select new
                           {
                               Rollo = Convert.ToInt32(ext.Item),
                               Orden = Convert.ToInt32(ext.Ot),
@@ -482,7 +485,7 @@ namespace BagproWebAPI.Controllers
                               Referencia = Convert.ToString(ext.ClienteItemNombre),
                               Cantidad = Convert.ToDecimal(ext.ExtBruto),
                               Peso = Convert.ToDecimal(ext.Extnetokg),
-                              Presentacion = Convert.ToString(ot.PtPresentacionNom),
+                              Presentacion = Convert.ToString(cl.PtPresentacionNom) == "Kilo" ? "KLS" : Convert.ToString(cl.PtPresentacionNom) == "Unidad" ? "UND" : "PAQ", 
                               PesoTeorico = Convert.ToDecimal(0),
                               Desviacion = Convert.ToDecimal(0),
                               Turno = Convert.ToString(ext.Turno),
@@ -491,18 +494,23 @@ namespace BagproWebAPI.Controllers
                               Maquina = Convert.ToInt16(ext.Maquina),
                               EnvioZeus = Convert.ToString(ext.EnvioZeus),
                               Proceso = ext.NomStatus,
-                          };
+                              CantPedida = cl.DatosotKg,
+                          }).ToList();
 
-            var ProcSel = from sel in _context.Set<ProcSellado>()
+            var ProcSel = (from sel in _context.Set<ProcSellado>()
+                          from cl in _context.Set<ClientesOt>()
                           where sel.FechaEntrada >= fechaInicio &&
-                                sel.FechaEntrada <= fechaFin &&
+                                sel.FechaEntrada <= fechaFin.AddDays(1) &&
                                 (orden != "" ? sel.Ot.Trim() == orden : true) &&
                                 (proceso != "" ? sel.NomStatus == proceso : true) &&
                                 (cliente != "" ? sel.Cliente == cliente : true) &&
                                 (producto != "" ? sel.Referencia == producto : true) &&
                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
-                                (envioZeus != "" ? envioZeus == sel.EnvioZeus : true)
-                          select new
+                                (envioZeus != "" ? envioZeus == sel.EnvioZeus : true) &&
+                                (Convert.ToInt32(sel.Ot.Trim()) == cl.Item) &&
+                                (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
+                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
+                           select new
                           {
                               Rollo = Convert.ToInt32(sel.Item),
                               Orden = Convert.ToInt32(sel.Ot),
@@ -514,14 +522,15 @@ namespace BagproWebAPI.Controllers
                               Peso = Convert.ToDecimal(sel.Peso),
                               Presentacion = Convert.ToString(sel.Unidad),
                               PesoTeorico = Convert.ToDecimal(sel.Pesot),
-                              Desviacion = Convert.ToDecimal(sel.Desv),
+                              Desviacion = (sel.Unidad == "UND" || (sel.Unidad == "PAQ" && sel.Qty == 1)) ? Convert.ToDecimal((((sel.Peso - sel.Pesot) * 100) / sel.Pesot)) : sel.Unidad == "KLS" ? Convert.ToDecimal(0) : (sel.Unidad == "PAQ" && sel.Qty > 1) ? Convert.ToDecimal(0) : Convert.ToDecimal(0),
                               Turno = Convert.ToString(sel.Turnos),
                               Fecha =sel.FechaEntrada,
                               Hora = Convert.ToString(sel.Hora),
                               Maquina = Convert.ToInt16(sel.Maquina),
                               EnvioZeus = Convert.ToString(sel.EnvioZeus),
                               Proceso = sel.NomStatus,
-                          };
+                              CantPedida = cl.DatosotKg,
+                          }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
             return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
@@ -741,6 +750,81 @@ namespace BagproWebAPI.Controllers
                 var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
                 return Ok(itemPS);
             }
+        }
+
+        //Primer rollo del dia extrusion
+        private IQueryable<int> FirstRollDayExtrusion(DateTime date)
+        {
+            return from PS in _context.Set<ProcExtrusion>()
+                       where PS.Fecha == date &&
+                            (!PS.Hora.StartsWith("00")&&
+                            !PS.Hora.StartsWith("01") &&
+                            !PS.Hora.StartsWith("02") &&
+                            !PS.Hora.StartsWith("03") &&
+                            !PS.Hora.StartsWith("04") &&
+                            !PS.Hora.StartsWith("05") &&
+                            !PS.Hora.StartsWith("06") &&
+                            !PS.Hora.StartsWith("07:0") &&
+                            !PS.Hora.StartsWith("07:1") &&
+                            !PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item ascending
+                   select PS.Item;
+        }
+
+        //Primer rollo del dia sellado
+        private IQueryable<int> FirstRollDaySealed(DateTime date)
+        {
+            return from PS in _context.Set<ProcSellado>()
+                        where PS.FechaEntrada == date &&
+                             (!PS.Hora.StartsWith("00") &&
+                             !PS.Hora.StartsWith("01") &&
+                             !PS.Hora.StartsWith("02") &&
+                             !PS.Hora.StartsWith("03") &&
+                             !PS.Hora.StartsWith("04") &&
+                             !PS.Hora.StartsWith("05") &&
+                             !PS.Hora.StartsWith("06") &&
+                             !PS.Hora.StartsWith("07:0") &&
+                             !PS.Hora.StartsWith("07:1") &&
+                             !PS.Hora.StartsWith("07:2"))
+                        orderby PS.Item ascending
+                        select PS.Item;
+        }
+
+        private IQueryable<int> RollsNightExtrusion(DateTime date)
+        {
+            return from PS in _context.Set<ProcExtrusion>()
+                   where PS.Fecha == date &&
+                        (PS.Hora.StartsWith("00") ||
+                        PS.Hora.StartsWith("01") ||
+                        PS.Hora.StartsWith("02") ||
+                        PS.Hora.StartsWith("03") ||
+                        PS.Hora.StartsWith("04") ||
+                        PS.Hora.StartsWith("05") ||
+                        PS.Hora.StartsWith("06") ||
+                        PS.Hora.StartsWith("07:0") ||
+                        PS.Hora.StartsWith("07:1") ||
+                        PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item descending
+                   select PS.Item;
+        }
+
+        //Primer rollo del dia sellado
+        private IQueryable<int> RollsNightSealed(DateTime date)
+        {
+            return from PS in _context.Set<ProcSellado>()
+                   where PS.FechaEntrada == date &&
+                        (PS.Hora.StartsWith("00") ||
+                        PS.Hora.StartsWith("01") ||
+                        PS.Hora.StartsWith("02") ||
+                        PS.Hora.StartsWith("03") ||
+                        PS.Hora.StartsWith("04") ||
+                        PS.Hora.StartsWith("05") ||
+                        PS.Hora.StartsWith("06") ||
+                        PS.Hora.StartsWith("07:0") ||
+                        PS.Hora.StartsWith("07:1") ||
+                        PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item descending
+                   select PS.Item;
         }
 
         // PUT: api/ProcExtrusion/5
