@@ -722,16 +722,36 @@ namespace BagproWebAPI.Controllers
                         where pe.Item == production &&
                               pe.EnvioZeus.Trim() == "0" &&
                               pe.NomStatus == "EMPAQUE" && 
-                              pe.Observaciones != null
+                              pe.Observaciones.StartsWith("Rollo #")
                         select pe;
-            if (datos.Any()) return Ok(datos);
+            if (datos.Count() > 0) return Ok(datos);
             else 
             {
                 var datos2 = from ps in _context.Set<ProcSellado>()
                              where ps.Item == production &&
                                    ps.EnvioZeus.Trim() == "0" &&
-                                   ps.NomStatus == "SELLADO" &&
-                                   ps.Observaciones != null
+                                   ps.Observaciones.StartsWith("Rollo #")
+                             select ps;
+                return Ok(datos2);
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("getProductionForExitByNumber/{production}")]
+        public ActionResult GetProductionForExitByNumber(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Item == production &&
+                              pe.NomStatus == "EMPAQUE" &&
+                              pe.Observaciones.StartsWith("Rollo #")
+                        select pe;
+            if (datos.Count() > 0) return Ok(datos);
+            else
+            {
+                var datos2 = from ps in _context.Set<ProcSellado>()
+                             where ps.Item == production &&
+                                   ps.Observaciones.StartsWith("Rollo #")
                              select ps;
                 return Ok(datos2);
             }
@@ -790,6 +810,7 @@ namespace BagproWebAPI.Controllers
                         select PS.Item;
         }
 
+        //Rollos de la noche en extrusión
         private IQueryable<int> RollsNightExtrusion(DateTime date)
         {
             return from PS in _context.Set<ProcExtrusion>()
@@ -808,7 +829,7 @@ namespace BagproWebAPI.Controllers
                    select PS.Item;
         }
 
-        //Primer rollo del dia sellado
+        //Rollos de la noche en sellado
         private IQueryable<int> RollsNightSealed(DateTime date)
         {
             return from PS in _context.Set<ProcSellado>()
