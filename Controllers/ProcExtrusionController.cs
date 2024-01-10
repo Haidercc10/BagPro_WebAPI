@@ -522,7 +522,7 @@ namespace BagproWebAPI.Controllers
                               Peso = Convert.ToDecimal(sel.Peso),
                               Presentacion = Convert.ToString(sel.Unidad),
                               PesoTeorico = Convert.ToDecimal(sel.Pesot),
-                              Desviacion = (sel.Unidad == "UND" || (sel.Unidad == "PAQ" && sel.Qty == 1)) ? Convert.ToDecimal((((sel.Peso - sel.Pesot) * 100) / sel.Pesot)) : sel.Unidad == "KLS" ? Convert.ToDecimal(0) : (sel.Unidad == "PAQ" && sel.Qty > 1) ? Convert.ToDecimal(0) : Convert.ToDecimal(0),
+                              Desviacion =  (((Convert.ToDecimal(sel.Peso) / Convert.ToDecimal(sel.Pesot)) * 100) - 100),
                               Turno = Convert.ToString(sel.Turnos),
                               Fecha =sel.FechaEntrada,
                               Hora = Convert.ToString(sel.Hora),
