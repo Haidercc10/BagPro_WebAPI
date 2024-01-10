@@ -251,7 +251,7 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcSellado>()
-                   where PS.FechaEntrada == fecha && 
+                   where PS.FechaEntrada >= fecha && 
                          !PS.Hora.StartsWith("00") &&
                          !PS.Hora.StartsWith("01") &&
                          !PS.Hora.StartsWith("02") &&
@@ -268,7 +268,7 @@ namespace BagproWebAPI.Controllers
         private IQueryable<int> UltimosRolloPesado(DateTime fecha)
         {
             return from PS2 in _context.Set<ProcSellado>()
-                   where PS2.FechaEntrada == fecha
+                   where PS2.FechaEntrada <= fecha
                    orderby PS2.Item descending
                    select PS2.Item;
         }
