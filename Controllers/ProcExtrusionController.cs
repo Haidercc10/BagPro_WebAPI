@@ -471,7 +471,7 @@ namespace BagproWebAPI.Controllers
                                  (cliente != "" ? ext.Cliente == cliente : true) &&
                                  (producto != "" ? ext.ClienteItem == producto : true) &&
                                  (turno != "" ? turno == "DIA" ? turnosDia.Contains(ext.Turno) : turno == "NOCHE" ? turnosNoche.Contains(ext.Turno) : true : true) &&
-                                 (envioZeus != "" ? envioZeus == ext.EnvioZeus : true) &&
+                                 (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == ext.EnvioZeus : true : true) &&
                                  (Convert.ToInt32(ext.Ot.Trim()) == cl.Item) &&
                                  ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
                                  (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) 
@@ -506,7 +506,7 @@ namespace BagproWebAPI.Controllers
                                 (cliente != "" ? sel.Cliente == cliente : true) &&
                                 (producto != "" ? sel.Referencia == producto : true) &&
                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
-                                (envioZeus != "" ? envioZeus == sel.EnvioZeus : true) &&
+                                (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == sel.EnvioZeus : true : true) &&
                                 (Convert.ToInt32(sel.Ot.Trim()) == cl.Item) &&
                                 (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
                                  (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
@@ -579,6 +579,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("EnviarAjuste/{rollo}")]
         public async Task<ActionResult> EnviarAjuste(int rollo)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var datos = (from pro in _context.Set<ProcExtrusion>()
                          join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                          where pro.Item == rollo &&
@@ -593,6 +594,7 @@ namespace BagproWebAPI.Controllers
                              Costo = Convert.ToString(ot.DatoscantKg)
 
                          }).FirstOrDefault();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             if (datos == null) return Ok();
 
             string today = DateTime.Today.ToString("yyyy-MM-dd");
@@ -775,6 +777,7 @@ namespace BagproWebAPI.Controllers
         //Primer rollo del dia extrusion
         private IQueryable<int> FirstRollDayExtrusion(DateTime date)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                        where PS.Fecha == date &&
                             (!PS.Hora.StartsWith("00")&&
@@ -789,11 +792,13 @@ namespace BagproWebAPI.Controllers
                             !PS.Hora.StartsWith("07:2"))
                    orderby PS.Item ascending
                    select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         //Primer rollo del dia sellado
         private IQueryable<int> FirstRollDaySealed(DateTime date)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcSellado>()
                         where PS.FechaEntrada == date &&
                              (!PS.Hora.StartsWith("00") &&
@@ -808,11 +813,13 @@ namespace BagproWebAPI.Controllers
                              !PS.Hora.StartsWith("07:2"))
                         orderby PS.Item ascending
                         select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         //Rollos de la noche en extrusión
         private IQueryable<int> RollsNightExtrusion(DateTime date)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                    where PS.Fecha == date &&
                         (PS.Hora.StartsWith("00") ||
@@ -827,11 +834,13 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("07:2"))
                    orderby PS.Item descending
                    select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         //Rollos de la noche en sellado
         private IQueryable<int> RollsNightSealed(DateTime date)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcSellado>()
                    where PS.FechaEntrada == date &&
                         (PS.Hora.StartsWith("00") ||
@@ -846,6 +855,7 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("07:2"))
                    orderby PS.Item descending
                    select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // PUT: api/ProcExtrusion/5

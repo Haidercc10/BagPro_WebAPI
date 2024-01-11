@@ -113,6 +113,7 @@ namespace BagproWebAPI.Controllers
                                  ot.UsrModifica == v.Id
                             select v.NombreCompleto).FirstOrDefault();
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var con = from ot in _context.Set<ClientesOt>()
                       where ot.Item == orden
                       select new
@@ -302,6 +303,7 @@ namespace BagproWebAPI.Controllers
                           MezPigmto_Id2xCapa3 = ot.Mezpigm2cap3,
                           P2C3_Nombre = ot.Mezpigm2cap3Nom,
                       };
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             return con.Any() ? Ok(con) : BadRequest($"¡No se encontró una Orden de Trabajo con el consecutivo {orden}!");
         }

@@ -68,6 +68,7 @@ namespace BagproWebAPI.Controllers
         {
             if (proceso == "CORTE") proceso = "CORTADORES";
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
+#pragma warning disable CS8629 // Nullable value type may be null.
             var procDesperdicio = from d in _context.Set<Procdesperdicio>()
                                   where d.Ot == ot &&
                                   d.NomStatus.Contains("DESP_" + proceso)
@@ -107,10 +108,13 @@ namespace BagproWebAPI.Controllers
                                       Turno = Convert.ToString(p.Turno),
                                       Observacion = Convert.ToString(""),
                                   };
-#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
 
+#pragma warning disable CS8604 // Possible null reference argument.
             if (procDesperdicio == null && procExtrusion == null) return NotFound();
             else return Ok(procDesperdicio.Concat(procExtrusion));
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
+#pragma warning restore CS8629 // Nullable value type may be null.
         }
 
         // PUT: api/Procdesperdicio/5

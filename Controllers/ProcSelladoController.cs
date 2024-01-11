@@ -567,6 +567,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("EnviarAjuste/{rollo}")]
         public async Task<ActionResult> EnviarAjuste(int rollo)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var datos = (from pro in _context.Set<ProcSellado>()
                          join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                          where pro.Item == rollo &&
@@ -580,6 +581,7 @@ namespace BagproWebAPI.Controllers
                              Cantidad = pro.Qty,
                              Costo = ot.DatoscantKg
                          }).FirstOrDefault();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (datos == null) return Ok();
 
