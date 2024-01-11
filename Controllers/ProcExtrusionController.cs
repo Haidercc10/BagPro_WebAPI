@@ -529,7 +529,7 @@ namespace BagproWebAPI.Controllers
                               Maquina = Convert.ToInt16(sel.Maquina),
                               EnvioZeus = Convert.ToString(sel.EnvioZeus),
                               Proceso = sel.NomStatus,
-                              CantPedida = cl.DatosotKg,
+                              CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
                           }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
