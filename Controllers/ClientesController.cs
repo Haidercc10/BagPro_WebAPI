@@ -78,6 +78,15 @@ namespace BagproWebAPI.Controllers
             
         }
 
+        [HttpGet("getClientesNombre/{nombre}")]
+        public ActionResult GetClientesNombre(string nombre)
+        {
+            var clientes = from c in _context.Clientes
+                           where c.NombreComercial.Contains(nombre)
+                           select c;
+            return Ok(clientes);
+        }
+
         // PUT: api/Clientes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

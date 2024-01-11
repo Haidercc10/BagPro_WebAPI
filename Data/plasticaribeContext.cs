@@ -2264,6 +2264,7 @@ namespace BagproWebAPI.Models
             modelBuilder.Entity<ClientesOt>().ToTable(tb => tb.HasTrigger("ActualizarOT_EstadosProcesosOT"));
             modelBuilder.Entity<ClientesOt>().ToTable(tb => tb.HasTrigger("CrearOT_EnEstadoProcesosOT_PBdD"));
 
+            
             modelBuilder.Entity<ClientesOtItem>(entity =>
             {
                 entity.ToTable("ClientesOT_Item");
@@ -2734,6 +2735,9 @@ namespace BagproWebAPI.Models
                     .IsUnicode(false)
                     .HasDefaultValueSql("('')");
             });
+            modelBuilder.Entity<ClientesOtItem>().ToTable(tb => tb.HasTrigger("TR_ActualizarCaracteristicasProductosXCLOT_Items"));
+            modelBuilder.Entity<ClientesOtItem>().ToTable(tb => tb.HasTrigger("TR_CreacionProductosEnPBDD"));
+
 
             modelBuilder.Entity<ConosCalibre>(entity =>
             {
@@ -6632,7 +6636,7 @@ namespace BagproWebAPI.Models
 
             modelBuilder.Entity<Wiketiando>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id);
 
                 entity.ToTable("Wiketiando");
 

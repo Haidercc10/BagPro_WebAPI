@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using BagproWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BagproWebAPI.Models;
-using Microsoft.AspNetCore.Authorization;
+using ServiceReference1;
+using System.Linq;
+using System.ServiceModel;
 
 namespace BagproWebAPI.Controllers
 {
@@ -25,10 +23,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProcExtrusion>>> GetProcExtrusions()
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             return await _context.ProcExtrusions.ToListAsync();
         }
 
@@ -36,10 +34,10 @@ namespace BagproWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProcExtrusion>> GetProcExtrusion(int id)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return NotFound();
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return NotFound();
+            }
             var procExtrusion = await _context.ProcExtrusions.FindAsync(id);
 
             if (procExtrusion == null)
@@ -70,10 +68,38 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        [HttpGet("FechaFinOT/{ot}")]
+        public ActionResult<ProcExtrusion> GetFechaFinOT(string ot)
+        {
+            var procExtrusion = (from ProcExt in _context.Set<ProcExtrusion>()
+                                 where ProcExt.Ot == ot
+                                       && ProcExt.NomStatus == "EMPAQUE"
+                                 orderby ProcExt.Item descending
+                                 select new
+                                 {
+                                     ProcExt.Item,
+                                     ProcExt.Ot,
+                                     ProcExt.Fecha,
+                                     ProcExt.NomStatus,
+                                 }).FirstOrDefault();
+
+            if (procExtrusion == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(procExtrusion);
+            }
+        }
+
         /** Obtener datos por procesos de la tabla procextrusion y procsellado */
         [HttpGet("getObtenerDatosxProcesos/{OT}/{status}")]
         public ActionResult<ProcExtrusion> GetObtenerDatosxProcesos(string OT, string status)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
                                                        && prExt.NomStatus == status)
                                                  .OrderByDescending(proExt => proExt.Item)
@@ -91,8 +117,8 @@ namespace BagproWebAPI.Controllers
                                                      Operario = ProExtru.Operador,
                                                      Maquina = Convert.ToString(ProExtru.Maquina),
                                                      Fecha = Convert.ToString(ProExtru.Fecha),
-                                                     Hora  = ProExtru.Hora.Trim(),
-                                                     Proceso =  ProExtru.NomStatus,
+                                                     Hora = ProExtru.Hora.Trim(),
+                                                     Proceso = ProExtru.NomStatus,
                                                      Turno = ProExtru.Turno.Trim(),
                                                      EnviadoZeus = ProExtru.EnvioZeus.Trim()
                                                  }).ToList();
@@ -123,12 +149,17 @@ namespace BagproWebAPI.Controllers
 
             if (query == null && query2 == null) return BadRequest("No se encontraron registros en este proceso de la OT seleccionada");
             else return Ok(query.Concat(query2));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
         [HttpGet("getDatosConsolidados/{OT}/{Proceso}")]
         public ActionResult<ProcExtrusion> GetDatosConsolidados(string OT, string Proceso)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
                                                        && prExt.NomStatus == Proceso)
                                                  .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
@@ -159,8 +190,11 @@ namespace BagproWebAPI.Controllers
                                                     Registros = ProSella.Count(),
                                                 }).ToList();
 
+
             if (query1 == null && query2 == null) return BadRequest("No se encontraron rollos consolidados para mostrar");
             else return Ok(query1.Concat(query2));
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         //Consultar toda la informacion de un rollo
@@ -258,6 +292,572 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
 
+        // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
+        [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
+        public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            List<string> procesos = new List<string>();
+            foreach (var item in proceso.Split("|"))
+            {
+                procesos.Add(item);
+            }
+
+            var extrusion = from ext in _context.Set<ProcExtrusion>()
+                            where ext.Ot == orden &&
+                                  procesos.Contains(ext.NomStatus.Trim())
+                            select ext;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
+            return extrusion.Any() ? Ok(extrusion) : BadRequest();
+        }
+
+        [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
+        public ActionResult<ProcExtrusion> GetOtControlCalidadExtrusion(string OT, string status)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+            var query = from cl in _context.Set<ClientesOt>()
+                        from pe in _context.Set<ProcExtrusion>()
+                        where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
+                        pe.Ot == OT &&
+                        Convert.ToString(cl.Item) == OT &&
+                        pe.NomStatus == status
+                        select new
+                        {
+                            Rollo = pe.Item,
+                            OT = cl.Item,
+                            Id_Cliente = cl.Cliente,
+                            Cliente = cl.ClienteNom,
+                            Item = cl.ClienteItems,
+                            Referencia = cl.ClienteItemsNom,
+                            Maquina = Convert.ToString(pe.Maquina),
+                            Proceso = Convert.ToString(pe.NomStatus),
+                            Turno = Convert.ToString(pe.Turno).Trim(),
+                            PigmentoId = cl.ExtPigmento.Trim(),
+                            Pigmento = cl.ExtPigmentoNom.Trim(),
+                            Calibre = cl.ExtCalibre,
+                            Ancho = cl.PtAnchopt,
+                            Largo = cl.PtLargopt,
+                            CantBolsasxPaq = cl.PtQtyPquete,
+                            AnchoFuelle_Derecha = cl.ExtAcho1,
+                            AnchoFuelle_Izquierda = cl.ExtAcho2,
+                            AnchoFuelle_Abajo = cl.ExtAcho3,
+                            TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
+                            Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
+                            Impresion = Convert.ToString(cl.Impresion).Trim(),
+                        };
+
+            var query2 = from cl in _context.Set<ClientesOt>()
+                         from ps in _context.Set<ProcSellado>()
+                         where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
+                         ps.Ot == OT &&
+                         Convert.ToString(cl.Item) == OT &&
+                         ps.NomStatus == status
+                         select new
+                         {
+                             Rollo = ps.Item,
+                             OT = cl.Item,
+                             Id_Cliente = cl.Cliente,
+                             Cliente = cl.ClienteNom,
+                             Item = cl.ClienteItems,
+                             Referencia = cl.ClienteItemsNom,
+                             Maquina = Convert.ToString(ps.Maquina),
+                             Proceso = Convert.ToString(ps.NomStatus),
+                             Turno = Convert.ToString(ps.Turnos).Trim(),
+                             PigmentoId = cl.ExtPigmento.Trim(),
+                             Pigmento = cl.ExtPigmentoNom.Trim(),
+                             Calibre = cl.ExtCalibre,
+                             Ancho = cl.PtAnchopt,
+                             Largo = cl.PtLargopt,
+                             CantBolsasxPaq = cl.PtQtyPquete,
+                             AnchoFuelle_Derecha = cl.ExtAcho1,
+                             AnchoFuelle_Izquierda = cl.ExtAcho2,
+                             AnchoFuelle_Abajo = cl.ExtAcho3,
+                             TratadoId = Convert.ToString("No aplica"),
+                             Tratado = Convert.ToString("No aplica"),
+                             Impresion = Convert.ToString(cl.Impresion).Trim(),
+                         };
+
+            if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
+            return Ok(query.Concat(query2));
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        // Consulta que devolverá la información de las cantidades producidas por cada ara en cada uno de los meses del año que le sea pasado
+        [HttpGet("getProduccionAreas/{anio}")]
+        public ActionResult GetProduccionAreas(int anio)
+        {
+#pragma warning disable CS8629 // Nullable value type may be null.
+            var producidoExt = from pe in _context.Set<ProcExtrusion>()
+                               where pe.Fecha.Value.Year == anio
+                               orderby pe.Fecha.Value.Year descending, pe.Fecha.Value.Month descending
+                               group pe by new
+                               {
+                                   Area = Convert.ToString(pe.NomStatus),
+                                   Mes = Convert.ToInt32(pe.Fecha.Value.Month),
+                                   Anio = Convert.ToInt32(pe.Fecha.Value.Year),
+                               } into pe
+                               select new
+                               {
+                                   pe.Key.Area,
+                                   pe.Key.Mes,
+                                   pe.Key.Anio,
+                                   Producido = pe.Sum(x => x.Extnetokg),
+                               };
+
+            var producidoSell = from ps in _context.Set<ProcSellado>()
+                                where ps.FechaEntrada.Year == anio
+                                orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
+                                group ps by new
+                                {
+                                    Area = Convert.ToString(ps.NomStatus),
+                                    Mes = Convert.ToInt32(ps.FechaEntrada.Month),
+                                    Anio = Convert.ToInt32(ps.FechaEntrada.Year),
+                                } into ps
+                                select new
+                                {
+                                    ps.Key.Area,
+                                    ps.Key.Mes,
+                                    ps.Key.Anio,
+                                    Producido = ps.Sum(x => x.Peso),
+                                };
+
+            var desperdicios = from desp in _context.Set<Procdesperdicio>()
+                               where desp.Fecha.Value.Year == anio
+                               orderby desp.Fecha.Value.Year descending, desp.Fecha.Value.Month descending
+                               group desp by new
+                               {
+                                   Area = Convert.ToString(desp.NomStatus),
+                                   Mes = Convert.ToInt32(desp.Fecha.Value.Month),
+                                   Anio = Convert.ToInt32(desp.Fecha.Value.Year),
+                               } into desp
+                               select new
+                               {
+                                   desp.Key.Area,
+                                   desp.Key.Mes,
+                                   desp.Key.Anio,
+                                   Producido = desp.Sum(x => x.Extnetokg),
+                               };
+
+            return Ok(producidoExt.Concat(producidoSell).Concat(desperdicios));
+#pragma warning restore CS8629 // Nullable value type may be null.
+        }
+
+        // Consulta que devolverá la producción de las áreas en un rango de fechas
+        [HttpGet("getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}")]
+        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "")
+        {
+#pragma warning disable IDE0075 // Simplify conditional expression
+#pragma warning disable CS8629 // Nullable value type may be null.
+#pragma warning disable CS8604 // Possible null reference argument.
+
+            List<string> turnosDia = new List<string>();
+            turnosDia.Add("DIA");
+            turnosDia.Add("RD"); 
+
+            List<string> turnosNoche = new List<string>();
+            turnosNoche.Add("NOCHE");
+            turnosNoche.Add("RN");
+
+            var ProcExt = (from ext in _context.Set<ProcExtrusion>()
+                           from cl in _context.Set<ClientesOt>()
+                           where ext.Fecha >= fechaInicio &&
+                                 ext.Fecha <= fechaFin.AddDays(1) &&
+                                 (orden != "" ? ext.Ot.Trim() == orden : true) &&
+                                 (proceso != "" ? ext.NomStatus == proceso : true) &&
+                                 (cliente != "" ? ext.Cliente == cliente : true) &&
+                                 (producto != "" ? ext.ClienteItem == producto : true) &&
+                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(ext.Turno) : turno == "NOCHE" ? turnosNoche.Contains(ext.Turno) : true : true) &&
+                                 (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == ext.EnvioZeus : true : true) &&
+                                 (Convert.ToInt32(ext.Ot.Trim()) == cl.Item) &&
+                                 ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
+                                 (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) 
+                           select new
+                          {
+                              Rollo = Convert.ToInt32(ext.Item),
+                              Orden = Convert.ToInt32(ext.Ot),
+                              IdCliente = Convert.ToString(ext.Cliente),
+                              Cliente = Convert.ToString(ext.ClienteNombre),
+                              Item = Convert.ToString(ext.ClienteItem),
+                              Referencia = Convert.ToString(ext.ClienteItemNombre),
+                              Cantidad = Convert.ToDecimal(ext.ExtBruto),
+                              Peso = Convert.ToDecimal(ext.Extnetokg),
+                              Presentacion = Convert.ToString(cl.PtPresentacionNom) == "Kilo" ? "KLS" : Convert.ToString(cl.PtPresentacionNom) == "Unidad" ? "UND" : "PAQ", 
+                              PesoTeorico = Convert.ToDecimal(0),
+                              Desviacion = Convert.ToDecimal(0),
+                              Turno = Convert.ToString(ext.Turno),
+                              Fecha = ext.Fecha.Value,
+                              Hora = Convert.ToString(ext.Hora),
+                              Maquina = Convert.ToInt16(ext.Maquina),
+                              EnvioZeus = Convert.ToString(ext.EnvioZeus),
+                              Proceso = ext.NomStatus,
+                              CantPedida = cl.DatosotKg,
+                          }).ToList();
+
+            var ProcSel = (from sel in _context.Set<ProcSellado>()
+                          from cl in _context.Set<ClientesOt>()
+                          where sel.FechaEntrada >= fechaInicio &&
+                                sel.FechaEntrada <= fechaFin.AddDays(1) &&
+                                (orden != "" ? sel.Ot.Trim() == orden : true) &&
+                                (proceso != "" ? sel.NomStatus == proceso : true) &&
+                                (cliente != "" ? sel.Cliente == cliente : true) &&
+                                (producto != "" ? sel.Referencia == producto : true) &&
+                                (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
+                                (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == sel.EnvioZeus : true : true) &&
+                                (Convert.ToInt32(sel.Ot.Trim()) == cl.Item) &&
+                                (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
+                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
+                           select new
+                          {
+                              Rollo = Convert.ToInt32(sel.Item),
+                              Orden = Convert.ToInt32(sel.Ot),
+                              IdCliente = Convert.ToString(sel.CodCliente),
+                              Cliente = Convert.ToString(sel.Cliente),
+                              Item = Convert.ToString(sel.Referencia),
+                              Referencia = Convert.ToString(sel.NomReferencia),
+                              Cantidad = Convert.ToDecimal(sel.Qty),
+                              Peso = Convert.ToDecimal(sel.Peso),
+                              Presentacion = Convert.ToString(sel.Unidad),
+                              PesoTeorico = Convert.ToDecimal(sel.Pesot),
+                              Desviacion =  (((Convert.ToDecimal(sel.Peso) / Convert.ToDecimal(sel.Pesot)) * 100) - 100),
+                              Turno = Convert.ToString(sel.Turnos),
+                              Fecha =sel.FechaEntrada,
+                              Hora = Convert.ToString(sel.Hora),
+                              Maquina = Convert.ToInt16(sel.Maquina),
+                              EnvioZeus = Convert.ToString(sel.EnvioZeus),
+                              Proceso = sel.NomStatus,
+                              CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
+                          }).ToList();
+
+            var procesos = ProcExt.Concat(ProcSel);
+            return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
+
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8629 // Nullable value type may be null.
+#pragma warning restore IDE0075 // Simplify conditional expression
+        }
+
+        [HttpPost("ajusteExistencia")]
+        public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            int count = 0;
+            foreach(var rollo in rollos)
+            {
+                var datos = (from pro in _context.Set<ProcExtrusion>()
+                             join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
+                             where pro.Item == rollo &&
+                                   pro.EnvioZeus.Trim() == "0"
+                             select new
+                             {
+                                 Orden = pro.Ot,
+                                 Item = pro.ClienteItem,
+                                 Presentacion = ot.PtPresentacionNom,
+                                 Rollo = pro.Item,
+                                 Cantidad = pro.Extnetokg,
+                                 Costo = ot.DatoscantKg
+                             }).FirstOrDefault();
+
+
+                if (datos != null)
+                {
+                    //await EnviarAjuste(datos.Orden, datos.Item, datos.Presentacion, datos.Rollo, datos.Cantidad, Convert.ToDecimal(datos.Costo));
+                    await PutEnvioZeus(datos.Rollo);
+                    count++;
+                    if (count == rollos.Count) return Ok();
+                }
+                else continue;
+            }
+
+            return Ok();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("EnviarAjuste/{rollo}")]
+        public async Task<ActionResult> EnviarAjuste(int rollo)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = (from pro in _context.Set<ProcExtrusion>()
+                         join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
+                         where pro.Item == rollo &&
+                               pro.EnvioZeus.Trim() == "0"
+                         select new
+                         {
+                             Orden = pro.Ot,
+                             Item = pro.ClienteItem,
+                             Presentacion = ot.PtPresentacionNom,
+                             Rollo = pro.Item,
+                             Cantidad = Convert.ToString(pro.Extnetokg),
+                             Costo = Convert.ToString(ot.DatoscantKg)
+
+                         }).FirstOrDefault();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            if (datos == null) return Ok();
+
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            SoapRequestAction request = new SoapRequestAction();
+            request.User = "wsZeusInvProd";
+            request.Password = "wsZeusInvProd";
+            request.Body = $"<Ajuste>" +
+                                $"<Op>I</Op>" +
+                                $"<Cabecera>" +
+                                    $"<Detalle>{Convert.ToString(datos.Orden)}</Detalle>" +
+                                    "<Concepto>001</Concepto>" +
+                                    "<Consecutivo>0</Consecutivo>" +
+                                    $"<Fecha>{today}</Fecha>" +
+                                    "<Estado></Estado>" +
+                                    "<Solicitante>7200000</Solicitante>" +
+                                    "<Aprueba></Aprueba>" +
+                                    "<Fuente>MA</Fuente>" +
+                                    "<Serie>00</Serie>" +
+                                    "<Usuario>zeussystem</Usuario>" +
+                                    "<Documento></Documento>" +
+                                    "<Documentorevertido></Documentorevertido>" +
+                                    "<Bodega>003</Bodega>" +
+                                    "<Grupo></Grupo>" +
+                                    "<Origen>I</Origen>" +
+                                    "<ConsecutivoRecosteo>0</ConsecutivoRecosteo>" +
+                                    "<TipoDocumentoExterno></TipoDocumentoExterno>" +
+                                    "<ConsecutivoExterno></ConsecutivoExterno>" +
+                                    "<EsAjustePorDistribucion></EsAjustePorDistribucion>" +
+                                    "<ItemsBodegaVirtual></ItemsBodegaVirtual>" +
+                                    "<Clasificaciones></Clasificaciones>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<EsInicioNIIF></EsInicioNIIF>" +
+                                    "<UtilizarZmlSpId></UtilizarZmlSpId>" +
+                                    "<DatoExterno1></DatoExterno1>" +
+                                    "<DatoExterno2></DatoExterno2>" +
+                                    "<DatoExterno3></DatoExterno3>" +
+                                    "<Moneda></Moneda>" +
+                                    "<TasaCambio>1</TasaCambio>" +
+                                    "<BU>Local</BU>" +
+                                "</Cabecera>" +
+                                "<Productos>" +
+                                    $"<CodigoArticulo>{datos.Item}</CodigoArticulo>" +
+                                    $"<Presentacion>{datos.Presentacion}</Presentacion>" +
+                                    "<CodigoLote>0</CodigoLote>" +
+                                    "<CodigoBodega>003</CodigoBodega>" +
+                                    "<CodigoUbicacion></CodigoUbicacion>" +
+                                    "<CodigoClasificacion>0</CodigoClasificacion>" +
+                                    "<CodigoReferencia></CodigoReferencia>" +
+                                    "<Serial>0</Serial>" +
+                                    $"<Detalle>{datos.Rollo}</Detalle>" +
+                                    $"<Cantidad>{datos.Cantidad}</Cantidad>" +
+                                    $"<PrecioUnidad>{datos.Costo}</PrecioUnidad>" +
+                                    $"<PrecioUnidad2>{datos.Costo}</PrecioUnidad2>" +
+                                    "<Concepto_Codigo></Concepto_Codigo>" +
+                                    "<TemporalItems_ValorAjuste></TemporalItems_ValorAjuste>" +
+                                    "<Servicios>" +
+                                    "<CodigoServicios>001</CodigoServicios>" +
+                                    "<Referencia></Referencia>" +
+                                    "<Detalle></Detalle>" +
+                                    "<AuxiliarAbierto></AuxiliarAbierto>" +
+                                    "<CentroCosto>0202</CentroCosto>" +
+                                    "<Tercero>800188732</Tercero>" +
+                                    "<Proveedor></Proveedor>" +
+                                    "<TipoDocumentoCartera></TipoDocumentoCartera>" +
+                                    "<DocumentoCartera></DocumentoCartera>" +
+                                    "<Vencimiento></Vencimiento>" +
+                                    "<Cliente></Cliente>" +
+                                    "<Vendedor></Vendedor>" +
+                                    "<ItemsContable></ItemsContable>" +
+                                    "<Propiedad1></Propiedad1>" +
+                                    "<Propiedad2></Propiedad2>" +
+                                    "<Propiedad3></Propiedad3>" +
+                                    "<Propiedad4></Propiedad4>" +
+                                    "<Propiedad5></Propiedad5>" +
+                                    "<CuentaMovimiento></CuentaMovimiento>" +
+                                    "<Moneda></Moneda>" +
+                                    "<Moneda></Moneda>" +
+                                    "</Servicios>" +
+                                "</Productos>" +
+                            "</Ajuste>";
+            request.DynamicProperty = "4";
+            request.Action = "Inventario";
+            request.TypeSQL = "true";
+
+            var binding = new BasicHttpBinding()
+            {
+                Name = "BasicHttpBinding_IFakeService",
+                MaxBufferSize = 2147483647,
+                MaxReceivedMessageSize = 2147483647
+            };
+
+            var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
+            WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
+            SoapResponse response = await client.ExecuteActionSOAPAsync(request);
+            await PutEnvioZeus(rollo);
+            return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("getDatosRollosPesados/{orden}/{proceso}")]
+        public ActionResult GetDatosRollosPesados(string orden, string proceso)
+        {
+            var rollosPesados = from pe in _context.Set<ProcExtrusion>()
+                                where pe.Ot == orden &&
+                                      pe.NomStatus == proceso
+                                select pe;
+            return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
+        }
+
+        [HttpGet("getInformactionProductionForTag/{production}")]
+        public ActionResult GetInformactionProductionForTag(int production)
+        {
+            var data = from pe in _context.Set<ProcExtrusion>()
+                       where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos"
+                       select pe;
+            return data.Any() ? Ok(data) : BadRequest();
+        }
+
+        [HttpGet("getProductionByNumber/{production}")]
+        public ActionResult GetProductionByNumber(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Item == production &&
+                              pe.EnvioZeus.Trim() == "0" &&
+                              pe.NomStatus == "EMPAQUE" && 
+                              pe.Observaciones.StartsWith("Rollo #")
+                        select pe;
+            if (datos.Count() > 0) return Ok(datos);
+            else 
+            {
+                var datos2 = from ps in _context.Set<ProcSellado>()
+                             where ps.Item == production &&
+                                   ps.EnvioZeus.Trim() == "0" &&
+                                   ps.Observaciones.StartsWith("Rollo #")
+                             select ps;
+                return Ok(datos2);
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("getProductionForExitByNumber/{production}")]
+        public ActionResult GetProductionForExitByNumber(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Item == production &&
+                              pe.NomStatus == "EMPAQUE" &&
+                              pe.Observaciones.StartsWith("Rollo #")
+                        select pe;
+            if (datos.Count() > 0) return Ok(datos);
+            else
+            {
+                var datos2 = from ps in _context.Set<ProcSellado>()
+                             where ps.Item == production &&
+                                   ps.Observaciones.StartsWith("Rollo #")
+                             select ps;
+                return Ok(datos2);
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpGet("getNumberReelByNumberAndProcess/{number}/{process}")]
+        public ActionResult GetNumberReelByNumberAndProcess(int number, string process)
+        {
+            if (process == "WIKETIADO") process = "Wiketiado";
+
+            var itemPE = from pe in _context.Set<ProcExtrusion>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+
+            if (itemPE.Any()) return Ok(itemPE);
+            else {
+                var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+                return Ok(itemPS);
+            }
+        }
+
+        //Primer rollo del dia extrusion
+        private IQueryable<int> FirstRollDayExtrusion(DateTime date)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return from PS in _context.Set<ProcExtrusion>()
+                       where PS.Fecha == date &&
+                            (!PS.Hora.StartsWith("00")&&
+                            !PS.Hora.StartsWith("01") &&
+                            !PS.Hora.StartsWith("02") &&
+                            !PS.Hora.StartsWith("03") &&
+                            !PS.Hora.StartsWith("04") &&
+                            !PS.Hora.StartsWith("05") &&
+                            !PS.Hora.StartsWith("06") &&
+                            !PS.Hora.StartsWith("07:0") &&
+                            !PS.Hora.StartsWith("07:1") &&
+                            !PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item ascending
+                   select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        //Primer rollo del dia sellado
+        private IQueryable<int> FirstRollDaySealed(DateTime date)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return from PS in _context.Set<ProcSellado>()
+                        where PS.FechaEntrada == date &&
+                             (!PS.Hora.StartsWith("00") &&
+                             !PS.Hora.StartsWith("01") &&
+                             !PS.Hora.StartsWith("02") &&
+                             !PS.Hora.StartsWith("03") &&
+                             !PS.Hora.StartsWith("04") &&
+                             !PS.Hora.StartsWith("05") &&
+                             !PS.Hora.StartsWith("06") &&
+                             !PS.Hora.StartsWith("07:0") &&
+                             !PS.Hora.StartsWith("07:1") &&
+                             !PS.Hora.StartsWith("07:2"))
+                        orderby PS.Item ascending
+                        select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        //Rollos de la noche en extrusión
+        private IQueryable<int> RollsNightExtrusion(DateTime date)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return from PS in _context.Set<ProcExtrusion>()
+                   where PS.Fecha == date &&
+                        (PS.Hora.StartsWith("00") ||
+                        PS.Hora.StartsWith("01") ||
+                        PS.Hora.StartsWith("02") ||
+                        PS.Hora.StartsWith("03") ||
+                        PS.Hora.StartsWith("04") ||
+                        PS.Hora.StartsWith("05") ||
+                        PS.Hora.StartsWith("06") ||
+                        PS.Hora.StartsWith("07:0") ||
+                        PS.Hora.StartsWith("07:1") ||
+                        PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item descending
+                   select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        //Rollos de la noche en sellado
+        private IQueryable<int> RollsNightSealed(DateTime date)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return from PS in _context.Set<ProcSellado>()
+                   where PS.FechaEntrada == date &&
+                        (PS.Hora.StartsWith("00") ||
+                        PS.Hora.StartsWith("01") ||
+                        PS.Hora.StartsWith("02") ||
+                        PS.Hora.StartsWith("03") ||
+                        PS.Hora.StartsWith("04") ||
+                        PS.Hora.StartsWith("05") ||
+                        PS.Hora.StartsWith("06") ||
+                        PS.Hora.StartsWith("07:0") ||
+                        PS.Hora.StartsWith("07:1") ||
+                        PS.Hora.StartsWith("07:2"))
+                   orderby PS.Item descending
+                   select PS.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         // PUT: api/ProcExtrusion/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProcExtrusion(int id, ProcExtrusion procExtrusion)
@@ -288,14 +888,36 @@ namespace BagproWebAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("putEnvioZeus{rollo}")]
+        public async Task<IActionResult> PutEnvioZeus(int rollo)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == rollo select pro).FirstOrDefault();
+            procExtrusion.EnvioZeus = "1";
+            _context.Entry(procExtrusion).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProcExtrusionExists(rollo)) return NotFound();
+                else throw;
+            }
+
+            return NoContent();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         // POST: api/ProcExtrusion
         [HttpPost]
         public async Task<ActionResult<ProcExtrusion>> PostProcExtrusion(ProcExtrusion procExtrusion)
         {
-          if (_context.ProcExtrusions == null)
-          {
-              return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
-          }
+            if (_context.ProcExtrusions == null)
+            {
+                return Problem("Entity set 'plasticaribeContext.ProcExtrusions'  is null.");
+            }
             _context.ProcExtrusions.Add(procExtrusion);
             await _context.SaveChangesAsync();
 
