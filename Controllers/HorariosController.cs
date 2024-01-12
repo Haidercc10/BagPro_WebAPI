@@ -65,12 +65,12 @@ namespace BagproWebAPI.Controllers
 
             if (Convert.ToDateTime(horaActual) >= Convert.ToDateTime(horaInicio) && Convert.ToDateTime(horaActual) <= Convert.ToDateTime(horaFin))
             {
-                if (proceso == "EXTRUSION") turno = "RD";
+                if (proceso == "EXTRUSION" || proceso == "DESP_EXTRUSION") turno = "RD";
                 else turno = "DIA";
             }
             else
             {
-                if (proceso == "EXTRUSION") turno = "RN";
+                if (proceso == "EXTRUSION" || proceso == "DESP_EXTRUSION") turno = "RN";
                 else turno = "NOCHE";
             }
 

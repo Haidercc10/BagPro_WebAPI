@@ -502,7 +502,7 @@ namespace BagproWebAPI.Controllers
                           where sel.FechaEntrada >= fechaInicio &&
                                 sel.FechaEntrada <= fechaFin.AddDays(1) &&
                                 (orden != "" ? sel.Ot.Trim() == orden : true) &&
-                                (proceso != "" ? sel.NomStatus == proceso : true) &&
+                                (proceso != "" ? proceso == "SELLADO" ? sel.NomStatus == proceso || (sel.NomStatus == "Wiketiado" && sel.Maquina == "50") : proceso == "Wiketiado" ? (sel.NomStatus == proceso && sel.Maquina != "50") : true : true) &&
                                 (cliente != "" ? sel.Cliente == cliente : true) &&
                                 (producto != "" ? sel.Referencia == producto : true) &&
                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
