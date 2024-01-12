@@ -88,6 +88,129 @@ namespace BagproWebAPI.Controllers
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
+                            //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
+                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                      group new { PS, CL } by new
+                      {
+                          PS.Cedula,
+                          PS.Cedula2,
+                          PS.Cedula3,
+                          PS.Cedula4,
+                          PS.Operario,
+                          PS.Operario2,
+                          PS.Operario3,
+                          PS.Operario4,
+                          PS.DivBulto,
+                          PS.Ot,
+                          PS.Referencia,
+                          PS.NomReferencia,
+                          PS.Unidad,
+                          PS.Turnos,
+                          CL.Dia,
+                          CL.Noche,
+                          PS.EnvioZeus,
+                          PS.NomStatus,
+                          PS.Maquina,
+                      } into PS
+                      select new
+                      {
+                          PS.Key.Cedula,
+                          PS.Key.Cedula2,
+                          PS.Key.Cedula3,
+                          PS.Key.Cedula4,
+                          PS.Key.Operario,
+                          PS.Key.Operario2,
+                          PS.Key.Operario3,
+                          PS.Key.Operario4,
+                          PS.Key.Ot,
+                          PS.Key.Referencia,
+                          PS.Key.NomReferencia,
+                          Cantidad = (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto),
+                          CantidadTotal = PS.Sum(x => x.PS.Qty),
+                          PS.Key.Unidad,
+                          PS.Key.Turnos,
+                          PS.Key.NomStatus,
+                          PrecioDia = (
+                            PS.Key.Maquina == "9" ? ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
+                                                      (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : Convert.ToDecimal(PS.Key.Dia)) :
+                            PS.Key.Maquina == "50" ? ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
+                                                      (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : Convert.ToDecimal(PS.Key.Dia)) :
+                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : 0
+                          ),
+                          PrecioNoche = (
+                            PS.Key.Maquina == "9" ? ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() != null ?
+                                                      (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : Convert.ToDecimal(PS.Key.Noche)) :
+                            PS.Key.Maquina == "50" ? ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() != null ?
+                                                      (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : Convert.ToDecimal(PS.Key.Noche)) :
+                            PS.Key.NomStatus == "SELLADO" ? Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.NomStatus == "Wiketiado" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : 0
+                          ),
+                          Total = (
+                            //PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Dia) :
+                            //PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Noche) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Dia) :
+                            PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Noche) :
+
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
+                                                                                                                                  (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : Convert.ToDecimal(PS.Key.Dia)) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
+                                                                                                                                   (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : Convert.ToDecimal(PS.Key.Dia)) :
+
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() != null ?
+                                                                                                                                  (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : Convert.ToDecimal(PS.Key.Noche)) :
+                            PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() != null ?
+                                                                                                                                   (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : Convert.ToDecimal(PS.Key.Noche)) :
+
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : 0
+                          ),
+                          Registros = PS.Count(),
+                          PesadoEntre = PS.Key.DivBulto,
+                          PS.Key.EnvioZeus,
+                      };
+            var result = new List<object>();
+            foreach (var item in con)
+            {
+                string data = $"'Referencia': '{item.Referencia.Trim()}', " +
+                    $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
+                    $"'Ot': '{item.Ot}', " +
+                    $"'Registros': '{item.Registros}', " +
+                    $"'Pesado_Entre': '{Convert.ToDecimal(item.PesadoEntre)}', " +
+                    $"'CantidadTotal': '{Convert.ToDecimal(item.CantidadTotal)}', " +
+                    $"'Cantidad': '{Convert.ToDecimal(item.Cantidad)}', " +
+                    $"'Presentacion': '{item.Unidad.Trim()}', " +
+                    $"'EnvioZeus': '{item.EnvioZeus.Trim()}', " +
+                    $"'Proceso': '{item.NomStatus.Trim()}', " +
+                    $"'Turno': '{item.Turnos.Trim()}', " +
+                    $"'PrecioDia': '{Convert.ToDecimal(item.PrecioDia)}', " +
+                    $"'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', " +
+                    $"'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
+
+                result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+            }
+
+            return result.Count() > 0 ? Ok(result) : NotFound();
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
+        }
+
+        // Consulta la nomina de los operarios de Sellado, esta consulta será acumulada por Items
+        [HttpGet("getNominaSelladoDespachoAcumuladaItem/{fechaInicio}/{fechaFin}")]
+        public ActionResult GetNominaSelladoDespachoAcumuladaItem(DateTime fechaInicio, DateTime fechaFin)
+        {
+#pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
+
+            var con = from PS in _context.Set<ProcSellado>()
+                      join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
+                      where PS.FechaEntrada >= fechaInicio
+                            && PS.FechaEntrada <= fechaFin.AddDays(1)
+                            && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       group new { PS, CL } by new
@@ -110,7 +233,7 @@ namespace BagproWebAPI.Controllers
                           CL.Noche,
                           PS.EnvioZeus,
                           PS.NomStatus,
-                          PS.Maquina
+                          PS.Maquina,
                       } into PS
                       select new
                       {
@@ -149,7 +272,7 @@ namespace BagproWebAPI.Controllers
                           Total = (
                             PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "DIA" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Dia) :
                             PS.Key.Maquina != "50" && PS.Key.Maquina != "9" && PS.Key.EnvioZeus == "1" && PS.Key.NomStatus == "SELLADO" && PS.Key.Turnos == "NOCHE" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * Convert.ToDecimal(PS.Key.Noche) :
-
+                            
                             PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
                                                                                                                                   (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() : Convert.ToDecimal(PS.Key.Dia)) :
                             PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() != null ?
@@ -160,7 +283,7 @@ namespace BagproWebAPI.Controllers
                             PS.Key.EnvioZeus == "1" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() != null ?
                                                                                                                                    (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() : Convert.ToDecimal(PS.Key.Noche)) :
 
-                             PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
+                            PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
                             PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "DIA" && PS.Key.Maquina == "50" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Key.Referencia select wik.Dia).First() :
 
                             PS.Key.EnvioZeus == "0" && PS.Key.Turnos == "NOCHE" && PS.Key.Maquina == "9" ? (PS.Sum(x => x.PS.Qty) / PS.Key.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Key.Referencia select wik.Noche).First() :
@@ -250,7 +373,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Referencia == producto
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
-                            && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
+                            //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       select new
                       {
@@ -290,8 +413,10 @@ namespace BagproWebAPI.Controllers
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
                           ),
                           Total = (
-                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
-                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
+                            //PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
+                            //PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
 
                             PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / PS.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() != null ?
                                                                                                                         (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() : Convert.ToDecimal(CL.Dia)) :
@@ -309,7 +434,8 @@ namespace BagproWebAPI.Controllers
                             PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / PS.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
                             PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / PS.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
                           ),
-                          PesadoEntre = PS.DivBulto
+                          PesadoEntre = PS.DivBulto,
+                          PS.EnvioZeus,
                       };
             var result = new List<object>();
             foreach (var item in con)
@@ -325,7 +451,8 @@ namespace BagproWebAPI.Controllers
                     $"'Maquina': '{item.Maquina.Trim()}'," +
                     $"'Peso': '{item.Peso}'," +
                     $"'Turno': '{item.Turnos.Trim()}'," +
-                    $"'Proceso': '{item.NomStatus.Trim()}'," +
+                    $"'EnvioZeus': '{item.EnvioZeus.Trim()}', " +
+                    $"'Proceso': '{item.NomStatus.Trim()}', " +
                     $"'Precio': '{item.Precio}'," +
                     $"'Valor_Total': '{item.Total}'," +
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
@@ -349,7 +476,7 @@ namespace BagproWebAPI.Controllers
                       where PS.FechaEntrada >= fechaInicio
                             && PS.FechaEntrada <= fechaFin.AddDays(1)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
-                            && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
+                            //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
@@ -390,8 +517,10 @@ namespace BagproWebAPI.Controllers
                             PS.NomStatus == "Wiketiado" && PS.Turnos == "NOCHE" ? (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Dia).First() : 0
                           ),
                           Total = (
-                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
-                            PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
+                            //PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
+                            //PS.Maquina != "50" && PS.Maquina != "9" && PS.EnvioZeus == "1" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.NomStatus == "SELLADO" && PS.Turnos == "DIA" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Dia) :
+                            PS.Maquina != "50" && PS.Maquina != "9" && PS.NomStatus == "SELLADO" && PS.Turnos == "NOCHE" ? (PS.Qty / PS.DivBulto) * Convert.ToDecimal(CL.Noche) :
 
                             PS.EnvioZeus == "1" && PS.Turnos == "DIA" && PS.Maquina == "9" ? (PS.Qty / PS.DivBulto) * ((from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() != null ?
                                                                                                                         (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Dia).First() : Convert.ToDecimal(CL.Dia)) :
@@ -409,7 +538,8 @@ namespace BagproWebAPI.Controllers
                             PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "9" ? (PS.Qty / PS.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 9 && wik.Codigo == PS.Referencia select wik.Noche).First() :
                             PS.EnvioZeus == "0" && PS.Turnos == "NOCHE" && PS.Maquina == "50" ? (PS.Qty / PS.DivBulto) * (from wik in _context.Set<Wiketiando>() where wik.Mq == 50 && wik.Codigo == PS.Referencia select wik.Noche).First() : 0
                           ),
-                          PesadoEntre = PS.DivBulto
+                          PesadoEntre = PS.DivBulto,
+                          PS.EnvioZeus,
                       };
             var result = new List<object>();
             foreach (var item in con)
@@ -425,7 +555,8 @@ namespace BagproWebAPI.Controllers
                     $"'Maquina': '{item.Maquina.Trim()}'," +
                     $"'Peso': '{item.Peso}'," +
                     $"'Turno': '{item.Turnos.Trim()}'," +
-                    $"'Proceso': '{item.NomStatus.Trim()}'," +
+                    $"'EnvioZeus': '{item.EnvioZeus.Trim()}', " +
+                    $"'Proceso': '{item.NomStatus.Trim()}', " +
                     $"'Precio': '{item.Precio}'," +
                     $"'Valor_Total': '{item.Total}'," +
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
