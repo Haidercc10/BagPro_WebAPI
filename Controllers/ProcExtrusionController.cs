@@ -722,17 +722,17 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var datos = from pe in _context.Set<ProcExtrusion>()
                         where pe.Item == production &&
-                              pe.EnvioZeus.Trim() == "0" &&
                               pe.NomStatus == "EMPAQUE" && 
-                              pe.Observaciones.StartsWith("Rollo #")
+                              pe.EnvioZeus.Trim() == "0" /*&&
+                              pe.Observaciones.StartsWith("Rollo #")*/
                         select pe;
-            if (datos.Count() > 0) return Ok(datos);
+            if (datos.Any()) return Ok(datos);
             else 
             {
                 var datos2 = from ps in _context.Set<ProcSellado>()
                              where ps.Item == production &&
-                                   ps.EnvioZeus.Trim() == "0" &&
-                                   ps.Observaciones.StartsWith("Rollo #")
+                                   ps.EnvioZeus.Trim() == "0" /*&&
+                                   ps.Observaciones.StartsWith("Rollo #")*/
                              select ps;
                 return Ok(datos2);
             }
