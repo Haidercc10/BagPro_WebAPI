@@ -175,7 +175,9 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Referencia': '{item.Referencia.Trim()}', " +
+                if (item.Cedula.Trim() != "0")
+                {
+                    string data = $"'Referencia': '{item.Referencia.Trim()}', " +
                     $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
                     $"'Ot': '{item.Ot}', " +
                     $"'Registros': '{item.Registros}', " +
@@ -190,10 +192,11 @@ namespace BagproWebAPI.Controllers
                     $"'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', " +
                     $"'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
 
-                result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
-                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
-                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                    result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                    if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                    if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                    if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                }
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
@@ -299,7 +302,9 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Referencia': '{item.Referencia.Trim()}', " +
+                if (item.Cedula.Trim() != "0")
+                {
+                    string data = $"'Referencia': '{item.Referencia.Trim()}', " +
                     $"'Nombre_Referencia': '{item.NomReferencia.Replace("'", "`").Replace('"', '`')}'," +
                     $"'Ot': '{item.Ot}', " +
                     $"'Registros': '{item.Registros}', " +
@@ -313,10 +318,11 @@ namespace BagproWebAPI.Controllers
                     $"'PrecioNoche': '{Convert.ToDecimal(item.PrecioNoche)}', " +
                     $"'PagoTotal': '{Convert.ToDecimal(item.Total)}'";
 
-                result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
-                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
-                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                    result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                    if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                    if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                    if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                }
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();
@@ -448,7 +454,9 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
+                if (item.Cedula.Trim() != "0")
+                {
+                    string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Ot': '{item.Ot}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
@@ -465,10 +473,11 @@ namespace BagproWebAPI.Controllers
                     $"'Valor_Total': '{item.Total}'," +
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
 
-                if (item.Cedula.Trim() == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2.Trim() == persona) result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
-                if (item.Cedula3.Trim() == persona) result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
-                if (item.Cedula4.Trim() == persona) result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                    if (item.Cedula.Trim() == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                    if (item.Cedula2.Trim() == persona) result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                    if (item.Cedula3.Trim() == persona) result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                    if (item.Cedula4.Trim() == persona) result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                }
             }
             return result.Count() > 0 ? Ok(result) : NotFound();
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
@@ -556,7 +565,9 @@ namespace BagproWebAPI.Controllers
             var result = new List<object>();
             foreach (var item in con)
             {
-                string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
+                if (item.Cedula.Trim() != "0")
+                {
+                    string data = $"'Fecha': '{item.FechaEntrada} {item.Hora}'," +
                     $"'Bulto': '{item.Item}'," +
                     $"'Ot': '{item.Ot}'," +
                     $"'Referencia': '{item.Referencia.Trim()}'," +
@@ -573,10 +584,11 @@ namespace BagproWebAPI.Controllers
                     $"'Valor_Total': '{item.Total}'," +
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
 
-                result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
-                if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
-                if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                    result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
+                    if (item.Cedula2.Trim() != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                    if (item.Cedula3.Trim() != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                    if (item.Cedula4.Trim() != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                }
             }
 
             return result.Count() > 0 ? Ok(result) : NotFound();

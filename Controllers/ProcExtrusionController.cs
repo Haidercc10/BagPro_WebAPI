@@ -722,7 +722,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var datos = from pe in _context.Set<ProcExtrusion>()
                         where pe.Item == production &&
-                              pe.NomStatus == "EMPAQUE" && 
+                              (pe.NomStatus == "EMPAQUE" || pe.NomStatus == "EXTRUSION") && 
                               pe.EnvioZeus.Trim() == "0" /*&&
                               pe.Observaciones.StartsWith("Rollo #")*/
                         select pe;
@@ -746,14 +746,16 @@ namespace BagproWebAPI.Controllers
             var datos = from pe in _context.Set<ProcExtrusion>()
                         where pe.Item == production &&
                               pe.NomStatus == "EMPAQUE" &&
-                              pe.Observaciones.StartsWith("Rollo #")
+                              pe.Observaciones.StartsWith("Rollo #") &&
+                              pe.EnvioZeus.Trim() == "1"
                         select pe;
             if (datos.Count() > 0) return Ok(datos);
             else
             {
                 var datos2 = from ps in _context.Set<ProcSellado>()
                              where ps.Item == production &&
-                                   ps.Observaciones.StartsWith("Rollo #")
+                                   ps.Observaciones.StartsWith("Rollo #") &&
+                                   ps.EnvioZeus.Trim() == "1"
                              select ps;
                 return Ok(datos2);
             }
@@ -772,6 +774,68 @@ namespace BagproWebAPI.Controllers
                 var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
                 return Ok(itemPS);
             }
+        }
+
+        // Consulta que devolverá la información del rollo
+        [HttpGet("getProductionByProduction/{production}")]
+        public ActionResult GetProductionByProduction(int production)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var datos = from ps in _context.Set<ProcSellado>()
+                        where ps.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
+                              ps.EnvioZeus.Trim() == "0"
+                        select ps;
+            if (datos.Any()) return Ok(datos);
+            else
+            {
+                var datos2 = from pe in _context.Set<ProcExtrusion>()
+                        where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
+                              pe.EnvioZeus.Trim() == "0" /*&&
+                              pe.NomStatus == "EMPAQUE"*/
+                        select pe;
+                return Ok(datos2);
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        [HttpPost("getAvaibleProduction/{item}")]
+        public IActionResult getAvaibleProduction(string item, [FromBody] List<long> notAvaibleProduction)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            var sellado = from p in _context.Set<ProcSellado>()
+                          join coi in _context.Set<ClientesOtItem>() on Convert.ToString(p.Referencia) equals Convert.ToString(coi.ClienteItems)
+                          where p.Referencia == item &&
+                                !notAvaibleProduction.Contains(p.Item) &&
+                                p.EnvioZeus.Trim() == "1"
+                          select new
+                          {
+                              Item = coi.ClienteItems,
+                              Reference = coi.ClienteItemsNom,
+                              NumberProduction = p.Item,
+                              Quantity = p.Qty,
+                              Presentation = coi.PtPresentacionNom,
+                          };
+
+            if (sellado.Any()) return Ok(sellado);
+            else
+            {
+                var extrusion = from p in _context.Set<ProcExtrusion>()
+                                join coi in _context.Set<ClientesOtItem>() on Convert.ToString(p.ClienteItem) equals Convert.ToString(coi.ClienteItems)
+                                where p.ClienteItem == item &&
+                                      !notAvaibleProduction.Contains(p.Item) &&
+                                      p.EnvioZeus.Trim() == "1"
+                                select new
+                                {
+                                    Item = coi.ClienteItems,
+                                    Reference = coi.ClienteItemsNom,
+                                    NumberProduction = p.Item,
+                                    Quantity = coi.PtPresentacionNom == "Kilo" ? p.Extnetokg : 1,
+                                    Presentation = coi.PtPresentacionNom,
+                                };
+
+                return extrusion.Any() ? Ok(extrusion) : NotFound();
+            }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         //Primer rollo del dia extrusion
