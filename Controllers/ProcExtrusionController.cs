@@ -693,7 +693,6 @@ namespace BagproWebAPI.Controllers
             var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
             WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
             SoapResponse response = await client.ExecuteActionSOAPAsync(request);
-            await PutEnvioZeus(rollo);
             return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
@@ -716,24 +715,24 @@ namespace BagproWebAPI.Controllers
             return data.Any() ? Ok(data) : BadRequest();
         }
 
-        [HttpGet("getProductionByNumber/{production}")]
-        public ActionResult GetProductionByNumber(int production)
+        [HttpGet("getProductionByNumber/{production}/{searchIn}")]
+        public ActionResult GetProductionByNumber(int production, string searchIn)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from pe in _context.Set<ProcExtrusion>()
+            var datos = from ps in _context.Set<ProcSellado>()
+                        where ps.Item == production &&
+                              ps.EnvioZeus.Trim() == "0" /*&&
+                              ps.Observaciones.StartsWith("Rollo #")*/
+                        select ps;
+            if (datos.Any() && (searchIn == "TODO" || searchIn == "SELLADO")) return Ok(datos);
+            else 
+            {
+                var datos2 = from pe in _context.Set<ProcExtrusion>()
                         where pe.Item == production &&
                               (pe.NomStatus == "EMPAQUE" || pe.NomStatus == "EXTRUSION") && 
                               pe.EnvioZeus.Trim() == "0" /*&&
                               pe.Observaciones.StartsWith("Rollo #")*/
                         select pe;
-            if (datos.Any()) return Ok(datos);
-            else 
-            {
-                var datos2 = from ps in _context.Set<ProcSellado>()
-                             where ps.Item == production &&
-                                   ps.EnvioZeus.Trim() == "0" /*&&
-                                   ps.Observaciones.StartsWith("Rollo #")*/
-                             select ps;
                 return Ok(datos2);
             }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -952,7 +951,7 @@ namespace BagproWebAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("putEnvioZeus{rollo}")]
+        [HttpPut("putEnvioZeus/{rollo}")]
         public async Task<IActionResult> PutEnvioZeus(int rollo)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.

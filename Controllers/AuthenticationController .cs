@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using ConfigurationManager = BagproWebAPI.Service.ConfigurationManager;
 using BagproWebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PlasticaribeAPI.Controllers
 {
@@ -24,16 +25,12 @@ namespace PlasticaribeAPI.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] Login user)
         {
-            if (user is null)
-            {
-                return BadRequest("Invalid user request!!!");
-            }
+#pragma warning disable CS8604 // Posible argumento de referencia nulo
+            if (user is null) return BadRequest("Invalid user request!!!");
             
             if (user.Id_Usuario == 1234568879 && user.Contrasena == "123456879")
             {
-#pragma warning disable CS8604 // Posible argumento de referencia nulo
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]));
-#pragma warning restore CS8604 // Posible argumento de referencia nulo
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
                     issuer: ConfigurationManager.AppSetting["JWT:ValidIssuer"],
@@ -49,6 +46,7 @@ namespace PlasticaribeAPI.Controllers
                 });
             }
             return Unauthorized();
+#pragma warning restore CS8604 // Posible argumento de referencia nulo
         }
     }
 }

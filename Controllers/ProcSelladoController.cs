@@ -684,7 +684,7 @@ namespace BagproWebAPI.Controllers
                              Presentacion = ot.PtPresentacionNom,
                              Rollo = pro.Item,
                              Cantidad = pro.Qty,
-                             Costo = ot.DatoscantKg
+                             Costo = ot.DatosvalorBolsa
                          }).FirstOrDefault();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
@@ -786,7 +786,7 @@ namespace BagproWebAPI.Controllers
             var endpoint = new EndpointAddress("http://192.168.0.85/wsGenericoZeus/ServiceWS.asmx");
             WebservicesGenericoZeusSoapClient client = new WebservicesGenericoZeusSoapClient(binding, endpoint);
             SoapResponse response = await client.ExecuteActionSOAPAsync(request);
-            await PutEnvioZeus(datos.Rollo);
+            //await PutEnvioZeus(datos.Rollo);
             return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
@@ -892,25 +892,21 @@ namespace BagproWebAPI.Controllers
             return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("putEnvioZeus{rollo}")]
-        public async Task<IActionResult> PutEnvioZeus(int rollo)
+        [HttpGet("putEnvioZeus/{rollo}")]
+        public ActionResult PutEnvioZeusProcSellado(int rollo)
         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefault();
-            procSellado.EnvioZeus = "1";
-            _context.Entry(procSellado).State = EntityState.Modified;
+            var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro);
 
-            try
+            if (procSellado.Any())
             {
-                await _context.SaveChangesAsync();
+                var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET EnvioZeus = '1' WHERE Item = {rollo}");
+                procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro);
+                return Ok(procSellado);
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                throw;
+                return BadRequest();
             }
-
-            return NoContent();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         [HttpGet("getProduccionSellado/{ot}")]
