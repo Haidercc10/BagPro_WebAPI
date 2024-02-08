@@ -733,7 +733,8 @@ namespace BagproWebAPI.Controllers
                               pe.EnvioZeus.Trim() == "0" /*&&
                               pe.Observaciones.StartsWith("Rollo #")*/
                         select pe;
-                return Ok(datos2);
+                if (datos2.Any() && (searchIn == "TODO" || searchIn == "EXTRUSION")) return Ok(datos2);
+                else return NotFound();
             }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
