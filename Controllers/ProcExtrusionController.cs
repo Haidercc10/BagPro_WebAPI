@@ -719,20 +719,11 @@ namespace BagproWebAPI.Controllers
         public ActionResult GetProductionByNumber(int production, string searchIn)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from ps in _context.Set<ProcSellado>()
-                        where ps.Item == production &&
-                              ps.EnvioZeus.Trim() == "0" /*&&
-                              ps.Observaciones.StartsWith("Rollo #")*/
-                        select ps;
+            var datos = from ps in _context.Set<ProcSellado>() where ps.Item == production && ps.EnvioZeus.Trim() == "0" select ps;
             if (datos.Any() && (searchIn == "TODO" || searchIn == "SELLADO")) return Ok(datos);
             else 
             {
-                var datos2 = from pe in _context.Set<ProcExtrusion>()
-                        where pe.Item == production &&
-                              (pe.NomStatus == "EMPAQUE" || pe.NomStatus == "EXTRUSION") && 
-                              pe.EnvioZeus.Trim() == "0" /*&&
-                              pe.Observaciones.StartsWith("Rollo #")*/
-                        select pe;
+                var datos2 = from pe in _context.Set<ProcExtrusion>() where pe.Item == production && (pe.NomStatus.Trim() == "EMPAQUE" || pe.NomStatus.Trim() == "EXTRUSION") && pe.EnvioZeus.Trim() == "0" select pe;
                 if (datos2.Any() && (searchIn == "TODO" || searchIn == "EXTRUSION")) return Ok(datos2);
                 else return NotFound();
             }

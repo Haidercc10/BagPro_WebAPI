@@ -76,7 +76,7 @@ namespace BagproWebAPI.Controllers
 
             } else             
             {
-                return Ok(idClientesItem); 
+                return Ok(idClientesItem.Take(1)); 
             }
         }
 
