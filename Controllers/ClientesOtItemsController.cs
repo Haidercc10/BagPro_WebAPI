@@ -86,7 +86,7 @@ namespace BagproWebAPI.Controllers
         {
             var nombreItem = (from c in _context.Set<ClientesOtItem>()
                               where c.ClienteItemsNom.Contains(referencia)
-                              select new { Item = c.ClienteItems, Referencia = c.ClienteItemsNom, PrecioKg = c.DatosValorKg, }).Take(50);
+                              select new { Item = c.ClienteItems, Referencia = c.ClienteItemsNom, PrecioKg = c.DatosValorKg, Categoria = 0 }).Take(50);
 
             if (nombreItem == null) return NotFound();
             else return Ok(nombreItem);
