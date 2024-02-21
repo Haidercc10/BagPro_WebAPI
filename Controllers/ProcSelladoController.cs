@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ServiceReference1;
+using StackExchange.Redis;
 using System.Data;
 using System.ServiceModel;
 
@@ -961,6 +962,29 @@ namespace BagproWebAPI.Controllers
             if (reimpresion == 0) return Ok(con1);
             else if (reimpresion == 1) return Ok(con2);
             else return BadRequest("No existe el bulto.");
+        }
+
+        //Función que recibirá los rollos a los que se les revertirá (actualizará) el Envio Zeus a 0
+        [HttpPost("putReversionEnvioZeus_ProcSellado")]
+        public ActionResult putReversionEnvioZeus_ProcSellado([FromBody] List<int> rolls)
+        {
+            int count = 0;
+            foreach (var roll in rolls)
+            {
+                var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == roll select pro).FirstOrDefault();
+                
+                if (procSellado != null)
+                {
+                    var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET EnvioZeus = '0' WHERE Item = {roll}");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                count++;
+                if (count == rolls.Count()) return NoContent();
+            }
+            return NoContent();
         }
 
     }

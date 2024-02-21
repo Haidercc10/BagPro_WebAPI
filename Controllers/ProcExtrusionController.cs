@@ -965,6 +965,33 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+
+        //Función que recibirá los rollos a los que se les revertirá (actualizará) el Envio Zeus a 0
+        [HttpPost("putReversionEnvioZeus_ProcExtrusion")]
+        async public Task<IActionResult> putReversionEnvioZeus_ProcExtrusion([FromBody] List<int> rolls)
+        {
+            int count = 0;
+            foreach (var roll in rolls)
+            {
+                var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == roll select pro).FirstOrDefault();
+                procExtrusion.EnvioZeus = "0";
+                _context.Entry(procExtrusion).State = EntityState.Modified;
+                _context.SaveChanges();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProcExtrusionExists(roll)) return NotFound();
+                    else throw;
+                }
+                count++;
+                if (count == rolls.Count()) return NoContent();
+            }
+            return NoContent();
+        }
+
         // POST: api/ProcExtrusion
         [HttpPost]
         public async Task<ActionResult<ProcExtrusion>> PostProcExtrusion(ProcExtrusion procExtrusion)
