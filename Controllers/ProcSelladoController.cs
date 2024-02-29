@@ -936,6 +936,7 @@ namespace BagproWebAPI.Controllers
                         Presentacion2 = "Kg",
                         Fecha = ps.FechaEntrada.ToString("dd/MM/yyyy"),
                         Hora = ps.Hora,
+                        Proceso = ps.NomStatus
                       };
 
             if (con == null) return BadRequest("No existe producción en sellado para esta Orden de Trabajo.");
@@ -959,8 +960,8 @@ namespace BagproWebAPI.Controllers
                            Bulto = ps.Item,
                        };
 
-            if (reimpresion == 0) return Ok(con1);
-            else if (reimpresion == 1) return Ok(con2);
+            if (reimpresion == 0) return Ok(con1.Take(1));
+            else if (reimpresion == 1) return Ok(con2.Take(1));
             else return BadRequest("No existe el bulto.");
         }
 

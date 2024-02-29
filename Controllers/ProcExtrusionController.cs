@@ -712,14 +712,14 @@ namespace BagproWebAPI.Controllers
             var data = from pe in _context.Set<ProcExtrusion>()
                        where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos"
                        select pe;
-            return data.Any() ? Ok(data) : BadRequest();
+            return data.Any() ? Ok(data.Take(1)) : BadRequest();
         }
 
         [HttpGet("getProductionByNumber/{production}/{searchIn}")]
         public ActionResult GetProductionByNumber(int production, string searchIn)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from ps in _context.Set<ProcSellado>() where ps.Item == production && ps.EnvioZeus.Trim() == "0" select ps;
+            var datos = from ps in _context.Set<ProcSellado>() where ps.Item == production && ps.EnvioZeus.Trim() == "0" && ps.NomStatus.Trim() == "SELLADO" select ps;
             if (datos.Any() && (searchIn == "TODO" || searchIn == "SELLADO")) return Ok(datos);
             else 
             {
@@ -774,6 +774,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var datos = from ps in _context.Set<ProcSellado>()
                         where ps.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
+                              ps.NomStatus == "SELLADO" &&
                               ps.EnvioZeus.Trim() == "0"
                         select ps;
             if (datos.Any()) return Ok(datos);
