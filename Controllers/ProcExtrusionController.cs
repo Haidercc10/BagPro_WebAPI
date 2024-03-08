@@ -702,6 +702,7 @@ namespace BagproWebAPI.Controllers
             var rollosPesados = from pe in _context.Set<ProcExtrusion>()
                                 where pe.Ot == orden &&
                                       pe.NomStatus == proceso
+                                orderby pe.Item descending
                                 select pe;
             return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
         }
