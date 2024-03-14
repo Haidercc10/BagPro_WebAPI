@@ -389,7 +389,8 @@ namespace BagproWebAPI.Controllers
                             && (PS.Cedula == persona || PS.Cedula2 == persona || PS.Cedula3 == persona || PS.Cedula4 == persona)
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
-                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                            && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : 
+                                                                                    PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                       select new
                       {
                           PS.Cedula,
