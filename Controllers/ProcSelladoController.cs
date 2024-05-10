@@ -36,7 +36,8 @@ namespace BagproWebAPI.Controllers
         public ActionResult<ProcSellado> GetOT(string ot)
         {
             var con = from ps in _context.Set<ProcSellado>()
-                      where ps.Ot == ot
+                      where ps.Ot == ot &&
+                      ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       group ps by new
                       {
                           ps.NomStatus,
@@ -57,25 +58,18 @@ namespace BagproWebAPI.Controllers
         {
             var nomStatus = "SELLADO";
             var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot &&
-                                                          prSella.NomStatus == nomStatus)
+                                                          prSella.NomStatus == nomStatus &&
+                                                          prSella.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe")
                                                        .OrderByDescending(x => x.FechaEntrada)
                                                        .Select(ProSellado => new
                                                        {
                                                            ProSellado.Ot,
                                                            ProSellado.NomStatus,
                                                            ProSellado.FechaEntrada
-                                                       })
-                                                       .First();
+                                                       }).First();
 
-            if (procSellado == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(procSellado);
-            }
-
+            if (procSellado == null) return NotFound();
+            else return Ok(procSellado);
         }
 
         // Consulta la nomina de los operarios de Sellado, esta consulta será acumulada por Items
@@ -91,6 +85,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                            && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -221,6 +216,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                            && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -346,7 +342,8 @@ namespace BagproWebAPI.Controllers
                          !PS.Hora.StartsWith("03") &&
                          !PS.Hora.StartsWith("04") &&
                          !PS.Hora.StartsWith("05") &&
-                         !PS.Hora.StartsWith("06")
+                         !PS.Hora.StartsWith("06") &&
+                          PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item ascending
                    select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -356,7 +353,8 @@ namespace BagproWebAPI.Controllers
         private IQueryable<int> UltimosRolloPesado(DateTime fecha)
         {
             return from PS2 in _context.Set<ProcSellado>()
-                   where PS2.FechaEntrada <= fecha
+                   where PS2.FechaEntrada <= fecha &&
+                         PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS2.Item descending
                    select PS2.Item;
         }
@@ -370,7 +368,8 @@ namespace BagproWebAPI.Controllers
                          PS2.Hora.StartsWith("08") ||
                          PS2.Hora.StartsWith("09") ||
                          !PS2.Hora.StartsWith("0")) &&
-                         PS2.FechaEntrada == fecha
+                         PS2.FechaEntrada == fecha &&
+                         PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS2.Item ascending
                    select PS2.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -391,6 +390,7 @@ namespace BagproWebAPI.Controllers
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : 
                                                                                     PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                            && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       select new
                       {
                           PS.Cedula,
@@ -501,6 +501,7 @@ namespace BagproWebAPI.Controllers
                             && PS.Item >= PrimerRolloPesado(fechaInicio).FirstOrDefault()
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
+                            && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
@@ -613,7 +614,8 @@ namespace BagproWebAPI.Controllers
             }
             var sellado = from sel in _context.Set<ProcSellado>()
                           where sel.Ot == orden &&
-                                procesos.Contains(sel.NomStatus)
+                                procesos.Contains(sel.NomStatus) && 
+                                sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                           select sel;
 #pragma warning restore CS8604 // Possible null reference argument.
             return sellado.Any() ? Ok(sellado) : BadRequest();
@@ -650,7 +652,8 @@ namespace BagproWebAPI.Controllers
                 var datos = (from pro in _context.Set<ProcSellado>()
                              join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                              where pro.Item == rollo &&
-                                   pro.EnvioZeus.Trim() == "0"
+                                   pro.EnvioZeus.Trim() == "0" &&
+                                   pro.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                              select new
                              {
                                  Orden = pro.Ot,
@@ -682,7 +685,8 @@ namespace BagproWebAPI.Controllers
             var datos = (from pro in _context.Set<ProcSellado>()
                          join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                          where pro.Item == rollo &&
-                               pro.EnvioZeus.Trim() == "0"
+                               pro.EnvioZeus.Trim() == "0" &&
+                               pro.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                          select new
                          {
                              Orden = pro.Ot,
@@ -919,7 +923,8 @@ namespace BagproWebAPI.Controllers
         public ActionResult<ProcSellado> GetProduccionSellado(string ot)
         {
             var con = from ps in _context.Set<ProcSellado>()
-                      where ps.Ot == ot
+                      where ps.Ot == ot && 
+                      ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       select new 
                       { 
                         Bulto = ps.Item, 

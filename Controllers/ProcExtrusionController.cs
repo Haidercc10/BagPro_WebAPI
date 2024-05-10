@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceReference1;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.ServiceModel;
 
@@ -54,6 +55,7 @@ namespace BagproWebAPI.Controllers
         {
             var con = from pe in _context.Set<ProcExtrusion>()
                       where pe.Ot == ot
+                      && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                       group pe by new
                       {
                           pe.NomStatus,
@@ -74,6 +76,7 @@ namespace BagproWebAPI.Controllers
             var procExtrusion = (from ProcExt in _context.Set<ProcExtrusion>()
                                  where ProcExt.Ot == ot
                                        && ProcExt.NomStatus == "EMPAQUE"
+                                       && ProcExt.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                                  orderby ProcExt.Item descending
                                  select new
                                  {
@@ -101,7 +104,8 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
-                                                       && prExt.NomStatus == status)
+                                                       && prExt.NomStatus == status
+                                                       && prExt.Observacion != "Etiqueta eliminada desde App Plasticaribe")
                                                  .OrderByDescending(proExt => proExt.Item)
                                                  .Select(ProExtru => new
                                                  {
@@ -124,7 +128,8 @@ namespace BagproWebAPI.Controllers
                                                  }).ToList();
 
             var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
-                                                       && prExt.NomStatus == status)
+                                                       && prExt.NomStatus == status
+                                                       && prExt.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe")
                                                  .OrderByDescending(proExt => proExt.Item)
                                                  .Select(ProSella => new
                                                  {
@@ -161,7 +166,8 @@ namespace BagproWebAPI.Controllers
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
-                                                       && prExt.NomStatus == Proceso)
+                                                       && prExt.NomStatus == Proceso
+                                                       && prExt.Observacion != "Etiqueta eliminada desde App Plasticaribe")
                                                  .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
                                                  .Select(ProEx => new
                                                  {
@@ -176,7 +182,8 @@ namespace BagproWebAPI.Controllers
                                                  }).ToList();
 
             var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
-                                                      && prExt.NomStatus == Proceso)
+                                                      && prExt.NomStatus == Proceso
+                                                      && prExt.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe")
                                                 .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus })
                                                 .Select(ProSella => new
                                                 {
@@ -202,7 +209,7 @@ namespace BagproWebAPI.Controllers
         public ActionResult consultarRollo(int rollo)
         {
             var con = from x in _context.Set<ProcExtrusion>()
-                      where x.Item == rollo && x.NomStatus == "EXTRUSION"
+                      where x.Item == rollo && x.NomStatus == "EXTRUSION" && x.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                       select x;
             return Ok(con);
         }
@@ -218,6 +225,7 @@ namespace BagproWebAPI.Controllers
                                   && pe.Fecha <= fechaFinal
                                   && pe.Ot.Contains(ot)
                                   && Convert.ToString(pe.Item).Contains(rollo)
+                                  && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                             select new
                             {
                                 Orden = Convert.ToString(pe.Ot),
@@ -235,6 +243,7 @@ namespace BagproWebAPI.Controllers
                                 && ps.FechaEntrada <= fechaFinal
                                 && ps.Ot.Contains(ot)
                                 && Convert.ToString(ps.Item).Contains(rollo)
+                                && ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                           select new
                           {
                               Orden = Convert.ToString(ps.Ot),
@@ -260,6 +269,7 @@ namespace BagproWebAPI.Controllers
                                   && pe.Fecha <= fechaFinal
                                   && pe.Ot.Contains(ot)
                                   && Convert.ToString(pe.Item).Contains(rollo)
+                                  && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                             select new
                             {
                                 Orden = Convert.ToString(pe.Ot),
@@ -276,6 +286,7 @@ namespace BagproWebAPI.Controllers
                                 && ps.FechaEntrada <= fechaFinal
                                 && ps.Ot.Contains(ot)
                                 && Convert.ToString(ps.Item).Contains(rollo)
+                                && ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                           select new
                           {
                               Orden = Convert.ToString(ps.Ot),
@@ -306,7 +317,8 @@ namespace BagproWebAPI.Controllers
 
             var extrusion = from ext in _context.Set<ProcExtrusion>()
                             where ext.Ot == orden &&
-                                  procesos.Contains(ext.NomStatus.Trim())
+                                  procesos.Contains(ext.NomStatus.Trim()) &&
+                                  ext.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                             select ext;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8604 // Possible null reference argument.
@@ -323,7 +335,8 @@ namespace BagproWebAPI.Controllers
                         where Convert.ToString(cl.Item).Trim() == pe.Ot.Trim() &&
                         pe.Ot == OT &&
                         Convert.ToString(cl.Item) == OT &&
-                        pe.NomStatus == status
+                        pe.NomStatus == status &&
+                        pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                         select new
                         {
                             Rollo = pe.Item,
@@ -354,7 +367,8 @@ namespace BagproWebAPI.Controllers
                          where Convert.ToString(cl.Item).Trim() == ps.Ot.Trim() &&
                          ps.Ot == OT &&
                          Convert.ToString(cl.Item) == OT &&
-                         ps.NomStatus == status
+                         ps.NomStatus == status &&
+                         ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                          select new
                          {
                              Rollo = ps.Item,
@@ -392,7 +406,8 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8629 // Nullable value type may be null.
             var producidoExt = from pe in _context.Set<ProcExtrusion>()
-                               where pe.Fecha.Value.Year == anio
+                               where pe.Fecha.Value.Year == anio &&
+                               pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                                orderby pe.Fecha.Value.Year descending, pe.Fecha.Value.Month descending
                                group pe by new
                                {
@@ -409,7 +424,8 @@ namespace BagproWebAPI.Controllers
                                };
 
             var producidoSell = from ps in _context.Set<ProcSellado>()
-                                where ps.FechaEntrada.Year == anio
+                                where ps.FechaEntrada.Year == anio &&
+                                ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                                 orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
                                 group ps by new
                                 {
@@ -474,7 +490,8 @@ namespace BagproWebAPI.Controllers
                                  (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == ext.EnvioZeus : true : true) &&
                                  (Convert.ToInt32(ext.Ot.Trim()) == cl.Item) &&
                                  ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
-                                 (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) 
+                                 (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) &&
+                                 ext.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                            select new
                           {
                               Rollo = Convert.ToInt32(ext.Item),
@@ -509,7 +526,8 @@ namespace BagproWebAPI.Controllers
                                 (envioZeus != "" ? envioZeus != "Todo" ? envioZeus == sel.EnvioZeus : true : true) &&
                                 (Convert.ToInt32(sel.Ot.Trim()) == cl.Item) &&
                                 (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
-                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
+                                (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
+                                && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                            select new
                           {
                               Rollo = Convert.ToInt32(sel.Item),
@@ -550,7 +568,8 @@ namespace BagproWebAPI.Controllers
                 var datos = (from pro in _context.Set<ProcExtrusion>()
                              join ot in _context.Set<ClientesOt>() on Convert.ToString(pro.Ot) equals Convert.ToString(ot.Item)
                              where pro.Item == rollo &&
-                                   pro.EnvioZeus.Trim() == "0"
+                                   pro.EnvioZeus.Trim() == "0" &&
+                                   pro.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                              select new
                              {
                                  Orden = pro.Ot,
@@ -701,7 +720,8 @@ namespace BagproWebAPI.Controllers
         {
             var rollosPesados = from pe in _context.Set<ProcExtrusion>()
                                 where pe.Ot == orden &&
-                                      pe.NomStatus == proceso
+                                      pe.NomStatus == proceso &&
+                                      pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                                 orderby pe.Item descending
                                 select pe;
             return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
@@ -720,11 +740,11 @@ namespace BagproWebAPI.Controllers
         public ActionResult GetProductionByNumber(int production, string searchIn)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from ps in _context.Set<ProcSellado>() where ps.Item == production && ps.EnvioZeus.Trim() == "0" && ps.NomStatus.Trim() == "SELLADO" select ps;
+            var datos = from ps in _context.Set<ProcSellado>() where ps.Item == production && ps.EnvioZeus.Trim() == "0" && ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" && ps.NomStatus.Trim() == "SELLADO" select ps;
             if (datos.Any() && (searchIn == "TODO" || searchIn == "SELLADO")) return Ok(datos);
             else 
             {
-                var datos2 = from pe in _context.Set<ProcExtrusion>() where pe.Item == production && (pe.NomStatus.Trim() == "EMPAQUE" || pe.NomStatus.Trim() == "EXTRUSION") && pe.EnvioZeus.Trim() == "0" select pe;
+                var datos2 = from pe in _context.Set<ProcExtrusion>() where pe.Item == production && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" && (pe.NomStatus.Trim() == "EMPAQUE" || pe.NomStatus.Trim() == "EXTRUSION") && pe.EnvioZeus.Trim() == "0" select pe;
                 if (datos2.Any() && (searchIn == "TODO" || searchIn == "EXTRUSION")) return Ok(datos2);
                 else return NotFound();
             }
@@ -739,7 +759,8 @@ namespace BagproWebAPI.Controllers
                         where pe.Item == production &&
                               pe.NomStatus == "EMPAQUE" &&
                               pe.Observaciones.StartsWith("Rollo #") &&
-                              pe.EnvioZeus.Trim() == "1"
+                              pe.EnvioZeus.Trim() == "1" &&
+                              pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                         select pe;
             if (datos.Count() > 0) return Ok(datos);
             else
@@ -747,7 +768,8 @@ namespace BagproWebAPI.Controllers
                 var datos2 = from ps in _context.Set<ProcSellado>()
                              where ps.Item == production &&
                                    ps.Observaciones.StartsWith("Rollo #") &&
-                                   ps.EnvioZeus.Trim() == "1"
+                                   ps.EnvioZeus.Trim() == "1" &&
+                                   ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                              select ps;
                 return Ok(datos2);
             }
@@ -759,11 +781,11 @@ namespace BagproWebAPI.Controllers
         {
             if (process == "WIKETIADO") process = "Wiketiado";
 
-            var itemPE = from pe in _context.Set<ProcExtrusion>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+            var itemPE = from pe in _context.Set<ProcExtrusion>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Item;
 
             if (itemPE.Any()) return Ok(itemPE);
             else {
-                var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process select pe.Item;
+                var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process && pe.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select pe.Item;
                 return Ok(itemPS);
             }
         }
@@ -776,16 +798,18 @@ namespace BagproWebAPI.Controllers
             var datos = from ps in _context.Set<ProcSellado>()
                         where ps.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
                               ps.NomStatus == "SELLADO" &&
-                              ps.EnvioZeus.Trim() == "0"
+                              ps.EnvioZeus.Trim() == "0" &&
+                              ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                         select ps;
             if (datos.Any()) return Ok(datos);
             else
             {
                 var datos2 = from pe in _context.Set<ProcExtrusion>()
                         where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
-                              pe.EnvioZeus.Trim() == "0" /*&&
-                              pe.NomStatus == "EMPAQUE"*/
-                        select pe;
+                              pe.EnvioZeus.Trim() == "0" && 
+                              pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                             /*pe.NomStatus == "EMPAQUE"*/
+                             select pe;
                 return Ok(datos2);
             }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -799,7 +823,8 @@ namespace BagproWebAPI.Controllers
                           join coi in _context.Set<ClientesOtItem>() on Convert.ToString(p.Referencia) equals Convert.ToString(coi.ClienteItems)
                           where p.Referencia == item &&
                                 !notAvaibleProduction.Contains(p.Item) &&
-                                p.EnvioZeus.Trim() == "1"
+                                p.EnvioZeus.Trim() == "1" &&
+                                p.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                           select new
                           {
                               Item = coi.ClienteItems,
@@ -816,7 +841,8 @@ namespace BagproWebAPI.Controllers
                                 join coi in _context.Set<ClientesOtItem>() on Convert.ToString(p.ClienteItem) equals Convert.ToString(coi.ClienteItems)
                                 where p.ClienteItem == item &&
                                       !notAvaibleProduction.Contains(p.Item) &&
-                                      p.EnvioZeus.Trim() == "1"
+                                      p.EnvioZeus.Trim() == "1" &&
+                                      p.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                                 select new
                                 {
                                     Item = coi.ClienteItems,
@@ -846,7 +872,8 @@ namespace BagproWebAPI.Controllers
                             !PS.Hora.StartsWith("06") &&
                             !PS.Hora.StartsWith("07:0") &&
                             !PS.Hora.StartsWith("07:1") &&
-                            !PS.Hora.StartsWith("07:2"))
+                            !PS.Hora.StartsWith("07:2")) &&
+                            PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item ascending
                    select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -867,8 +894,9 @@ namespace BagproWebAPI.Controllers
                              !PS.Hora.StartsWith("06") &&
                              !PS.Hora.StartsWith("07:0") &&
                              !PS.Hora.StartsWith("07:1") &&
-                             !PS.Hora.StartsWith("07:2"))
-                        orderby PS.Item ascending
+                             !PS.Hora.StartsWith("07:2")) &&
+                              PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                   orderby PS.Item ascending
                         select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
@@ -888,7 +916,8 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("06") ||
                         PS.Hora.StartsWith("07:0") ||
                         PS.Hora.StartsWith("07:1") ||
-                        PS.Hora.StartsWith("07:2"))
+                        PS.Hora.StartsWith("07:2")) &&
+                        PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item descending
                    select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -909,7 +938,8 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("06") ||
                         PS.Hora.StartsWith("07:0") ||
                         PS.Hora.StartsWith("07:1") ||
-                        PS.Hora.StartsWith("07:2"))
+                        PS.Hora.StartsWith("07:2")) &&
+                        PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item descending
                    select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -949,7 +979,7 @@ namespace BagproWebAPI.Controllers
         public async Task<IActionResult> PutEnvioZeus(int rollo)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == rollo select pro).FirstOrDefault();
+            var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == rollo && pro.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pro).FirstOrDefault();
             procExtrusion.EnvioZeus = "1";
             _context.Entry(procExtrusion).State = EntityState.Modified;
 
@@ -975,7 +1005,7 @@ namespace BagproWebAPI.Controllers
             int count = 0;
             foreach (var roll in rolls)
             {
-                var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == roll select pro).FirstOrDefault();
+                var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == roll && pro.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pro).FirstOrDefault();
                 procExtrusion.EnvioZeus = "0";
                 _context.Entry(procExtrusion).State = EntityState.Modified;
                 _context.SaveChanges();
@@ -992,6 +1022,48 @@ namespace BagproWebAPI.Controllers
                 if (count == rolls.Count()) return NoContent();
             }
             return NoContent();
+        }
+
+        //Función que agregará una observacion de los rollos eliminados.
+        [HttpPost("putObservationDeletedRolls")]
+        async public Task<IActionResult> putObservationDeletedRolls([FromBody] List<rollsToDelete> rollsToDelete)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+               
+            foreach(var rolls in rollsToDelete) 
+            { 
+                if (rolls.process == "EMP")
+                {
+                    var roll = (from pe in _context.Set<ProcExtrusion>() where pe.Item == rolls.roll && pe.NomStatus == rolls.process.Replace("EMP", "EMPAQUE") && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe).FirstOrDefault();
+                    roll.Observacion = "Etiqueta eliminada desde App Plasticaribe";
+                    _context.Entry(roll).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        return NotFound();
+                    }
+                } 
+                else if (rolls.process == "SELLA") 
+                {
+                    var roll = (from ps in _context.Set<ProcSellado>() where ps.Item == rolls.roll && ps.NomStatus == rolls.process.Replace("SELLA", "SELLADO") && ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select ps).FirstOrDefault();
+
+                    if (roll != null)
+                    {
+                        var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET RemplazoItem = 'Etiqueta eliminada desde App Plasticaribe' WHERE Item = {roll.Item}");
+                    }
+                    else 
+                    {
+                        return NotFound();
+                    }
+                    
+                }
+            }
+            return NoContent();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         // POST: api/ProcExtrusion
@@ -1033,7 +1105,7 @@ namespace BagproWebAPI.Controllers
         public ActionResult EliminarRolloIngresados(int rollo)
         {
             var x = (from y in _context.Set<ProcExtrusion>()
-                     where y.Item == rollo
+                     where y.Item == rollo && y.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                      orderby y.Item descending
                      select y).FirstOrDefault();
 
@@ -1053,4 +1125,14 @@ namespace BagproWebAPI.Controllers
             return (_context.ProcExtrusions?.Any(e => e.Item == id)).GetValueOrDefault();
         }
     }
+}
+
+public class rollsToDelete
+{
+    //[RegularExpression("^[1-9]\\d*$", ErrorMessage = "Invalid fieldName.")]
+    public long roll { get; set; }
+
+    //[RegularExpression("^[1-9]\\d*$", ErrorMessage = "Invalid fieldName.")]
+    public string process { get; set; } = null!;
+
 }
