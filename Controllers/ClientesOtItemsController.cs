@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BagproWebAPI.Controllers
 {
@@ -52,32 +53,36 @@ namespace BagproWebAPI.Controllers
         }
 
         //Consultar por Id de Cliente Item
-        [HttpGet("OtItem/{ClienteItems}")]
-        public  IActionResult GetIdClientesOtItem(int ClienteItems)
+        [HttpPost("OtItem")]
+        public  IActionResult GetIdClientesOtItem([FromBody] List<int> rolls)
         {
-            var idClientesItem = from cliOT in _context.Set<ClientesOtItem>()
-                                 from ven in _context.Set<Vendedore>()
-                                 where cliOT.ClienteItems == ClienteItems
-                                 && cliOT.UsrModifica == ven.Id
-                                 select new
-                                 {
-                                     cliOT.ClienteItems,
-                                     cliOT.ClienteItemsNom,
-                                     cliOT.Cliente,
-                                     cliOT.ClienteNom,
-                                     cliOT.PtPresentacionNom,
-                                     cliOT.DatosValorKg,
-                                     ven.NombreCompleto
-                                 };
+            List<Object> items = new List<Object>();
 
-            if (idClientesItem == null)
+            int count = 0;
+            foreach (var item in rolls)
             {
-                return NotFound();
+                var idClientesItem = from cliOT in _context.Set<ClientesOtItem>()
+                                     from ven in _context.Set<Vendedore>()
+                                     where cliOT.ClienteItems == item
+                                     && cliOT.UsrModifica == ven.Id
+                                     select new //ListItems
+                                     {
+                                         ClienteItems = cliOT.ClienteItems,
+                                         ClienteItemsNom = cliOT.ClienteItemsNom,
+                                         Cliente = cliOT.Cliente,
+                                         ClienteNom = cliOT.ClienteNom,
+                                         PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : "Paquete",
+                                         DatosValorKg = cliOT.DatosValorKg,
+                                         NombreCompleto = ven.NombreCompleto
+                                     };
 
-            } else             
-            {
-                return Ok(idClientesItem.Take(1)); 
+                count++;
+                items.AddRange(idClientesItem.Take(1));
+                if (rolls.Count() == count) return Ok(items);
+                //if (idClientesItem == null) return NotFound();
+                //else return Ok(idClientesItem.Take(1));
             }
+            return Ok(items);
         }
 
         //Consultar através de un LIKE 
@@ -163,4 +168,22 @@ namespace BagproWebAPI.Controllers
             return (_context.ClientesOtItems?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
+}
+
+class ListItems
+{
+    public int? ClienteItems { get; set; }
+
+    public string ClienteItemsNom { get; set; } = null!;
+
+    public int Cliente { get; set; }
+
+    public string ClienteNom { get; set; } = null!;
+    
+    public string PtPresentacionNom { get; set; }
+
+    public decimal? DatosValorKg { get; set; }
+
+    public string NombreCompleto { get; set; } = null!;
+
 }
