@@ -815,6 +815,46 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        //Consulta que devolverá el numero del bulto desde cualquier proceso
+        [HttpGet("getRollProduction/{roll}")]
+        public ActionResult getRollProduction(int roll, string? process = "")
+        {
+            var data = (from pe in _context.Set<ProcExtrusion>()
+                        join ot in _context.Set<ClientesOt>() on pe.Ot.Trim() equals Convert.ToString(ot.Item)
+                        where pe.Item == roll && 
+                        pe.NomStatus.Contains(process) &&
+                        pe.Ot.Trim() == Convert.ToString(ot.Item)
+                        select new
+                        {
+                            Rollo = pe.Item,
+                            OT = ot.Item,
+                            Cliente = ot.ClienteNom.Trim(),
+                            Item = ot.ClienteItems,
+                            Referencia = ot.ClienteItemsNom.Trim(),
+                            Peso = pe.Extnetokg,
+                            Unidad = Convert.ToString("Kg"),
+                            Proceso = pe.NomStatus.Trim(),
+                        }).FirstOrDefault();
+
+            if (data == null) return Ok((from ps in _context.Set<ProcSellado>() 
+                                         join ot in _context.Set<ClientesOt>() on ps.Ot.Trim() equals Convert.ToString(ot.Item)
+                                         where ps.Item == roll && 
+                                         ps.NomStatus.Contains(process) &&
+                                         ps.Ot.Trim() == Convert.ToString(ot.Item)
+                                         select new 
+                                         { 
+                                             Rollo = ps.Item,
+                                             OT = ot.Item,
+                                             Cliente = ot.ClienteNom.Trim(),
+                                             Item = ot.ClienteItems,
+                                             Referencia = ot.ClienteItemsNom.Trim(),
+                                             Peso = ps.Peso,
+                                             Unidad = Convert.ToString("Kg"),
+                                             Proceso = ps.NomStatus.Trim(),
+                                         }).FirstOrDefault());
+            else return Ok(data);
+        }
+
         [HttpPost("getAvaibleProduction/{item}")]
         public IActionResult getAvaibleProduction(string item, [FromBody] List<long> notAvaibleProduction)
         {
