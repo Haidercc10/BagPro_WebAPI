@@ -727,6 +727,20 @@ namespace BagproWebAPI.Controllers
             return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
         }
 
+        [HttpPost("getAvailablesRollsOT/{orden}/{proceso}")]
+        public ActionResult getAvailablesRollsOT(string orden, string proceso, [FromBody] List<int> rollos)
+        {
+            var rollosPesados = from pe in _context.Set<ProcExtrusion>()
+                                where pe.Ot == orden &&
+                                      pe.NomStatus == proceso &&
+                                      !rollos.Contains(pe.Item) &&
+                                      pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                                orderby pe.Item descending
+                                select pe;
+
+            return Ok(rollosPesados);
+        }
+
         [HttpGet("getInformactionProductionForTag/{production}")]
         public ActionResult GetInformactionProductionForTag(int production)
         {
