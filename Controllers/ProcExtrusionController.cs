@@ -512,6 +512,7 @@ namespace BagproWebAPI.Controllers
                               EnvioZeus = Convert.ToString(ext.EnvioZeus),
                               Proceso = ext.NomStatus,
                               CantPedida = cl.DatosotKg,
+                              Observacion = ext.Observaciones,
                           }).ToList();
 
             var ProcSel = (from sel in _context.Set<ProcSellado>()
@@ -548,7 +549,8 @@ namespace BagproWebAPI.Controllers
                               EnvioZeus = Convert.ToString(sel.EnvioZeus),
                               Proceso = sel.NomStatus,
                               CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
-                          }).ToList();
+                              Observacion = sel.Observaciones,
+                           }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
             return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
@@ -848,6 +850,10 @@ namespace BagproWebAPI.Controllers
                             Peso = pe.Extnetokg,
                             Unidad = Convert.ToString("Kg"),
                             Proceso = pe.NomStatus.Trim(),
+                            Id_Material = Convert.ToInt32(ot.ExtMaterial.Trim()),
+                            Material = ot.ExtMaterialNom.Trim(),
+                            Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento.Trim()),
+                            Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
                         }).FirstOrDefault();
 
             if (data == null) return Ok((from ps in _context.Set<ProcSellado>() 
@@ -865,6 +871,10 @@ namespace BagproWebAPI.Controllers
                                              Peso = ps.Peso,
                                              Unidad = Convert.ToString("Kg"),
                                              Proceso = ps.NomStatus.Trim(),
+                                             Id_Material = Convert.ToInt32(ot.ExtMaterial.Trim()),
+                                             Material = ot.ExtMaterialNom.Trim(),
+                                             Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento.Trim()),
+                                             Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
                                          }).FirstOrDefault());
             else return Ok(data);
         }

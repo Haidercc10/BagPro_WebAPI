@@ -925,6 +925,7 @@ namespace BagproWebAPI.Controllers
             var con = from ps in _context.Set<ProcSellado>()
                       where ps.Ot == ot && 
                       ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                      orderby ps.Item ascending
                       select new 
                       { 
                         Bulto = ps.Item, 
