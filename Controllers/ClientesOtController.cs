@@ -2,6 +2,7 @@
 
 using Aspose.Pdf.Facades;
 using BagproWebAPI.Models;
+using Intercom.Core;
 using Intercom.Data;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -35,6 +36,17 @@ namespace BagproWebAPI.Controllers
             }
             return await _context.ClientesOts.ToListAsync();
         }
+
+        //Consulta para obtener los clientes por OT. 
+        [HttpGet("getClientsForOT/{ot}")]
+        public ActionResult getClientsForOT(int ot) 
+        { 
+            var client = from c in _context.Set<ClientesOt>()
+                         where c.Item == ot 
+                         select c.ClienteNom;
+
+            return Ok(client);
+        } 
 
         // GET: api/ClientesOt/5
         [HttpGet("{id}")]
