@@ -214,6 +214,21 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        //Consultar toda la informacion de un item por ot y por rollo 
+        [HttpGet("getInformationRoll/{rollo}/{ot}")]
+        public ActionResult getInformationRoll(int rollo, string ot)
+        {
+            var con = from x in _context.Set<ProcExtrusion>()
+                      where x.Item == rollo && x.Ot == ot && x.NomStatus == "EXTRUSION" && x.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                      select new
+                      {
+                          Production = x,
+                          NitClient = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(x.Cliente) select cl.IdentNro).FirstOrDefault(),
+                          Price = (from c in _context.ClientesOts where Convert.ToString(c.Item) == Convert.ToString(x.Ot) select c.ExtUnidadesNom == "Kilo" ? c.DatosValorKg : c.DatosvalorBolsa).FirstOrDefault(),
+                      }; 
+            return Ok(con);
+        }
+
         // Consulta los rollos pesados en bagpro de los procesos de Extrusion, Empaque y Sellado
         [HttpGet("getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}")]
         public ActionResult GetRollosExtrusion_Empaque_Sellado(DateTime fechaInicial, DateTime fechaFinal, string proceso, string? ot = "", string? rollo = "")
