@@ -40,11 +40,19 @@ namespace BagproWebAPI.Controllers
         //Consulta para obtener los clientes por OT. 
         [HttpGet("getClientsForOT/{ot}")]
         public ActionResult getClientsForOT(int ot) 
-        { 
+        {
             var client = from c in _context.Set<ClientesOt>()
-                         where c.Item == ot 
-                         select c.ClienteNom;
-
+                         where c.Item == ot
+                         select new
+                         {
+                             c.ClienteNom,
+                             c.ExtMaterialNom,
+                             c.PtAnchopt,
+                             c.ExtAcho1,
+                             c.ExtAcho2,
+                             c.ExtAcho3,
+                             c.ExtUnidadesNom
+                         }; 
             return Ok(client);
         } 
 
