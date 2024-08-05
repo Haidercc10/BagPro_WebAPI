@@ -744,6 +744,7 @@ namespace BagproWebAPI.Controllers
             return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
         }
 
+        //Función que retornará los rollos de Bagpro por ot y proceso sin tener en cuenta los rollos que vienen por parametro.
         [HttpPost("getAvailablesRollsOT/{orden}/{proceso}")]
         public ActionResult getAvailablesRollsOT(string orden, string proceso, [FromBody] List<int> rollos)
         {
@@ -755,7 +756,14 @@ namespace BagproWebAPI.Controllers
                                 orderby pe.Item descending
                                 select pe;
 
-            return Ok(rollosPesados);
+            if(rollosPesados.Any()) return Ok(rollosPesados);
+            else return Ok(from ps in _context.Set<ProcExtrusion>()
+                           where ps.Ot == orden &&
+                                 ps.NomStatus == proceso &&
+                                 !rollos.Contains(ps.Item) &&
+                                 ps.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                           orderby ps.Item descending
+                           select ps);
         }
 
         [HttpGet("getInformactionProductionForTag/{production}")]
