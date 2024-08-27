@@ -528,6 +528,7 @@ namespace BagproWebAPI.Controllers
                               Proceso = ext.NomStatus,
                               CantPedida = cl.DatosotKg,
                               Observacion = ext.Observaciones,
+                              Operario = ext.Operador,
                           }).ToList();
 
             var ProcSel = (from sel in _context.Set<ProcSellado>()
@@ -565,6 +566,7 @@ namespace BagproWebAPI.Controllers
                               Proceso = sel.NomStatus,
                               CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
                               Observacion = sel.Observaciones,
+                              Operario = sel.Operario, 
                            }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
@@ -902,7 +904,43 @@ namespace BagproWebAPI.Controllers
             else return Ok(data);
         }
 
-        [HttpPost("getAvaibleProduction/{item}")]
+        //Consulta que devolverá el numero del bulto desde cualquier proceso
+        [HttpGet("getPayRollCourt/{date1}/{date2}")]
+        public ActionResult getPayRollCourt(DateTime date1, DateTime date2)
+        {
+            var payRoll = from p in _context.Set<ProcExtrusion>()
+                          join cl in _context.Set<ClientesOtItem>() on p.ClienteItem.Trim() equals cl.ClienteItems.ToString().Trim()
+                          where p.Fecha >= date1 &&
+                          p.Fecha <= date2 && 
+                          p.NomStatus == "EMPAQUE" &&
+                          p.Observacion == null
+                          select new
+                          {
+                              Roll = p.Item,
+                              Item = p.ClienteItem.Trim(), 
+                              Reference = p.ClienteItemNombre.Trim(),
+                              OT = p.Ot.Trim(),
+                              Weight = p.Extnetokg, 
+                              Operator = p.Operador,
+                              Date = p.Fecha, 
+                              Hour = p.Hora.Trim(), 
+                              Turn = p.Turno.Trim(), 
+                              Value_Production = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0,
+                              Value_Pay = p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0,
+                              Value_Day = Convert.ToDecimal(cl.DiaC.Value),
+                              Value_Night = Convert.ToDecimal(cl.NocheC.Value),
+                              Value_Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value : (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value,
+                              Position_Job = "Operario Corte",
+                              Machine = p.Maquina, 
+                              Send_Zeus = p.EnvioZeus,
+                              Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday
+
+                              //p.Turno == "DIA" && Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value :
+                          };
+            return Ok(payRoll);
+        }
+
+            [HttpPost("getAvaibleProduction/{item}")]
         public IActionResult getAvaibleProduction(string item, [FromBody] List<long> notAvaibleProduction)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.

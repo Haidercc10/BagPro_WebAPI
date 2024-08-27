@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace BagproWebAPI.Models
@@ -66,6 +67,7 @@ namespace BagproWebAPI.Models
         public string? PtFormatoptNom { get; set; }
         public decimal? PtPesopt { get; set; }
         public decimal? PtMargen { get; set; }
+        [Precision(18,2)]
         public decimal? PtPesoMillar { get; set; }
         public decimal? PtPesoRollo { get; set; }
         public int? PtQtyBulto { get; set; }

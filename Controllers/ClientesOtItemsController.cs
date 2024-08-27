@@ -52,6 +52,40 @@ namespace BagproWebAPI.Controllers
             return clientesOtItem;
         }
 
+
+        //Consultar através de un LIKE 
+        [HttpPost("CalcularKilosItem")]
+        public ActionResult CalcularKilosItem([FromBody] List<Items> items)
+        {
+            List<Object> references = new List<Object>();
+            int counter = 0;
+            foreach (var item in items)
+            {
+                string unit = item.unit == "UND" ? "Unidad" : 
+                              item.unit == "PAQ" ? "Paquete" : 
+                              item.unit == "KLS" ? "Kilo" : "";
+
+                var kilos = (from c in _context.Set<ClientesOtItem>()
+                            where c.ClienteItems == item.item
+                            && c.PtPresentacionNom == unit
+                            select new
+                            {
+                                Item = c.ClienteItems, 
+                                Reference = c.ClienteItemsNom, 
+                                Weight = c.PtPresentacionNom == "Kilo" ? item.qty :
+                                         c.PtPresentacionNom == "Unidad" ? Convert.ToDecimal((Convert.ToDecimal(item.qty) * Convert.ToDecimal(c.PtPesoMillar.Value)) / Convert.ToInt32(1000)) :
+                                         c.PtPresentacionNom == "Paquete" && c.PtQtyBulto == 1 ? (c.PtQtyBulto * c.PtPesoMillar * item.qty) :
+                                         c.PtPresentacionNom == "Paquete" && c.PtQtyBulto > 1 ? ((c.PtQtyBulto * c.PtPesoMillar * c.PtQtyPquete) / 1000) * (item.qty / c.PtQtyBulto) : 0,
+                                Unit = c.PtPresentacionNom
+                            }).FirstOrDefault();
+                counter++;
+                references.Add(kilos);
+                if (items.Count() == counter) return Ok(references);
+            }
+            return Ok(references);
+        }
+
+
         //Consultar por Id de Cliente Item
         [HttpPost("OtItem")]
         public  IActionResult GetIdClientesOtItem([FromBody] List<int> rolls)
@@ -170,7 +204,17 @@ namespace BagproWebAPI.Controllers
     }
 }
 
-class ListItems
+public class Items
+{ 
+    public int item { get; set; } 
+
+    public string unit { get; set; }
+
+    [Precision(18,2)]
+    public decimal qty { get; set; }
+}
+
+    class ListItems
 {
     public int? ClienteItems { get; set; }
 
