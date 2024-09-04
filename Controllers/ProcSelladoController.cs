@@ -480,9 +480,9 @@ namespace BagproWebAPI.Controllers
                     $"'Pesado_Entre': '{item.PesadoEntre}' ";
 
                     if (item.Cedula.Trim() == persona) result.Add($"'Cedula': '{item.Cedula.Trim()}', 'Operario': '{item.Operario.Trim()}', {data}");
-                    if (item.Cedula2.Trim() == persona) result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
-                    if (item.Cedula3.Trim() == persona) result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
-                    if (item.Cedula4.Trim() == persona) result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
+                    if (item.Cedula2.Trim() == persona && persona != "0") result.Add($"'Cedula': '{item.Cedula2.Trim()}', 'Operario': '{item.Operario2.Trim()}', {data}");
+                    if (item.Cedula3.Trim() == persona && persona != "0") result.Add($"'Cedula': '{item.Cedula3.Trim()}', 'Operario': '{item.Operario3.Trim()}', {data}");
+                    if (item.Cedula4.Trim() == persona && persona != "0") result.Add($"'Cedula': '{item.Cedula4.Trim()}', 'Operario': '{item.Operario4.Trim()}', {data}");
                 //}
             }
             return result.Count() > 0 ? Ok(result) : NotFound();

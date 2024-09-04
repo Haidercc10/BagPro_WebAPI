@@ -910,9 +910,11 @@ namespace BagproWebAPI.Controllers
         {
             var payRoll = from p in _context.Set<ProcExtrusion>()
                           join cl in _context.Set<ClientesOtItem>() on p.ClienteItem.Trim() equals cl.ClienteItems.ToString().Trim()
-                          where p.Fecha >= date1 &&
-                          p.Fecha <= date2 && 
+                          where p.Fecha >= date1 && //02
+                          p.Fecha <= date2.AddDays(1) && //03+1 = 04
                           p.NomStatus == "EMPAQUE" &&
+                          p.Item >= FirstRollDayExtrusion(date1).FirstOrDefault() &&
+                          (RollsNightExtrusion(date2.AddDays(1)).Any() ? p.Item <= (RollsNightExtrusion(date2.AddDays(1)).FirstOrDefault()) : p.Fecha <= date2) &&
                           p.Observacion == null
                           select new
                           {
@@ -925,22 +927,43 @@ namespace BagproWebAPI.Controllers
                               Date = p.Fecha, 
                               Hour = p.Hora.Trim(), 
                               Turn = p.Turno.Trim(), 
-                              Value_Production = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0,
-                              Value_Pay = p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0,
+                              Value_Production = p.Estado.Trim() == "0" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value == Convert.ToDecimal(86.46) ? Convert.ToDecimal(125.01) :
+                                                                                                                                      cl.DiaC.Value == Convert.ToDecimal(132.08) ? Convert.ToDecimal(175.47) :
+                                                                                                                                      cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) : 0 : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) : p.Turno == "DIA" ? Convert.ToDecimal(173.17) : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) : 0,
+                              Value_Pay = p.Estado.Trim() == "0" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value == Convert.ToDecimal(86.46) ? Convert.ToDecimal(125.01) * p.Extnetokg :
+                                                                                                                               cl.DiaC.Value == Convert.ToDecimal(132.08) ? Convert.ToDecimal(175.47) * p.Extnetokg :
+                                                                                                                               cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) * p.Extnetokg : 0 : p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) * p.Extnetokg : p.Turno == "DIA" ? Convert.ToDecimal(173.17) * p.Extnetokg : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) * p.Extnetokg : 0, 
+
                               Value_Day = Convert.ToDecimal(cl.DiaC.Value),
                               Value_Night = Convert.ToDecimal(cl.NocheC.Value),
-                              Value_Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value : (cl.DiaC.Value * Convert.ToDecimal(0.30)) + cl.DiaC.Value,
+                              Value_Sunday = cl.DiaC.Value == Convert.ToDecimal(86.46) ? Convert.ToDecimal(125.01) :
+                                             cl.DiaC.Value == Convert.ToDecimal(132.08) ? Convert.ToDecimal(175.47) :
+                                             cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) : 0,
+                              Value_Rewinding = p.Estado.Trim() == "1" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) : p.Turno == "DIA" ? Convert.ToDecimal(173.17) : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) : 0 : 0,
                               Position_Job = "Operario Corte",
                               Machine = p.Maquina, 
-                              Send_Zeus = p.EnvioZeus,
-                              Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday
-
+                              Send_Zeus = p.EnvioZeus.Trim(),
+                              Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday,
+                              Material = p.Material.Trim(), 
+                              Printed = cl.ImpTinta1 != "1" ? "SI" : "NO", 
+                              Laminate = cl.LamCapa2Nom.Trim(),
+                              Rewinding = p.Estado == "1" ? "SI" : "NO" 
                               //p.Turno == "DIA" && Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value :
+                              //Value_Production = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.35)) + cl.DiaC.Value : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0,
+                              /* Value_Pay = p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0,
+                              Value_Day = Convert.ToDecimal(cl.DiaC.Value),
+                              Value_Night = Convert.ToDecimal(cl.NocheC.Value),
+                              Value_Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.35)) + cl.DiaC.Value : (cl.DiaC.Value * Convert.ToDecimal(0.35)) + cl.DiaC.Value,
+                              Position_Job = "Operario Corte",
+                              Machine = p.Maquina,
+                              Send_Zeus = p.EnvioZeus,
+                              Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday*/
+
                           };
             return Ok(payRoll);
         }
 
-            [HttpPost("getAvaibleProduction/{item}")]
+        [HttpPost("getAvaibleProduction/{item}")]
         public IActionResult getAvaibleProduction(string item, [FromBody] List<long> notAvaibleProduction)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
