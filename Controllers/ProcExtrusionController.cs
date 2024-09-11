@@ -947,7 +947,8 @@ namespace BagproWebAPI.Controllers
                               Material = p.Material.Trim(), 
                               Printed = cl.ImpTinta1 != "1" ? "SI" : "NO", 
                               Laminate = cl.LamCapa2Nom.Trim(),
-                              Rewinding = p.Estado == "1" ? "SI" : "NO" 
+                              Rewinding = p.Estado == "1" ? "SI" : "NO",
+                              Concept = "PRODUCCION"
                               //p.Turno == "DIA" && Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value :
                               //Value_Production = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? (cl.DiaC.Value * Convert.ToDecimal(0.35)) + cl.DiaC.Value : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0,
                               /* Value_Pay = p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0,
