@@ -419,6 +419,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getProduccionAreas/{anio}")]
         public ActionResult GetProduccionAreas(int anio)
         {
+            string[] maquinas = { "35", "37", "38" };
 #pragma warning disable CS8629 // Nullable value type may be null.
             var producidoExt = from pe in _context.Set<ProcExtrusion>()
                                where pe.Fecha.Value.Year == anio &&
@@ -440,7 +441,9 @@ namespace BagproWebAPI.Controllers
 
             var producidoSell = from ps in _context.Set<ProcSellado>()
                                 where ps.FechaEntrada.Year == anio &&
-                                ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                                ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" && 
+                                !maquinas.Contains(ps.Maquina) && 
+                                ps.Cedula != "0"
                                 orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
                                 group ps by new
                                 {
@@ -451,6 +454,26 @@ namespace BagproWebAPI.Controllers
                                 select new
                                 {
                                     ps.Key.Area,
+                                    ps.Key.Mes,
+                                    ps.Key.Anio,
+                                    Producido = ps.Sum(x => x.Peso),
+                                };
+
+            var producidoCamisillas = from ps in _context.Set<ProcSellado>()
+                                where ps.FechaEntrada.Year == anio &&
+                                ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" &&
+                                maquinas.Contains(ps.Maquina) &&
+                                ps.Cedula != "0"
+                                      orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
+                                group ps by new
+                                {
+                                    Area = Convert.ToString(ps.NomStatus),
+                                    Mes = Convert.ToInt32(ps.FechaEntrada.Month),
+                                    Anio = Convert.ToInt32(ps.FechaEntrada.Year),
+                                } into ps
+                                select new
+                                {
+                                    Area = ps.Key.Area.Replace("SELLADO", "CAMISILLA"),
                                     ps.Key.Mes,
                                     ps.Key.Anio,
                                     Producido = ps.Sum(x => x.Peso),
@@ -473,7 +496,7 @@ namespace BagproWebAPI.Controllers
                                    Producido = desp.Sum(x => x.Extnetokg),
                                };
 
-            return Ok(producidoExt.Concat(producidoSell).Concat(desperdicios));
+            return Ok(producidoExt.Concat(producidoSell).Concat(producidoCamisillas).Concat(desperdicios));
 #pragma warning restore CS8629 // Nullable value type may be null.
         }
 
@@ -492,6 +515,8 @@ namespace BagproWebAPI.Controllers
             List<string> turnosNoche = new List<string>();
             turnosNoche.Add("NOCHE");
             turnosNoche.Add("RN");
+
+            string[] machines = { "35", "37", "38" };
 
             var ProcExt = (from ext in _context.Set<ProcExtrusion>()
                            from cl in _context.Set<ClientesOt>()
@@ -536,7 +561,7 @@ namespace BagproWebAPI.Controllers
                           where sel.FechaEntrada >= fechaInicio &&
                                 sel.FechaEntrada <= fechaFin.AddDays(1) &&
                                 (orden != "" ? sel.Ot.Trim() == orden : true) &&
-                                (proceso != "" ? proceso == "SELLADO" ? sel.NomStatus == proceso || (sel.NomStatus == "Wiketiado" && sel.Maquina == "50") : proceso == "Wiketiado" ? (sel.NomStatus == proceso && sel.Maquina != "50") : false : true) &&
+                                (proceso != "" ? proceso == "SELLADO" ? sel.NomStatus == proceso && !machines.Contains(sel.Maquina) || (sel.NomStatus == "Wiketiado" && sel.Maquina == "50") : proceso == "Wiketiado" ? (sel.NomStatus == proceso && sel.Maquina != "50") : proceso == "CAMISILLA" ? sel.NomStatus == "SELLADO" && machines.Contains(sel.Maquina) : false : true) &&
                                 (cliente != "" ? sel.Cliente == cliente : true) &&
                                 (producto != "" ? sel.Referencia == producto : true) &&
                                 (turno != "" ? turno == "DIA" ? turnosDia.Contains(sel.Turnos) : turno == "NOCHE" ? turnosNoche.Contains(sel.Turnos) : true : true) &&
@@ -1178,10 +1203,11 @@ namespace BagproWebAPI.Controllers
         async public Task<IActionResult> putObservationDeletedRolls([FromBody] List<rollsToDelete> rollsToDelete)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-               
+            string[] processProduction = { "EMP", "EXT", "IMP", "ROT", "LAM", "DBLD" };
+            
             foreach(var rolls in rollsToDelete) 
             { 
-                if (rolls.process == "EMP")
+                if (processProduction.Contains(rolls.process))
                 {
                     var roll = (from pe in _context.Set<ProcExtrusion>() where pe.Item == rolls.roll && pe.NomStatus == rolls.process.Replace("EMP", "EMPAQUE") && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe).FirstOrDefault();
                     roll.Observacion = "Etiqueta eliminada desde App Plasticaribe";

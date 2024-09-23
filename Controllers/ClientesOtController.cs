@@ -636,7 +636,7 @@ namespace BagproWebAPI.Controllers
                                    // Información de Sellado
                                    Id_Formato_Producto = clot.PtFormatopt.Trim(),
                                    Formato_Producto = clot.PtFormatoptNom.Trim(),
-                                   SelladoCorte_Ancho = clot.PtAnchopt,
+                                   SelladoCorte_Ancho    = clot.PtAnchopt,
                                    SelladoCorte_Largo = clot.PtLargopt,
                                    SelladoCorte_Fuelle = clot.PtFuelle,
                                    SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
