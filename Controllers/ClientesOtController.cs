@@ -577,10 +577,15 @@ namespace BagproWebAPI.Controllers
                                    Peso_Neto = clot.DatosotKg,
                                    ValorKg = clot.DatosValorKg,
                                    ValorUnidad = clot.DatosvalorBolsa,
+                                   //Cantidad_Extrusion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "EXTRUSION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
+                                   //Cantidad_Impresion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "IMPRESION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
+                                   //Cantidad_Rotograbado = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "ROTOGRABADO" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
+                                   //Cantidad_Empaque = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "EMPAQUE" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
                                    Cantidad_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus == "SELLADO" && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Qty).Sum(),
                                    NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(clot.Cliente) select cl.IdentNro).FirstOrDefault(),
                                    Wicket = (from w in _context.Wiketiandos where w.Id == Convert.ToString(clot.ClienteItems) select w.Id.Trim()).FirstOrDefault(),
                                    
+
                                    // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
                                    Material = clot.ExtMaterialNom.Trim(),
