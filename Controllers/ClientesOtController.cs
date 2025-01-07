@@ -1044,6 +1044,60 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore IDE0075 // Simplify conditional expression
         }
 
+        //
+        [HttpGet("getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}")]
+        public ActionResult getOtsForCustomerOrders(DateTime date1, DateTime date2, int item, string presentation, string idClient, string orderSale)
+        {
+            var codBagpro = (from c in _context.Set<Cliente>()
+                             where c.IdentNro == idClient
+                             select c.CodBagpro).FirstOrDefault();
+
+            var ordersProduction = (from cl in _context.Set<ClientesOt>()
+                                    where cl.FechaCrea >= date1 &&
+                                    cl.FechaCrea <= date2 &&
+                                    cl.ClienteItems == item &&
+                                    cl.PtPresentacionNom == presentation &&
+                                    cl.Cliente == Convert.ToInt32(codBagpro)
+                                    select new { 
+                                       OT = cl.Item, 
+                                       Consecutivo = orderSale 
+                                    }).FirstOrDefault();
+
+            return Ok(ordersProduction);
+        }
+
+        //
+        [HttpPost("getOtsForCustomerOrders2")]
+        public ActionResult getOtsForCustomerOrders([FromBody] List<CustomerOrders> CustomerOrders)
+        {
+            List<Object> orders = new List<Object>();
+            int counter = 0;
+            foreach (var item in CustomerOrders)
+            {
+                //var codBagpro = (from c in _context.Set<Cliente>()
+                //                 where c.IdentNro == item.idClient
+                //                 select c.CodBagpro).FirstOrDefault();
+
+                var ordersProduction = (from cl in _context.Set<ClientesOt>()
+                                        where cl.FechaCrea >= item.date1 &&
+                                              cl.FechaCrea <= item.date2 &&
+                                              cl.ClienteItems == item.item //&&
+                                              //cl.PtPresentacionNom == item.presentation //&&
+                                              //cl.Cliente == Convert.ToInt32(codBagpro)
+                                        select new
+                                        { 
+                                            OT = cl.Item,
+                                            Consecutivo = item.consecutivo,
+                                            Item = cl.ClienteItems
+                                        }).FirstOrDefault();
+
+                counter++;
+                orders.Add(ordersProduction);
+                if (CustomerOrders.Count() == counter) return Ok(orders);
+            }
+            return Ok(orders);
+        }
+
         [HttpPut("putOrdenTrabajo{orden}")]
         public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
         {
@@ -1142,4 +1196,19 @@ namespace BagproWebAPI.Controllers
             }    
         }
     }
+}
+
+public class CustomerOrders
+{
+    public DateTime date1 { get; set; }
+
+    public DateTime date2 { get; set; }
+
+    public int item { get; set; }
+
+    //public string presentation { get; set; }
+
+    //public string idClient { get; set; }
+
+    public string consecutivo { get; set; }
 }
