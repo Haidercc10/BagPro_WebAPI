@@ -1,0 +1,2713 @@
+[
+  {
+    "ContainingType": "PlasticaribeAPI.Controllers.AuthenticationController",
+    "Method": "Login",
+    "RelativePath": "api/Authentication/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "BagproWebAPI.Service.Login",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "GetClientes",
+    "RelativePath": "api/Clientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.Cliente, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "PostCliente",
+    "RelativePath": "api/Clientes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cliente",
+        "Type": "BagproWebAPI.Models.Cliente",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Cliente",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "GetCliente",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Cliente",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "PutCliente",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "cliente",
+        "Type": "BagproWebAPI.Models.Cliente",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "DeleteCliente",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "GetClientesNombre",
+    "RelativePath": "api/Clientes/getClientesNombre/{nombre}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nombre",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesController",
+    "Method": "GetClienteConOT",
+    "RelativePath": "api/Clientes/UltimosClientes/{fecha}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetClientesOts",
+    "RelativePath": "api/ClientesOt",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.ClientesOt, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "PostClientesOt",
+    "RelativePath": "api/ClientesOt",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "clientesOt",
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetClientesOt",
+    "RelativePath": "api/ClientesOt/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "PutClientesOt",
+    "RelativePath": "api/ClientesOt/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "clientesOt",
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "DeleteClientesOt",
+    "RelativePath": "api/ClientesOt/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOtXUsuarioVendedor",
+    "RelativePath": "api/ClientesOt/BuscarOTxVendedores/{OT}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OT",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "PutEstadoClientesOt",
+    "RelativePath": "api/ClientesOt/CambioEstadoOT/{Item}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "clientesOt",
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "IsRequired": true
+      },
+      {
+        "Name": "Estado",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "consultarItem",
+    "RelativePath": "api/ClientesOt/consultarItem/{fecha1}/{fecha2}/{item}/{precio}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "precio",
+        "Type": "System.Decimal",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetCostostOt",
+    "RelativePath": "api/ClientesOt/CostosOT/{Item}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getCantOrdenesMateriales",
+    "RelativePath": "api/ClientesOt/getCantOrdenesMateriales/{fecha1}/{fecha2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getClientsForOT",
+    "RelativePath": "api/ClientesOt/getClientsForOT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getCostoOrdenesUltimoMes",
+    "RelativePath": "api/ClientesOt/getCostoOrdenesUltimoMes/{fecha1}/{fecha2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getCostoOredenesUltimoMes_Clientes",
+    "RelativePath": "api/ClientesOt/getCostoOredenesUltimoMes_Clientes/{fecha1}/{fecha2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getCostoOredenesUltimoMes_Vendedores",
+    "RelativePath": "api/ClientesOt/getCostoOredenesUltimoMes_Vendedores/{fecha1}/{fecha2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOrdenDeTrabajo",
+    "RelativePath": "api/ClientesOt/getOrdenDeTrabajo/{orden}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOrdenesTrabajo",
+    "RelativePath": "api/ClientesOt/getOrdenesTrabajo/{fechaInicial}/{fechaFinal}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "cliente",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "item",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "material",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "pigmento",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ancho",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "largo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "fuelle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "calibre",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOrdenTrabajo",
+    "RelativePath": "api/ClientesOt/getOrdenTrabajo/{orden}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getOtsForCustomerOrders",
+    "RelativePath": "api/ClientesOt/getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "date2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "presentation",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "idClient",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "orderSale",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getOtsForCustomerOrders",
+    "RelativePath": "api/ClientesOt/getOtsForCustomerOrders2",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "CustomerOrders",
+        "Type": "System.Collections.Generic.List\u00601[[CustomerOrders, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "getPesoProcesosUltimoMes",
+    "RelativePath": "api/ClientesOt/getPesoProcesosUltimoMes/{fecha1}/{fecha2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fecha2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetPresentacionItem",
+    "RelativePath": "api/ClientesOt/getPresentacionItem/{item}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetItemUltOT",
+    "RelativePath": "api/ClientesOt/OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ClienteItems",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "PtPresentacionNom",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOt",
+    "RelativePath": "api/ClientesOt/OT/{item}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GeneratePDF",
+    "RelativePath": "api/ClientesOt/Prueba",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "PutOrdenTrabajo",
+    "RelativePath": "api/ClientesOt/putOrdenTrabajo{orden}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "clientesOt",
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetUltimaOt",
+    "RelativePath": "api/ClientesOt/UltimaOT",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOt",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "GetClientesOtItems",
+    "RelativePath": "api/ClientesOtItems",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.ClientesOtItem, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "PostClientesOtItem",
+    "RelativePath": "api/ClientesOtItems",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "clientesOtItem",
+        "Type": "BagproWebAPI.Models.ClientesOtItem",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOtItem",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "GetClientesOtItem",
+    "RelativePath": "api/ClientesOtItems/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ClientesOtItem",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "PutClientesOtItem",
+    "RelativePath": "api/ClientesOtItems/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "clientesOtItem",
+        "Type": "BagproWebAPI.Models.ClientesOtItem",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "DeleteClientesOtItem",
+    "RelativePath": "api/ClientesOtItems/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "CalcularKilosItem",
+    "RelativePath": "api/ClientesOtItems/CalcularKilosItem",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "items",
+        "Type": "System.Collections.Generic.List\u00601[[Items, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "LikeReferencia",
+    "RelativePath": "api/ClientesOtItems/likeReferencia/{referencia}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "referencia",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "GetIdClientesOtItem",
+    "RelativePath": "api/ClientesOtItems/OtItem",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolls",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "GetHorarios",
+    "RelativePath": "api/Horarios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.Horario, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "PostHorario",
+    "RelativePath": "api/Horarios",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "horario",
+        "Type": "BagproWebAPI.Models.Horario",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Horario",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "GetHorario",
+    "RelativePath": "api/Horarios/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Horario",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "PutHorario",
+    "RelativePath": "api/Horarios/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "horario",
+        "Type": "BagproWebAPI.Models.Horario",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "DeleteHorario",
+    "RelativePath": "api/Horarios/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.HorariosController",
+    "Method": "GetHorarioProceso",
+    "RelativePath": "api/Horarios/getHorarioProceso/{proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "GetOperariosProcesos",
+    "RelativePath": "api/OperariosProcesos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.OperariosProceso, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "PostOperariosProceso",
+    "RelativePath": "api/OperariosProcesos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "operariosProceso",
+        "Type": "BagproWebAPI.Models.OperariosProceso",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.OperariosProceso",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "GetOperariosProceso",
+    "RelativePath": "api/OperariosProcesos/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.OperariosProceso",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "PutOperariosProceso",
+    "RelativePath": "api/OperariosProcesos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "operariosProceso",
+        "Type": "BagproWebAPI.Models.OperariosProceso",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "DeleteOperariosProceso",
+    "RelativePath": "api/OperariosProcesos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.OperariosProcesosController",
+    "Method": "GetNombreOperariosProceso",
+    "RelativePath": "api/OperariosProcesos/NombreOperarios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "GetProcdesperdicios",
+    "RelativePath": "api/Procdesperdicio",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.Procdesperdicio, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "PostProcdesperdicio",
+    "RelativePath": "api/Procdesperdicio",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "procdesperdicio",
+        "Type": "BagproWebAPI.Models.Procdesperdicio",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Procdesperdicio",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "GetProcdesperdicio",
+    "RelativePath": "api/Procdesperdicio/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Procdesperdicio",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "PutProcdesperdicio",
+    "RelativePath": "api/Procdesperdicio/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "procdesperdicio",
+        "Type": "BagproWebAPI.Models.Procdesperdicio",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "DeleteProcdesperdicio",
+    "RelativePath": "api/Procdesperdicio/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "GetOtProcesoDesperdicio",
+    "RelativePath": "api/Procdesperdicio/getOtProcesoDesperdicio/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcdesperdicioController",
+    "Method": "GetOT",
+    "RelativePath": "api/Procdesperdicio/OT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Procdesperdicio",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProcExtrusions",
+    "RelativePath": "api/ProcExtrusion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.ProcExtrusion, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "PostProcExtrusion",
+    "RelativePath": "api/ProcExtrusion",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "procExtrusion",
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProcExtrusion",
+    "RelativePath": "api/ProcExtrusion/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "PutProcExtrusion",
+    "RelativePath": "api/ProcExtrusion/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "procExtrusion",
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "DeleteProcExtrusion",
+    "RelativePath": "api/ProcExtrusion/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "AjusteExistencia",
+    "RelativePath": "api/ProcExtrusion/ajusteExistencia",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollos",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "consultarRollo",
+    "RelativePath": "api/ProcExtrusion/consultarRollo/{rollo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "EliminarRolloIngresados",
+    "RelativePath": "api/ProcExtrusion/EliminarRolloProcExtrusion/{rollo}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "EnviarAjuste",
+    "RelativePath": "api/ProcExtrusion/EnviarAjuste/{rollo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetFechaFinOT",
+    "RelativePath": "api/ProcExtrusion/FechaFinOT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getAvaibleProduction",
+    "RelativePath": "api/ProcExtrusion/getAvaibleProduction/{item}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "notAvaibleProduction",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int64, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getAvailablesRollsOT",
+    "RelativePath": "api/ProcExtrusion/getAvailablesRollsOT/{orden}/{proceso}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "rollos",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetDatosConsolidados",
+    "RelativePath": "api/ProcExtrusion/getDatosConsolidados/{OT}/{Proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OT",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "Proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetDatosRollosPesados",
+    "RelativePath": "api/ProcExtrusion/getDatosRollosPesados/{orden}/{proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetInformacionOrden_Proceso",
+    "RelativePath": "api/ProcExtrusion/getInformacionOrden_Proceso/{orden}/{proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetInformactionProductionForTag",
+    "RelativePath": "api/ProcExtrusion/getInformactionProductionForTag/{production}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "production",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getInformationRoll",
+    "RelativePath": "api/ProcExtrusion/getInformationRoll/{rollo}/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetNumberReelByNumberAndProcess",
+    "RelativePath": "api/ProcExtrusion/getNumberReelByNumberAndProcess/{number}/{process}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "number",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "process",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetObtenerDatosxProcesos",
+    "RelativePath": "api/ProcExtrusion/getObtenerDatosxProcesos/{OT}/{status}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OT",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetOtControlCalidadExtrusion",
+    "RelativePath": "api/ProcExtrusion/getOtControlCalidadExtrusion/{OT}/{status}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OT",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getPayRollCourt",
+    "RelativePath": "api/ProcExtrusion/getPayRollCourt/{date1}/{date2}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date1",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "date2",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProcExtrusion_ProcSellado",
+    "RelativePath": "api/ProcExtrusion/getProcExtrusion_ProcSellado/{fechaInicial}/{fechaFinal}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "rollo",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProduccionAreas",
+    "RelativePath": "api/ProcExtrusion/getProduccionAreas/{anio}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "anio",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProduccionDetalladaAreas",
+    "RelativePath": "api/ProcExtrusion/getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "orden",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "cliente",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "producto",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "turno",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "envioZeus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "maquina",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "operario",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProductionByNumber",
+    "RelativePath": "api/ProcExtrusion/getProductionByNumber/{production}/{searchIn}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "production",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "searchIn",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProductionByProduction",
+    "RelativePath": "api/ProcExtrusion/getProductionByProduction/{production}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "production",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetProductionForExitByNumber",
+    "RelativePath": "api/ProcExtrusion/getProductionForExitByNumber/{production}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "production",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetRollosExtrusion_Empaque_Sellado",
+    "RelativePath": "api/ProcExtrusion/getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "rollo",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getRollProduction",
+    "RelativePath": "api/ProcExtrusion/getRollProduction/{roll}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roll",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "process",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "GetOT",
+    "RelativePath": "api/ProcExtrusion/OT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcExtrusion",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "PutEnvioZeus",
+    "RelativePath": "api/ProcExtrusion/putEnvioZeus/{rollo}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "putObservationDeletedRolls",
+    "RelativePath": "api/ProcExtrusion/putObservationDeletedRolls",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollsToDelete",
+        "Type": "System.Collections.Generic.List\u00601[[rollsToDelete, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "putReversionEnvioZeus_ProcExtrusion",
+    "RelativePath": "api/ProcExtrusion/putReversionEnvioZeus_ProcExtrusion",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolls",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "GetProcImpresionRollosBopps",
+    "RelativePath": "api/ProcImpresionRollosBopp",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.ProcImpresionRollosBopp, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "PostProcImpresionRollosBopp",
+    "RelativePath": "api/ProcImpresionRollosBopp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "procImpresionRollosBopp",
+        "Type": "BagproWebAPI.Models.ProcImpresionRollosBopp",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcImpresionRollosBopp",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "GetProcImpresionRollosBopp",
+    "RelativePath": "api/ProcImpresionRollosBopp/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcImpresionRollosBopp",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "PutProcImpresionRollosBopp",
+    "RelativePath": "api/ProcImpresionRollosBopp/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "procImpresionRollosBopp",
+        "Type": "BagproWebAPI.Models.ProcImpresionRollosBopp",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "DeleteProcImpresionRollosBopp",
+    "RelativePath": "api/ProcImpresionRollosBopp/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcImpresionRollosBoppController",
+    "Method": "Get",
+    "RelativePath": "api/ProcImpresionRollosBopp/consultaOtImpresion/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetProcExtrusions",
+    "RelativePath": "api/ProcSellado",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.ProcSellado, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "AjusteExistencia",
+    "RelativePath": "api/ProcSellado/ajusteExistencia",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollos",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "DeleteRollos_Sellado",
+    "RelativePath": "api/ProcSellado/EliminarRollosSellado_Wiketiado/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcSellado",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "EnviarAjuste",
+    "RelativePath": "api/ProcSellado/EnviarAjuste",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ordenTrabajo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "articulo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "presentacion",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "costo",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "EnviarAjuste",
+    "RelativePath": "api/ProcSellado/EnviarAjuste/{rollo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetFechaFinOTSellado",
+    "RelativePath": "api/ProcSellado/FechaFinOT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcSellado",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetEtiquetaBagpro",
+    "RelativePath": "api/ProcSellado/getEtiquetaBagpro/{rollo}/{reimpresion}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "reimpresion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcSellado",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetInformacionOrden_Proceso",
+    "RelativePath": "api/ProcSellado/getInformacionOrden_Proceso/{orden}/{proceso}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orden",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetNominaSelladoAcumuladaItem",
+    "RelativePath": "api/ProcSellado/getNominaSelladoAcumuladaItem/{fechaInicio}/{fechaFin}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetNominaSelladoDespachoAcumuladaItem",
+    "RelativePath": "api/ProcSellado/getNominaSelladoDespachoAcumuladaItem/{fechaInicio}/{fechaFin}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetNominaSelladoDetalladaItemPersona",
+    "RelativePath": "api/ProcSellado/getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "producto",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "persona",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetNominaSelladoDetalladaxBulto",
+    "RelativePath": "api/ProcSellado/getNominaSelladoDetalladaxBulto/{fechaInicio}/{fechaFin}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetProduccionSellado",
+    "RelativePath": "api/ProcSellado/getProduccionSellado/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcSellado",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "GetOT",
+    "RelativePath": "api/ProcSellado/OT/{ot}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ot",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.ProcSellado",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "PutEnvioZeusProcSellado",
+    "RelativePath": "api/ProcSellado/putEnvioZeus/{rollo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rollo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "putReversionEnvioZeus_ProcSellado",
+    "RelativePath": "api/ProcSellado/putReversionEnvioZeus_ProcSellado",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolls",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "RollosPesadosMadrugada2",
+    "RelativePath": "api/ProcSellado/RollosPesadosMadrugada2/{fecha}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcSelladoController",
+    "Method": "UltimosRolloPesados",
+    "RelativePath": "api/ProcSellado/UltimosRolloPesados/{fecha}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fecha",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WiketiandoController",
+    "Method": "GetWiketiandos",
+    "RelativePath": "api/Wiketiando",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.Models.Wiketiando, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WiketiandoController",
+    "Method": "PostWiketiando",
+    "RelativePath": "api/Wiketiando",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "wiketiando",
+        "Type": "BagproWebAPI.Models.Wiketiando",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Wiketiando",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WiketiandoController",
+    "Method": "GetWiketiando",
+    "RelativePath": "api/Wiketiando/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "BagproWebAPI.Models.Wiketiando",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WiketiandoController",
+    "Method": "PutWiketiando",
+    "RelativePath": "api/Wiketiando/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "wiketiando",
+        "Type": "BagproWebAPI.Models.Wiketiando",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WiketiandoController",
+    "Method": "DeleteWiketiando",
+    "RelativePath": "api/Wiketiando/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[BagproWebAPI.WeatherForecast, BagproWebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
+  }
+]

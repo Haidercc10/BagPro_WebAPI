@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "wZz/WMzFiZaCQfN/nNx4sUsECGEHGGMEfxwOK46NYg8=",
+  "Hash": "Qo6Fb0hKAvpZDIdfT21eLfPq423CHvQ0HOJWJSmo/t4=",
   "Source": "BagproWebAPI",
   "BasePath": "_content/BagproWebAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

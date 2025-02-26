@@ -502,7 +502,7 @@ namespace BagproWebAPI.Controllers
 
         // Consulta que devolverá la producción de las áreas en un rango de fechas
         [HttpGet("getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}")]
-        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "")
+        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "", string? maquina = "", string? operario = "")
         {
 #pragma warning disable IDE0075 // Simplify conditional expression
 #pragma warning disable CS8629 // Nullable value type may be null.
@@ -531,7 +531,9 @@ namespace BagproWebAPI.Controllers
                                  (Convert.ToInt32(ext.Ot.Trim()) == cl.Item) &&
                                  ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
                                  (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) &&
-                                 ext.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                                 ext.Observacion != "Etiqueta eliminada desde App Plasticaribe" &&
+                                 (maquina != "" ? Convert.ToString(ext.Maquina) == maquina : true) &&
+                                 (operario != "" ? Convert.ToString(ext.Operador) == operario : true)
                            select new
                           {
                               Rollo = Convert.ToInt32(ext.Item),
@@ -569,7 +571,9 @@ namespace BagproWebAPI.Controllers
                                 (Convert.ToInt32(sel.Ot.Trim()) == cl.Item) &&
                                 (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
-                                && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                                && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" &&
+                                (maquina != "" ? Convert.ToString(sel.Maquina) == maquina : true) &&
+                                (operario != "" ? (Convert.ToString(sel.Operario) == operario || Convert.ToString(sel.Operario2) == operario || Convert.ToString(sel.Operario3) == operario || Convert.ToString(sel.Operario4) == operario) : true)
                            select new
                           {
                               Rollo = Convert.ToInt32(sel.Item),
@@ -957,7 +961,7 @@ namespace BagproWebAPI.Controllers
                                                                                                                                       cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) : 0 : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) : p.Turno == "DIA" ? Convert.ToDecimal(173.17) : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) : 0,
                               Value_Pay = p.Estado.Trim() == "0" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value == Convert.ToDecimal(86.46) ? Convert.ToDecimal(125.01) * p.Extnetokg :
                                                                                                                                cl.DiaC.Value == Convert.ToDecimal(132.08) ? Convert.ToDecimal(175.47) * p.Extnetokg :
-                                                                                                                               cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) * p.Extnetokg : 0 : p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) * p.Extnetokg : p.Turno == "DIA" ? Convert.ToDecimal(173.17) * p.Extnetokg : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) * p.Extnetokg : 0, 
+                                                                                                                               cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) * p.Extnetokg : 0 : p.Turno == "DIA" ? Convert.ToDecimal(cl.DiaC.Value * p.Extnetokg) : p.Turno == "NOCHE" ? Convert.ToDecimal(cl.NocheC.Value * p.Extnetokg) : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) * p.Extnetokg : p.Turno == "DIA" ? Convert.ToDecimal(173.17) * p.Extnetokg : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) * p.Extnetokg : 0,
 
                               Value_Day = Convert.ToDecimal(cl.DiaC.Value),
                               Value_Night = Convert.ToDecimal(cl.NocheC.Value),

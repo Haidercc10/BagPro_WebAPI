@@ -1,0 +1,6758 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BagPro WebAPI",
+    "description": "",
+    "version": "V1"
+  },
+  "paths": {
+    "/api/Authentication/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Clientes": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cliente"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cliente"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cliente"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Clientes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Clientes/{id}": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cliente"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Clientes/UltimosClientes/{fecha}": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Clientes/getClientesNombre/{nombre}": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOt"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOt"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOt"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getClientsForOT/{ot}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/{id}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/CostosOT/{Item}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "Item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/OT/{item}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getOrdenTrabajo/{orden}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "ClienteItems",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PtPresentacionNom",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getOrdenDeTrabajo/{orden}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/UltimaOT": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/consultarItem/{fecha1}/{fecha2}/{item}/{precio}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "precio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/BuscarOTxVendedores/{OT}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "OT",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getPresentacionItem/{item}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/CambioEstadoOT/{Item}": {
+      "put": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "Item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Estado",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getCostoOrdenesUltimoMes/{fecha1}/{fecha2}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getPesoProcesosUltimoMes/{fecha1}/{fecha2}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getCantOrdenesMateriales/{fecha1}/{fecha2}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getCostoOredenesUltimoMes_Vendedores/{fecha1}/{fecha2}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getCostoOredenesUltimoMes_Clientes/{fecha1}/{fecha2}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fecha1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fecha2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getOrdenesTrabajo/{fechaInicial}/{fechaFinal}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicial",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFinal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "cliente",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "item",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "material",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "pigmento",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "ancho",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "largo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "fuelle",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "calibre",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "date1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "date2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "presentation",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idClient",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderSale",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/getOtsForCustomerOrders2": {
+      "post": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CustomerOrders"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CustomerOrders"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CustomerOrders"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/putOrdenTrabajo{orden}": {
+      "put": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOt/Prueba": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems": {
+      "get": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOtItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOtItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientesOtItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems/{id}": {
+      "get": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientesOtItem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientesOtItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems/CalcularKilosItem": {
+      "post": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Items"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Items"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Items"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems/OtItem": {
+      "post": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems/likeReferencia/{referencia}": {
+      "get": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "referencia",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Horarios": {
+      "get": {
+        "tags": [
+          "Horarios"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Horario"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Horario"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Horario"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Horarios"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Horarios/{id}": {
+      "get": {
+        "tags": [
+          "Horarios"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Horario"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Horarios"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Horario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Horarios"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Horarios/getHorarioProceso/{proceso}": {
+      "get": {
+        "tags": [
+          "Horarios"
+        ],
+        "parameters": [
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/OperariosProcesos": {
+      "get": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperariosProceso"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperariosProceso"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperariosProceso"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/OperariosProcesos/{id}": {
+      "get": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperariosProceso"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperariosProceso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/OperariosProcesos/NombreOperarios": {
+      "get": {
+        "tags": [
+          "OperariosProcesos"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Procdesperdicio": {
+      "get": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Procdesperdicio"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Procdesperdicio"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Procdesperdicio"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Procdesperdicio/{id}": {
+      "get": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Procdesperdicio"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Procdesperdicio/OT/{ot}": {
+      "get": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Procdesperdicio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Procdesperdicio/getOtProcesoDesperdicio/{ot}": {
+      "get": {
+        "tags": [
+          "Procdesperdicio"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcExtrusion"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcExtrusion"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcExtrusion"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/{id}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcExtrusion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/OT/{ot}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/FechaFinOT/{ot}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getObtenerDatosxProcesos/{OT}/{status}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "OT",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getDatosConsolidados/{OT}/{Proceso}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "OT",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/consultarRollo/{rollo}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getInformationRoll/{rollo}/{ot}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getRollosExtrusion_Empaque_Sellado/{fechaInicial}/{fechaFinal}/{proceso}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicial",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFinal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ot",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "rollo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProcExtrusion_ProcSellado/{fechaInicial}/{fechaFinal}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicial",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFinal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "ot",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "rollo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getInformacionOrden_Proceso/{orden}/{proceso}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getOtControlCalidadExtrusion/{OT}/{status}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "OT",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcExtrusion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProduccionAreas/{anio}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "orden",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "cliente",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "producto",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "turno",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "envioZeus",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "maquina",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "operario",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/ajusteExistencia": {
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/EnviarAjuste/{rollo}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getDatosRollosPesados/{orden}/{proceso}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getAvailablesRollsOT/{orden}/{proceso}": {
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getInformactionProductionForTag/{production}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "production",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProductionByNumber/{production}/{searchIn}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "production",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchIn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProductionForExitByNumber/{production}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "production",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getNumberReelByNumberAndProcess/{number}/{process}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "process",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getProductionByProduction/{production}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "production",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getRollProduction/{roll}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "roll",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "process",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getPayRollCourt/{date1}/{date2}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "date1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "date2",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getAvaibleProduction/{item}": {
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/putEnvioZeus/{rollo}": {
+      "put": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/putReversionEnvioZeus_ProcExtrusion": {
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/putObservationDeletedRolls": {
+      "post": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/rollsToDelete"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/rollsToDelete"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/rollsToDelete"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/EliminarRolloProcExtrusion/{rollo}": {
+      "delete": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcImpresionRollosBopp": {
+      "get": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcImpresionRollosBopp/{id}": {
+      "get": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcImpresionRollosBopp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcImpresionRollosBopp/consultaOtImpresion/{ot}": {
+      "get": {
+        "tags": [
+          "ProcImpresionRollosBopp"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcSellado"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcSellado"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcSellado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/OT/{ot}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/FechaFinOT/{ot}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getNominaSelladoAcumuladaItem/{fechaInicio}/{fechaFin}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getNominaSelladoDespachoAcumuladaItem/{fechaInicio}/{fechaFin}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/UltimosRolloPesados/{fecha}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/RollosPesadosMadrugada2/{fecha}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "producto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "persona",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getNominaSelladoDetalladaxBulto/{fechaInicio}/{fechaFin}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getInformacionOrden_Proceso/{orden}/{proceso}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/EliminarRollosSellado_Wiketiado/{id}": {
+      "delete": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/ajusteExistencia": {
+      "post": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/EnviarAjuste/{rollo}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/EnviarAjuste": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "ordenTrabajo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "articulo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "presentacion",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rollo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cantidad",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "costo",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/putEnvioZeus/{rollo}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getProduccionSellado/{ot}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/getEtiquetaBagpro/{rollo}/{reimpresion}": {
+      "get": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "parameters": [
+          {
+            "name": "rollo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "reimpresion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcSellado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProcSellado/putReversionEnvioZeus_ProcSellado": {
+      "post": {
+        "tags": [
+          "ProcSellado"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Wiketiando": {
+      "get": {
+        "tags": [
+          "Wiketiando"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Wiketiando"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Wiketiando"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Wiketiando"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Wiketiando"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Wiketiando/{id}": {
+      "get": {
+        "tags": [
+          "Wiketiando"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiketiando"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Wiketiando"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wiketiando"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Wiketiando"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cliente": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codBagpro": {
+            "type": "string",
+            "nullable": true
+          },
+          "identTipo": {
+            "type": "string",
+            "nullable": true
+          },
+          "identNro": {
+            "type": "string",
+            "nullable": true
+          },
+          "nombreComercial": {
+            "type": "string",
+            "nullable": true
+          },
+          "usrCrea": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCrea": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "usrModifica": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaModifica": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesOt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clienteNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItems": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clienteItemsNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extrusion": {
+            "type": "string",
+            "nullable": true
+          },
+          "extMaterial": {
+            "type": "string",
+            "nullable": true
+          },
+          "extMaterialNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extFormato": {
+            "type": "string",
+            "nullable": true
+          },
+          "extFormatoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extPigmento": {
+            "type": "string",
+            "nullable": true
+          },
+          "extPigmentoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extUnidades": {
+            "type": "string",
+            "nullable": true
+          },
+          "extUnidadesNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extCalibre": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extPeso": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extTratado": {
+            "type": "string",
+            "nullable": true
+          },
+          "extTratadoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impresion": {
+            "type": "string",
+            "nullable": true
+          },
+          "impFlexoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impFlexo": {
+            "type": "string",
+            "nullable": true
+          },
+          "impRodillo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "impPista": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "impTinta1": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta2": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta3": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta4": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta4Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta5": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta5Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta6": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta6Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta7": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta7Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta8": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta8Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamiando": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa1": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa3": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCalibre1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lamCalibre2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lamCalibre3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "cant1": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cant2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cant3": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pterminado": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptFormatopt": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptFormatoptNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptPesopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptMargen": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptPesoMillar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptPesoRollo": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptQtyBulto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ptPresentacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptPresentacionNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptQtyPquete": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ptSelladoPt": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptSelladoPtNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptAnchopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptLargopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptFuelle": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezcla": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezModo": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezModoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncapas": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "mezporc1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezporc2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezporc3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosOt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosFechaDespachar": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "datoscantBolsa": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosvalorBolsa": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datoscantKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosmargenKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosotKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datoscantBolsa2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosValorKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosvalorOt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "corte": {
+            "type": "string",
+            "nullable": true
+          },
+          "usrCrea": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCrea": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "usrModifica": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaModifica": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pedido": {
+            "type": "string",
+            "nullable": true
+          },
+          "cyrel": {
+            "type": "string",
+            "nullable": true
+          },
+          "observacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiqueta": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiquetaLargo": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiquetaFuelle": {
+            "type": "string",
+            "nullable": true
+          },
+          "pesopaquete": {
+            "type": "string",
+            "nullable": true
+          },
+          "pesoBulto": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "laminado2": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaTerminada": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesOtItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clienteNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItems": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "clienteItemsNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extrusion": {
+            "type": "string",
+            "nullable": true
+          },
+          "extMaterial": {
+            "type": "string",
+            "nullable": true
+          },
+          "extMaterialNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extFormato": {
+            "type": "string",
+            "nullable": true
+          },
+          "extFormatoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extPigmento": {
+            "type": "string",
+            "nullable": true
+          },
+          "extPigmentoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extUnidades": {
+            "type": "string",
+            "nullable": true
+          },
+          "extUnidadesNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "extCalibre": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extPeso": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extAcho3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "extTratado": {
+            "type": "string",
+            "nullable": true
+          },
+          "extTratadoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impresion": {
+            "type": "string",
+            "nullable": true
+          },
+          "impFlexoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impFlexo": {
+            "type": "string",
+            "nullable": true
+          },
+          "impRodillo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "impPista": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "impTinta1": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta2": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta3": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta4": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta4Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta5": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta5Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta6": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta6Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta7": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta7Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta8": {
+            "type": "string",
+            "nullable": true
+          },
+          "impTinta8Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamiando": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa1": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa3": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCapa3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lamCalibre1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lamCalibre2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lamCalibre3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "cant1": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cant2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cant3": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pterminado": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptFormatopt": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptFormatoptNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptPesopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptMargen": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptPesoMillar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptPesoRollo": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptQtyBulto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ptPresentacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptPresentacionNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptQtyPquete": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ptSelladoPt": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptSelladoPtNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ptAnchopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptLargopt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ptFuelle": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezcla": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezModo": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezModoNom": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncapas": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "mezporc1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap1": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap1Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap1": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezporc2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap2": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap2Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap2": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezporc3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod1cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod1cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc1cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod2cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod2cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc2cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod3cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod3cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc3cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezprod4cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezprod4cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porc4cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm1cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm1cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig1cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mezpigm2cap3": {
+            "type": "string",
+            "nullable": true
+          },
+          "mezpigm2cap3Nom": {
+            "type": "string",
+            "nullable": true
+          },
+          "porcpig2cap3": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosOt": {
+            "type": "string",
+            "nullable": true
+          },
+          "datosFechaDespachar": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "datoscantBolsa": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosvalorBolsa": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datoscantKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosmargenKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosotKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datoscantBolsa2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosValorKg": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "datosvalorOt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "corte": {
+            "type": "string",
+            "nullable": true
+          },
+          "usrCrea": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCrea": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "usrModifica": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaModifica": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pedido": {
+            "type": "string",
+            "nullable": true
+          },
+          "cyrel": {
+            "type": "string",
+            "nullable": true
+          },
+          "observacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiqueta": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiquetaLargo": {
+            "type": "string",
+            "nullable": true
+          },
+          "etiquetaFuelle": {
+            "type": "string",
+            "nullable": true
+          },
+          "pesopaquete": {
+            "type": "string",
+            "nullable": true
+          },
+          "pesoBulto": {
+            "type": "string",
+            "nullable": true
+          },
+          "dia": {
+            "type": "string",
+            "nullable": true
+          },
+          "noche": {
+            "type": "string",
+            "nullable": true
+          },
+          "laminado2": {
+            "type": "string",
+            "nullable": true
+          },
+          "diaC": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "nocheC": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrders": {
+        "type": "object",
+        "properties": {
+          "date1": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date2": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "consecutivo": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Horario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turno": {
+            "type": "string",
+            "nullable": true
+          },
+          "hora": {
+            "type": "string",
+            "nullable": true
+          },
+          "minuto": {
+            "type": "string",
+            "nullable": true
+          },
+          "hora2": {
+            "type": "string",
+            "nullable": true
+          },
+          "minuto2": {
+            "type": "string",
+            "nullable": true
+          },
+          "usuario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "activo": {
+            "type": "string",
+            "nullable": true
+          },
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proceso": {
+            "type": "string",
+            "nullable": true
+          },
+          "procesoplanta": {
+            "type": "string",
+            "nullable": true
+          },
+          "horaI": {
+            "type": "string",
+            "nullable": true
+          },
+          "horaF": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Items": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "id_Usuario": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "contrasena": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OperariosProceso": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "planta": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProcExtrusion": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ot": {
+            "type": "string",
+            "nullable": true
+          },
+          "cliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItemNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "extancho": {
+            "type": "number",
+            "format": "double"
+          },
+          "extlargo": {
+            "type": "number",
+            "format": "double"
+          },
+          "extfuelle": {
+            "type": "number",
+            "format": "double"
+          },
+          "extunidad": {
+            "type": "string",
+            "nullable": true
+          },
+          "exttotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "exttotalextruir": {
+            "type": "number",
+            "format": "double"
+          },
+          "exttotalrollos": {
+            "type": "number",
+            "format": "double"
+          },
+          "exttotaldesp": {
+            "type": "number",
+            "format": "double"
+          },
+          "extrend": {
+            "type": "number",
+            "format": "double"
+          },
+          "extConoC": {
+            "type": "number",
+            "format": "double"
+          },
+          "extCono2": {
+            "type": "string",
+            "nullable": true
+          },
+          "extTara": {
+            "type": "number",
+            "format": "double"
+          },
+          "extBruto": {
+            "type": "number",
+            "format": "double"
+          },
+          "extnetokg": {
+            "type": "number",
+            "format": "double"
+          },
+          "operador": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "calibre": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maquina": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "nomStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "turno": {
+            "type": "string",
+            "nullable": true
+          },
+          "hora": {
+            "type": "string",
+            "nullable": true
+          },
+          "observacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "envioZeus": {
+            "type": "string",
+            "nullable": true
+          },
+          "tipoDesperdicio": {
+            "type": "string",
+            "nullable": true
+          },
+          "tipoSustancias": {
+            "type": "string",
+            "nullable": true
+          },
+          "ac": {
+            "type": "string",
+            "nullable": true
+          },
+          "estadoInventario": {
+            "type": "string",
+            "nullable": true
+          },
+          "qtyNoDisponible": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "qtyDisponible": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "facturado": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaRecibidoDespacho": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fechaFacturado": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fechaSalida": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observaciones": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProcImpresionRollosBopp": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "otImp": {
+            "type": "string",
+            "nullable": true
+          },
+          "tipo": {
+            "type": "string",
+            "nullable": true
+          },
+          "maq": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ot": {
+            "type": "string",
+            "nullable": true
+          },
+          "codCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "cliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "codItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "item": {
+            "type": "string",
+            "nullable": true
+          },
+          "adj": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ancho": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "kls": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "flexo": {
+            "type": "string",
+            "nullable": true
+          },
+          "rodillo": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tinta1": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta2": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta3": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta4": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta5": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta6": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta7": {
+            "type": "string",
+            "nullable": true
+          },
+          "tinta8": {
+            "type": "string",
+            "nullable": true
+          },
+          "rollos": {
+            "type": "string",
+            "nullable": true
+          },
+          "rCalibre": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "rAncho": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "rPeso": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "sAncho": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "sTirilla": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tirilla": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProcSellado": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ot": {
+            "type": "string",
+            "nullable": true
+          },
+          "codCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "cliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "referencia": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomReferencia": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula": {
+            "type": "string",
+            "nullable": true
+          },
+          "operario": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula2": {
+            "type": "string",
+            "nullable": true
+          },
+          "operario2": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula3": {
+            "type": "string",
+            "nullable": true
+          },
+          "operario3": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula4": {
+            "type": "string",
+            "nullable": true
+          },
+          "operario4": {
+            "type": "string",
+            "nullable": true
+          },
+          "cedula5": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "operario5": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maquina": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "number",
+            "format": "double"
+          },
+          "peso": {
+            "type": "number",
+            "format": "double"
+          },
+          "fechaEntrada": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "supervisor": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "datoEntrada": {
+            "type": "string",
+            "nullable": true
+          },
+          "datoSalida": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCambio": {
+            "type": "string",
+            "nullable": true
+          },
+          "unidad": {
+            "type": "string",
+            "nullable": true
+          },
+          "hora": {
+            "type": "string",
+            "nullable": true
+          },
+          "envioZeus": {
+            "type": "string",
+            "nullable": true
+          },
+          "turnos": {
+            "type": "string",
+            "nullable": true
+          },
+          "pesot": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "desv": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "pesoMillar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "divBulto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "remplazoItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ac": {
+            "type": "string",
+            "nullable": true
+          },
+          "estadoInventario": {
+            "type": "string",
+            "nullable": true
+          },
+          "qtyDisponible": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "qtyNoDisponible": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "facturado": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaRecibidoDespacho": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fechaFacturado": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fechaSalida": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observaciones": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Procdesperdicio": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ot": {
+            "type": "string",
+            "nullable": true
+          },
+          "cliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "clienteItemNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "exttotalextruir": {
+            "type": "number",
+            "format": "double"
+          },
+          "exttotalrollos": {
+            "type": "number",
+            "format": "double"
+          },
+          "exttotaldesp": {
+            "type": "number",
+            "format": "double"
+          },
+          "extTara": {
+            "type": "number",
+            "format": "double"
+          },
+          "extBruto": {
+            "type": "number",
+            "format": "double"
+          },
+          "extnetokg": {
+            "type": "number",
+            "format": "double"
+          },
+          "operador": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "maquina": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnoD": {
+            "type": "string",
+            "nullable": true
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hora": {
+            "type": "string",
+            "nullable": true
+          },
+          "nomStatus": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Wiketiando": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "dia": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "noche": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "mq": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "codigo": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "rollsToDelete": {
+        "type": "object",
+        "properties": {
+          "roll": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "process": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Bearer Authentication with JWT Token",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

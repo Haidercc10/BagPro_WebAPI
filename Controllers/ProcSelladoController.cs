@@ -77,6 +77,8 @@ namespace BagproWebAPI.Controllers
         public ActionResult GetNominaSelladoAcumuladaItem(DateTime fechaInicio, DateTime fechaFin)
         {
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
+            //int[] rolls = { 842348, 842351, 842353, 842355, 842362, 842364, 842414, 842303, 842429, 842365, 842366, 842367, 842406, 842407, 842408, 842409, 842410, 842411, 842412, 842413, 842321, 842322, 842323, 842325, 842327, 842330, 842332, 842336, 842340, 842346, 842350, 842352, 842354, 842357, 842361, 842363 };
+
 
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
@@ -86,6 +88,7 @@ namespace BagproWebAPI.Controllers
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                             && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                            //&& !rolls.Contains(PS.Item)
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -209,6 +212,8 @@ namespace BagproWebAPI.Controllers
         {
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
 
+        //    int[] rolls = { 842348, 842351, 842353, 842355 ,842362, 842364, 842414, 842303,842429,842365,842366,842367,842406,842407,842408,842409,842410,842411,842412,842413,842321,842322,842323,842325,842327,842330,842332,842336,842340,842346,842350,842352,842354,842357,842361,842363 };
+
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
@@ -217,6 +222,7 @@ namespace BagproWebAPI.Controllers
                             && (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                             && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                          //  && !rolls.Contains(PS.Item)
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -350,6 +356,7 @@ namespace BagproWebAPI.Controllers
         }
 
         // Funcion que devolverá todos los rollos pesados en el día que se le pase y los ordenará de manera descendente
+
         private IQueryable<int> UltimosRolloPesado(DateTime fecha)
         {
             return from PS2 in _context.Set<ProcSellado>()
@@ -357,6 +364,16 @@ namespace BagproWebAPI.Controllers
                          PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS2.Item descending
                    select PS2.Item;
+        }
+
+        [HttpGet("UltimosRolloPesados/{fecha}")]
+        public ActionResult UltimosRolloPesados(DateTime fecha)
+        {
+            return Ok(from PS2 in _context.Set<ProcSellado>()
+                      where PS2.FechaEntrada <= fecha &&
+                            PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                      orderby PS2.Item descending
+                      select PS2.Item);
         }
 
         // Funcion que devolverá todos los rollos que hayan sido pesados en la fecha que se le pase y que sean solamente de las horas 7, 8 y 9
@@ -370,8 +387,25 @@ namespace BagproWebAPI.Controllers
                          !PS2.Hora.StartsWith("0")) &&
                          PS2.FechaEntrada == fecha &&
                          PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                   orderby PS2.Item ascending
+                   orderby PS2.Item descending
                    select PS2.Item;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        // Funcion que devolverá todos los rollos que hayan sido pesados en la fecha que se le pase y que sean solamente de las horas 7, 8 y 9
+        [HttpGet("RollosPesadosMadrugada2/{fecha}")]
+        public ActionResult RollosPesadosMadrugada2(DateTime fecha)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return Ok(from PS2 in _context.Set<ProcSellado>()
+                   where (PS2.Hora.StartsWith("07") ||
+                         PS2.Hora.StartsWith("08") ||
+                         PS2.Hora.StartsWith("09") ||
+                         !PS2.Hora.StartsWith("0")) &&
+                         PS2.FechaEntrada == fecha &&
+                         PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                   orderby PS2.Item ascending
+                   select PS2.Item);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -379,6 +413,8 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getNominaSelladoDetalladaItemPersona/{fechaInicio}/{fechaFin}/{producto}/{persona}")]
         public ActionResult GetNominaSelladoDetalladaItemPersona(DateTime fechaInicio, DateTime fechaFin, string producto, string persona)
         {
+            //int[] rolls = { 842348, 842351, 842353, 842355, 842362, 842364, 842414, 842303, 842429, 842365, 842366, 842367, 842406, 842407, 842408, 842409, 842410, 842411, 842412, 842413, 842321, 842322, 842323, 842325, 842327, 842330, 842332, 842336, 842340, 842346, 842350, 842352, 842354, 842357, 842361, 842363 };
+
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
@@ -391,6 +427,7 @@ namespace BagproWebAPI.Controllers
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : 
                                                                                     PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                             && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                            //&& !rolls.Contains(PS.Item)
                       select new
                       {
                           PS.Cedula,
@@ -493,6 +530,8 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getNominaSelladoDetalladaxBulto/{fechaInicio}/{fechaFin}")]
         public ActionResult GetNominaSelladoDetalladaxBulto(DateTime fechaInicio, DateTime fechaFin)
         {
+            //int[] rolls = { 842348, 842351, 842353, 842355, 842362, 842364, 842414, 842303, 842429, 842365, 842366, 842367, 842406, 842407, 842408, 842409, 842410, 842411, 842412, 842413, 842321, 842322, 842323, 842325, 842327, 842330, 842332, 842336, 842340, 842346, 842350, 842352, 842354, 842357, 842361, 842363 };
+
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
@@ -502,6 +541,7 @@ namespace BagproWebAPI.Controllers
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                             && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                            //&& !rolls.Contains(PS.Item)
                       orderby PS.Cedula, PS.Referencia, PS.FechaEntrada, PS.Item
                       select new
                       {
