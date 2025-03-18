@@ -1,4 +1,5 @@
 ﻿using BagproWebAPI.Models;
+using iText.Forms.Form.Element;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -550,7 +551,7 @@ namespace BagproWebAPI.Controllers
                               Turno = Convert.ToString(ext.Turno),
                               Fecha = ext.Fecha.Value,
                               Hora = Convert.ToString(ext.Hora),
-                              Maquina = Convert.ToInt16(ext.Maquina),
+                              Maquina = Convert.ToInt32(ext.Maquina),
                               EnvioZeus = Convert.ToString(ext.EnvioZeus),
                               Proceso = ext.NomStatus,
                               CantPedida = cl.DatosotKg,
@@ -574,6 +575,7 @@ namespace BagproWebAPI.Controllers
                                 && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" &&
                                 (maquina != "" ? Convert.ToString(sel.Maquina) == maquina : true) &&
                                 (operario != "" ? (Convert.ToString(sel.Operario) == operario || Convert.ToString(sel.Operario2) == operario || Convert.ToString(sel.Operario3) == operario || Convert.ToString(sel.Operario4) == operario) : true)
+                                
                            select new
                           {
                               Rollo = Convert.ToInt32(sel.Item),
@@ -590,7 +592,7 @@ namespace BagproWebAPI.Controllers
                               Turno = Convert.ToString(sel.Turnos),
                               Fecha =sel.FechaEntrada,
                               Hora = Convert.ToString(sel.Hora),
-                              Maquina = Convert.ToInt16(sel.Maquina),
+                              Maquina = Convert.ToInt32(sel.Maquina),
                               EnvioZeus = Convert.ToString(sel.EnvioZeus),
                               Proceso = sel.NomStatus,
                               CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
@@ -599,6 +601,7 @@ namespace BagproWebAPI.Controllers
                            }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
+
             return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
 
 #pragma warning restore CS8604 // Possible null reference argument.
@@ -908,6 +911,8 @@ namespace BagproWebAPI.Controllers
                             Material = ot.ExtMaterialNom.Trim(),
                             Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento.Trim()),
                             Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
+                            Fecha = pe.Fecha.Value.ToString("yyyy-MM-dd"),
+                            Maquina = pe.Maquina,
                         }).FirstOrDefault();
 
             if (data == null) return Ok((from ps in _context.Set<ProcSellado>() 
@@ -929,6 +934,8 @@ namespace BagproWebAPI.Controllers
                                              Material = ot.ExtMaterialNom.Trim(),
                                              Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento.Trim()),
                                              Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
+                                             Fecha = ps.FechaEntrada.ToString("yyyy-MM-dd"),
+                                             Maquina = ps.Maquina,
                                          }).FirstOrDefault());
             else return Ok(data);
         }
@@ -948,14 +955,14 @@ namespace BagproWebAPI.Controllers
                           select new
                           {
                               Roll = p.Item,
-                              Item = p.ClienteItem.Trim(), 
+                              Item = p.ClienteItem.Trim(),
                               Reference = p.ClienteItemNombre.Trim(),
                               OT = p.Ot.Trim(),
-                              Weight = p.Extnetokg, 
+                              Weight = p.Extnetokg,
                               Operator = p.Operador,
-                              Date = p.Fecha, 
-                              Hour = p.Hora.Trim(), 
-                              Turn = p.Turno.Trim(), 
+                              Date = p.Fecha,
+                              Hour = p.Hora.Trim(),
+                              Turn = p.Turno.Trim(),
                               Value_Production = p.Estado.Trim() == "0" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? cl.DiaC.Value == Convert.ToDecimal(86.46) ? Convert.ToDecimal(125.01) :
                                                                                                                                       cl.DiaC.Value == Convert.ToDecimal(132.08) ? Convert.ToDecimal(175.47) :
                                                                                                                                       cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) : 0 : p.Turno == "DIA" ? cl.DiaC.Value : p.Turno == "NOCHE" ? cl.NocheC.Value : 0 : Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) : p.Turno == "DIA" ? Convert.ToDecimal(173.17) : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) : 0,
@@ -970,11 +977,11 @@ namespace BagproWebAPI.Controllers
                                              cl.DiaC.Value == Convert.ToDecimal(120.88) ? Convert.ToDecimal(170.67) : 0,
                               Value_Rewinding = p.Estado.Trim() == "1" ? Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday ? Convert.ToDecimal(250.02) : p.Turno == "DIA" ? Convert.ToDecimal(173.17) : p.Turno == "NOCHE" ? Convert.ToDecimal(207.73) : 0 : 0,
                               Position_Job = "Operario Corte",
-                              Machine = p.Maquina, 
+                              Machine = p.Maquina,
                               Send_Zeus = p.EnvioZeus.Trim(),
                               Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday,
-                              Material = p.Material.Trim(), 
-                              Printed = cl.ImpTinta1 != "1" ? "SI" : "NO", 
+                              Material = p.Material.Trim(),
+                              Printed = cl.ImpTinta1 != "1" ? "SI" : "NO",
                               Laminate = cl.LamCapa2Nom.Trim(),
                               Rewinding = p.Estado == "1" ? "SI" : "NO",
                               Concept = "PRODUCCION"
@@ -990,10 +997,12 @@ namespace BagproWebAPI.Controllers
                               Sunday = Convert.ToDateTime(p.Fecha).DayOfWeek == DayOfWeek.Sunday*/
 
                           };
-            return Ok(payRoll);
+
+            if (date1 >= Convert.ToDateTime("2025-03-03")) return Ok(payRoll);
+            else return Ok(payRoll);
         }
 
-        [HttpPost("getAvaibleProduction/{item}")]
+         [HttpPost("getAvaibleProduction/{item}")]
         public IActionResult getAvaibleProduction(string item, [FromBody] List<long> notAvaibleProduction)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -1082,6 +1091,7 @@ namespace BagproWebAPI.Controllers
         //Rollos de la noche en extrusión
         private IQueryable<int> RollsNightExtrusion(DateTime date)
         {
+            
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                    where PS.Fecha == date &&

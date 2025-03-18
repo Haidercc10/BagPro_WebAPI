@@ -51,7 +51,11 @@ namespace BagproWebAPI.Controllers
                              c.ExtAcho1,
                              c.ExtAcho2,
                              c.ExtAcho3,
-                             c.ExtUnidadesNom
+                             c.ExtUnidadesNom, 
+                             c.ExtCalibre,
+                             c.ExtPigmentoNom,
+                             c.DatosValorKg,
+                             //Fabrication_Day = (from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot && pe.Item == roll && pe.NomStatus == "EXTRUSION" select pe.Fecha).FirstOrDefault(),
                          }; 
             return Ok(client);
         } 
@@ -1001,14 +1005,19 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
-        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string cliente = "", string item = "", string material = "", string pigmento = "", string ancho = "", string largo = "", string fuelle = "", string calibre = "")
+        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "")
         {
+
+            /*var client = (from cl in _context.Clientes
+                          where cl.IdentNro == Convert.ToString(cliente)
+                          select cl.CodBagpro).FirstOrDefault();*/
+
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = from ot in _context.Set<ClientesOt>()
-                                 join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
+                                 //join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
-                                       (cliente != "" ? Convert.ToString(cli.IdentNro) == cliente : true) &&
+                                       (cliente != "" ? Convert.ToString(ot.Cliente).Contains(cliente) : true) &&
                                        (item != "" ? Convert.ToString(ot.ClienteItems) == item : true) &&
                                        (material != "" ? ot.ExtMaterialNom == material : true) &&
                                        (pigmento != "" ? ot.ExtPigmentoNom == pigmento : true) &&
@@ -1021,24 +1030,59 @@ namespace BagproWebAPI.Controllers
                                      OrdenTrabajo = ot.Item,
                                      FechaCreacion = ot.FechaCrea,
                                      IdCliente = ot.Cliente,
-                                     NitCliente = (from cl in _context.Clientes
+                                     /*NitCliente = (from cl in _context.Clientes
                                                    where cl.CodBagpro == Convert.ToString(ot.Cliente)
-                                                   select cl.IdentNro).FirstOrDefault(),
+                                                   select cl.IdentNro).FirstOrDefault(),*/
                                      Cliente = ot.ClienteNom,
                                      Item = ot.ClienteItems,
                                      Referencia = ot.ClienteItemsNom,
+                                     Item_Referencia = ot.ClienteItems + " " + ot.ClienteItemsNom,
                                      Cantidad = ot.PtPresentacionNom == "Kilo" ? ot.DatoscantKg : ot.DatoscantBolsa,
                                      Precio = ot.PtPresentacionNom == "Kilo" ? ot.DatosValorKg : ot.DatosvalorBolsa,
                                      Existencia = 0,
-                                     Presentacion = ot.PtPresentacionNom,
-                                     Material = ot.ExtMaterialNom,
-                                     Pigmento = ot.ExtPigmentoNom,
-                                     UndExtrusion = ot.ExtUnidadesNom,
+                                     Presentacion = ot.PtPresentacionNom.Trim(),
+                                     Material = ot.ExtMaterialNom.Trim(),
+                                     Pigmento = ot.ExtPigmentoNom.Trim(),
+                                     UndExtrusion = ot.ExtUnidadesNom.Trim(),
                                      Calibre = ot.ExtCalibre,
                                      Formato = ot.PtFormatoptNom,
                                      Ancho = ot.PtAnchopt,
                                      Largo = ot.PtLargopt,
                                      Fuelle = ot.PtFuelle,
+                                     Peso_Metro = ot.ExtPeso,
+                                     Rodillo = ot.ImpRodillo,
+                                     Kilos = ot.DatosotKg,
+                                     Formato_Extrusion = ot.ExtFormatoNom.ToUpper().Trim(),
+                                     Ancho_Extrusion = Convert.ToDecimal(ot.ExtAcho2) > 0 ? Convert.ToString(Convert.ToString(" DE ") + Convert.ToString(ot.ExtAcho1).Trim() + "+" + Convert.ToString(ot.ExtAcho2).Trim() + "+" + Convert.ToString(ot.ExtAcho3).Trim() + " " + ot.ExtUnidadesNom.ToUpper().Trim()) : Convert.ToString(" DE " + Convert.ToString(ot.ExtAcho1).Trim() + " " + ot.ExtUnidadesNom.ToUpper().Trim()),
+                                     Pigmento_Extrusion = ot.ExtPigmentoNom != "NATURAL" ? Convert.ToString(" PIG.: " + ot.ExtPigmentoNom.Trim()) : "",
+                                     Calibre_Extrusion = Convert.ToString(" CAL. " + Convert.ToString(ot.ExtCalibre) + " MILS``"),
+                                     Maquinas = (from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot.Item && pe.NomStatus == Convert.ToString("EXTRUSION") && pe.Fecha >= fechaInicial group pe by new { pe.Maquina } into pe select pe.Key.Maquina).ToList(),
+                                     //Colores
+                                     Color_1 = ot.ImpTinta1Nom.Trim(),
+                                     Color_2 = ot.ImpTinta2Nom.Trim(),
+                                     Color_3 = ot.ImpTinta3Nom.Trim(),
+                                     Color_4 = ot.ImpTinta4Nom.Trim(),
+                                     Color_5 = ot.ImpTinta5Nom.Trim(),
+                                     Color_6 = ot.ImpTinta6Nom.Trim(),
+                                     Color_7 = ot.ImpTinta7Nom.Trim(),
+                                     Color_8 = ot.ImpTinta8Nom.Trim(),
+                                     Fecha_Despacho = ot.DatosFechaDespachar,
+                                     AnchoPT = ot.ExtAcho1,
+                                     LargoPT = ot.ExtAcho2,
+                                     FuellePT = ot.ExtAcho3,
+                                     Tipo_Sellado = ot.PtSelladoPtNom,
+                                     Etiqueta = ot.Etiqueta,
+                                     Etiqueta_Largo = ot.EtiquetaLargo,
+                                     Etiqueta_Fuelle = ot.EtiquetaFuelle,
+                                     Cant_Unidades = ot.DatoscantBolsa,
+                                     Fuelle_Izquierdo = ot.ExtAcho2,
+                                     Fuelle_Derecho = ot.ExtAcho3,
+                                     Fuelle_Fondo = ot.PtFuelle,
+
+                                     AnchoReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtAnchopt : ot.ExtAcho1,
+                                     LargoReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtLargopt : ot.ExtAcho2,
+                                     FuelleReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtFuelle : ot.ExtAcho3
+
                                  };
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression
