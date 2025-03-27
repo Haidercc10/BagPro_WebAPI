@@ -1223,7 +1223,7 @@ namespace BagproWebAPI.Controllers
             { 
                 if (processProduction.Contains(rolls.process))
                 {
-                    var roll = (from pe in _context.Set<ProcExtrusion>() where pe.Item == rolls.roll && pe.NomStatus == rolls.process.Replace("EMP", "EMPAQUE") && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe).FirstOrDefault();
+                    var roll = (from pe in _context.Set<ProcExtrusion>() where pe.Item == rolls.roll && processProduction.Contains(pe.NomStatus.Substring(0, 3)) select pe).FirstOrDefault();
                     roll.Observacion = "Etiqueta eliminada desde App Plasticaribe";
                     _context.Entry(roll).State = EntityState.Modified;
                     _context.SaveChanges();
@@ -1238,8 +1238,7 @@ namespace BagproWebAPI.Controllers
                 } 
                 else if (rolls.process == "SELLA") 
                 {
-                    var roll = (from ps in _context.Set<ProcSellado>() where ps.Item == rolls.roll && ps.NomStatus == rolls.process.Replace("SELLA", "SELLADO") && ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select ps).FirstOrDefault();
-
+                    var roll = (from ps in _context.Set<ProcSellado>() where ps.Item == rolls.roll && ps.NomStatus == rolls.process.Replace("SELLA", "SELLADO") select ps).FirstOrDefault();
                     if (roll != null)
                     {
                         var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET RemplazoItem = 'Etiqueta eliminada desde App Plasticaribe' WHERE Item = {roll.Item}");
