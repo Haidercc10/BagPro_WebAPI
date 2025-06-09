@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceReference1;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 
@@ -420,7 +421,7 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getProduccionAreas/{anio}")]
         public ActionResult GetProduccionAreas(int anio)
         {
-            string[] maquinas = { "35", "37", "38" };
+            string[] maquinas = { "35", "37", "38", "39" };
 #pragma warning disable CS8629 // Nullable value type may be null.
             var producidoExt = from pe in _context.Set<ProcExtrusion>()
                                where pe.Fecha.Value.Year == anio &&
@@ -517,7 +518,7 @@ namespace BagproWebAPI.Controllers
             turnosNoche.Add("NOCHE");
             turnosNoche.Add("RN");
 
-            string[] machines = { "35", "37", "38" };
+            string[] machines = { "35", "37", "38", "39" };
 
             var ProcExt = (from ext in _context.Set<ProcExtrusion>()
                            from cl in _context.Set<ClientesOt>()
@@ -913,6 +914,9 @@ namespace BagproWebAPI.Controllers
                             Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
                             Fecha = pe.Fecha.Value.ToString("yyyy-MM-dd"),
                             Maquina = pe.Maquina,
+                            Operario = pe.Operador.Trim(),
+                            Hora = pe.Hora, 
+                            Turno = pe.Turno,
                         }).FirstOrDefault();
 
             if (data == null) return Ok((from ps in _context.Set<ProcSellado>() 
@@ -936,6 +940,9 @@ namespace BagproWebAPI.Controllers
                                              Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
                                              Fecha = ps.FechaEntrada.ToString("yyyy-MM-dd"),
                                              Maquina = ps.Maquina,
+                                             Operario = ps.Operario.Trim(),
+                                             Hora = ps.Hora,
+                                             Turno = ps.Turnos,
                                          }).FirstOrDefault());
             else return Ok(data);
         }
@@ -1047,28 +1054,56 @@ namespace BagproWebAPI.Controllers
         //Primer rollo del dia extrusion
         private IQueryable<int> FirstRollDayExtrusion(DateTime date)
         {
+            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                        where PS.Fecha == date &&
-                            (!PS.Hora.StartsWith("00")&&
+                            (!PS.Hora.StartsWith("00") &&
                             !PS.Hora.StartsWith("01") &&
                             !PS.Hora.StartsWith("02") &&
                             !PS.Hora.StartsWith("03") &&
                             !PS.Hora.StartsWith("04") &&
                             !PS.Hora.StartsWith("05") &&
-                            !PS.Hora.StartsWith("06") &&
+                            !PS.Hora.StartsWith("06") /*&&
                             !PS.Hora.StartsWith("07:0") &&
                             !PS.Hora.StartsWith("07:1") &&
-                            !PS.Hora.StartsWith("07:2")) &&
+                            !PS.Hora.StartsWith("07:2")*/) &&
+                            process.Contains(PS.NomStatus) &&
                             PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item ascending
                    select PS.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        //Primer rollo del dia extrusion
+        [HttpGet("FirstRollDayExtrusion2/{date}")]
+        public ActionResult FirstRollDayExtrusion2(DateTime date)
+        {
+            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return Ok(from PS in _context.Set<ProcExtrusion>()
+                      where PS.Fecha == date &&
+                           (!PS.Hora.StartsWith("00") &&
+                           !PS.Hora.StartsWith("01") &&
+                           !PS.Hora.StartsWith("02") &&
+                           !PS.Hora.StartsWith("03") &&
+                           !PS.Hora.StartsWith("04") &&
+                           !PS.Hora.StartsWith("05") &&
+                           !PS.Hora.StartsWith("06") &&
+                           !PS.Hora.StartsWith("07:0") &&
+                           !PS.Hora.StartsWith("07:1") &&
+                           !PS.Hora.StartsWith("07:2")) &&
+                           process.Contains(PS.NomStatus) &&
+                           PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                      orderby PS.Item ascending
+                      select PS.Item);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         //Primer rollo del dia sellado
         private IQueryable<int> FirstRollDaySealed(DateTime date)
         {
+            //string[] process = { "SELLADO", "Wiketiado" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcSellado>()
                         where PS.FechaEntrada == date &&
@@ -1082,6 +1117,7 @@ namespace BagproWebAPI.Controllers
                              !PS.Hora.StartsWith("07:0") &&
                              !PS.Hora.StartsWith("07:1") &&
                              !PS.Hora.StartsWith("07:2")) &&
+                             //process.Contains(PS.NomStatus) &&
                               PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item ascending
                         select PS.Item;
@@ -1091,7 +1127,7 @@ namespace BagproWebAPI.Controllers
         //Rollos de la noche en extrusión
         private IQueryable<int> RollsNightExtrusion(DateTime date)
         {
-            
+            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                    where PS.Fecha == date &&
@@ -1101,10 +1137,11 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("03") ||
                         PS.Hora.StartsWith("04") ||
                         PS.Hora.StartsWith("05") ||
-                        PS.Hora.StartsWith("06") ||
+                        PS.Hora.StartsWith("06") /*||
                         PS.Hora.StartsWith("07:0") ||
                         PS.Hora.StartsWith("07:1") ||
-                        PS.Hora.StartsWith("07:2")) &&
+                        PS.Hora.StartsWith("07:2")*/) &&
+                        process.Contains(PS.NomStatus) &&
                         PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item descending
                    select PS.Item;
@@ -1114,6 +1151,7 @@ namespace BagproWebAPI.Controllers
         //Rollos de la noche en sellado
         private IQueryable<int> RollsNightSealed(DateTime date)
         {
+            //string[] process = { "SELLADO", "Wiketiado" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcSellado>()
                    where PS.FechaEntrada == date &&
@@ -1127,6 +1165,7 @@ namespace BagproWebAPI.Controllers
                         PS.Hora.StartsWith("07:0") ||
                         PS.Hora.StartsWith("07:1") ||
                         PS.Hora.StartsWith("07:2")) &&
+                        //process.Contains(PS.NomStatus) &&
                         PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item descending
                    select PS.Item;

@@ -1497,6 +1497,22 @@
   },
   {
     "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "FirstRollDayExtrusion2",
+    "RelativePath": "api/ProcExtrusion/FirstRollDayExtrusion2/{date}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
     "Method": "getAvaibleProduction",
     "RelativePath": "api/ProcExtrusion/getAvaibleProduction/{item}",
     "HttpMethod": "POST",

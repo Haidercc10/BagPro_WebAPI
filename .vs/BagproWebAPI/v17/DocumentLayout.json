@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\models\\clientesotitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:models\\clientesotitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\pc-sistemas\\documents\\github\\bagpro_webapi\\models\\clientesotitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:models\\clientesotitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -72,7 +72,7 @@
               "RelativeDocumentMoniker": "Controllers\\ProcExtrusionController.cs",
               "ToolTip": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeToolTip": "Controllers\\ProcExtrusionController.cs",
-              "ViewState": "AgIAANAEAAAAAAAAAAAgwOEEAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALMDAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.57Z",
               "EditorCaption": ""
@@ -85,26 +85,25 @@
               "RelativeDocumentMoniker": "Controllers\\ClientesOtController.cs",
               "ToolTip": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
               "RelativeToolTip": "Controllers\\ClientesOtController.cs",
-              "ViewState": "AgIAAFkCAAAAAAAAAADwvzkCAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8EAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-09T21:34:18.584Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-09T21:34:18.584Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "ProcSelladoController.cs",
               "DocumentMoniker": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ProcSelladoController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcSelladoController.cs",
               "ToolTip": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ProcSelladoController.cs",
               "RelativeToolTip": "Controllers\\ProcSelladoController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFMAAACAAAAAAAAAAA==",
+              "ViewState": "AgIAADEBAAAAAAAAAAAAAIUBAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.578Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "ClientesOtItem.cs",
               "DocumentMoniker": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Models\\ClientesOtItem.cs",
               "RelativeDocumentMoniker": "Models\\ClientesOtItem.cs",
@@ -112,12 +111,11 @@
               "RelativeToolTip": "Models\\ClientesOtItem.cs",
               "ViewState": "AgIAAJQAAAAAAAAAAAAwwJ4AAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-09T21:34:18.564Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-09T21:34:18.564Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "ClientesOtItemsController.cs",
               "DocumentMoniker": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClientesOtItemsController.cs",
@@ -125,8 +123,7 @@
               "RelativeToolTip": "Controllers\\ClientesOtItemsController.cs",
               "ViewState": "AgIAAGQAAAAAAAAAAAAcwJIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-09T21:34:18.547Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-09T21:34:18.547Z"
             }
           ]
         },
