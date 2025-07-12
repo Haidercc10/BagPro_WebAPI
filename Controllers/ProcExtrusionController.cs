@@ -917,6 +917,8 @@ namespace BagproWebAPI.Controllers
                             Operario = pe.Operador.Trim(),
                             Hora = pe.Hora, 
                             Turno = pe.Turno,
+                            Cantidad = pe.Extnetokg,
+                            Presentacion = ot.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : ot.PtPresentacionNom.Trim() == "Unidad" ? "Und" : "Paquete"
                         }).FirstOrDefault();
 
             if (data == null) return Ok((from ps in _context.Set<ProcSellado>() 
@@ -943,6 +945,8 @@ namespace BagproWebAPI.Controllers
                                              Operario = ps.Operario.Trim(),
                                              Hora = ps.Hora,
                                              Turno = ps.Turnos,
+                                             Cantidad = ps.Qty, 
+                                             Presentacion = ot.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : ot.PtPresentacionNom.Trim() == "Unidad" ? "Und" : "Paquete"
                                          }).FirstOrDefault());
             else return Ok(data);
         }

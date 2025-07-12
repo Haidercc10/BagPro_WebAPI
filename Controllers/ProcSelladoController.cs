@@ -77,9 +77,6 @@ namespace BagproWebAPI.Controllers
         public ActionResult GetNominaSelladoAcumuladaItem(DateTime fechaInicio, DateTime fechaFin)
         {
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
-            //int[] rolls = { 842348, 842351, 842353, 842355, 842362, 842364, 842414, 842303, 842429, 842365, 842366, 842367, 842406, 842407, 842408, 842409, 842410, 842411, 842412, 842413, 842321, 842322, 842323, 842325, 842327, 842330, 842332, 842336, 842340, 842346, 842350, 842352, 842354, 842357, 842361, 842363 };
-
-
             var con = from PS in _context.Set<ProcSellado>()
                       join CL in _context.Set<ClientesOtItem>() on PS.Referencia.Trim() equals CL.ClienteItems.ToString().Trim()
                       where PS.FechaEntrada >= fechaInicio
@@ -88,7 +85,6 @@ namespace BagproWebAPI.Controllers
                             //&& (PS.NomStatus == "SELLADO" ? PS.EnvioZeus == "1" : true)
                             && (RollosPesadosMadrugada(fechaFin.AddDays(1)).Any() ? PS.Item < RollosPesadosMadrugada(fechaFin.AddDays(1)).FirstOrDefault() : PS.Item <= UltimosRolloPesado(fechaFin).FirstOrDefault())
                             && PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                            //&& !rolls.Contains(PS.Item)
                       group new { PS, CL } by new
                       {
                           PS.Cedula,
@@ -387,7 +383,7 @@ namespace BagproWebAPI.Controllers
                          !PS2.Hora.StartsWith("0")) &&
                          PS2.FechaEntrada == fecha &&
                          PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                   orderby PS2.Item descending
+                   orderby PS2.Item ascending
                    select PS2.Item;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
@@ -998,6 +994,15 @@ namespace BagproWebAPI.Controllers
                       select new
                       {
                           Bulto = ps.Item,
+                          Cliente = ps.Cliente.Trim(),
+                          Id_Producto = ps.Referencia.Trim(),
+                          Producto = ps.NomReferencia.Trim(),
+                          Ancho1_Extrusion = 0,
+                          Ancho2_Extrusion = 0,
+                          Ancho3_Extrusion = 0,
+                          Und_Extrusion = "",
+                          Calibre_Extrusion = 0,
+                          Material = ps.Estado.Split("-", StringSplitOptions.RemoveEmptyEntries)[0],
                       };
 
             var con2 = from ps in _context.Set<ProcSellado>()
@@ -1005,6 +1010,15 @@ namespace BagproWebAPI.Controllers
                        select new
                        {
                            Bulto = ps.Item,
+                           Cliente = ps.Cliente, 
+                           Id_Producto = ps.Referencia,
+                           Producto = ps.NomReferencia,
+                           Ancho1_Extrusion = 0,
+                           Ancho2_Extrusion = 0,
+                           Ancho3_Extrusion = 0,  
+                           Und_Extrusion = "",
+                           Calibre_Extrusion = 0,
+                           Material = ps.Estado.Split("-", StringSplitOptions.RemoveEmptyEntries)[0], 
                        };
 
             if (reimpresion == 0) return Ok(con1.Take(1));

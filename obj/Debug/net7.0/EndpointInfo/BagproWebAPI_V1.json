@@ -603,6 +603,14 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "process",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
         "responses": {
@@ -3257,6 +3265,36 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ProcExtrusion/getDataForOrder/{ot}/{process}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "ot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "process",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"

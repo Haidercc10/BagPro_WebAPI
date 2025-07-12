@@ -539,7 +539,7 @@ namespace BagproWebAPI.Controllers
 
         /**Consulta por item y presentación*/
         [HttpGet("getOrdenDeTrabajo/{orden}")]
-        public ActionResult GetOrdenDeTrabajo(int orden)
+        public ActionResult GetOrdenDeTrabajo(int orden, string? process = "")
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
@@ -584,8 +584,9 @@ namespace BagproWebAPI.Controllers
                                    //Cantidad_Extrusion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "EXTRUSION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
                                    //Cantidad_Impresion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "IMPRESION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
                                    //Cantidad_Rotograbado = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "ROTOGRABADO" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
-                                   //Cantidad_Empaque = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "EMPAQUE" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
-                                   Cantidad_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus == "SELLADO" && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Qty).Sum(),
+                                   Cantidad_Proceso = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus.StartsWith(process) && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
+                                   Cantidad_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus.StartsWith(process) && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Qty).Sum(),
+                                   Peso_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus.StartsWith(process) && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Peso).Sum(),
                                    NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(clot.Cliente) select cl.IdentNro).FirstOrDefault(),
                                    Wicket = (from w in _context.Wiketiandos where w.Id == Convert.ToString(clot.ClienteItems) select w.Id.Trim()).FirstOrDefault(),
                                    
