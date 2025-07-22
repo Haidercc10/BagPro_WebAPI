@@ -72,7 +72,7 @@
               "RelativeDocumentMoniker": "Controllers\\ProcExtrusionController.cs",
               "ToolTip": "C:\\Users\\PC-SISTEMAS\\Documents\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeToolTip": "Controllers\\ProcExtrusionController.cs",
-              "ViewState": "AgIAAH4DAAAAAAAAAAAEwIUDAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAOgEAAAAAAAAAAASwO4EAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.57Z",
               "EditorCaption": ""
@@ -124,7 +124,8 @@
               "RelativeToolTip": "Controllers\\ClientesOtItemsController.cs",
               "ViewState": "AgIAAGQAAAAAAAAAAAAcwJIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-09T21:34:18.547Z"
+              "WhenOpened": "2025-01-09T21:34:18.547Z",
+              "EditorCaption": ""
             }
           ]
         },

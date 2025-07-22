@@ -1260,7 +1260,7 @@ namespace BagproWebAPI.Controllers
         async public Task<IActionResult> putObservationDeletedRolls([FromBody] List<rollsToDelete> rollsToDelete)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            string[] processProduction = { "EMP", "EXT", "IMP", "ROT", "LAM", "DBLD" };
+            string[] processProduction = { "EMP", "EXT", "IMP", "ROT", "LAM", "DBLD", "PERF" };
             
             foreach(var rolls in rollsToDelete) 
             { 
