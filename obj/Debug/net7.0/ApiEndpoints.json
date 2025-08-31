@@ -1518,6 +1518,22 @@
   },
   {
     "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "FirstRollDaySealed2",
+    "RelativePath": "api/ProcExtrusion/FirstRollDaySealed2/{date}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
     "Method": "getAvaibleProduction",
     "RelativePath": "api/ProcExtrusion/getAvaibleProduction/{item}",
     "HttpMethod": "POST",
@@ -1558,27 +1574,6 @@
       {
         "Name": "rollos",
         "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
-    "Method": "getDataForOrder",
-    "RelativePath": "api/ProcExtrusion/getDataForOrder/{ot}/{process}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ot",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "process",
-        "Type": "System.String",
         "IsRequired": true
       }
     ],

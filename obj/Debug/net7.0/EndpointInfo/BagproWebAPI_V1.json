@@ -3272,26 +3272,19 @@
         }
       }
     },
-    "/api/ProcExtrusion/getDataForOrder/{ot}/{process}": {
+    "/api/ProcExtrusion/FirstRollDayExtrusion2/{date}": {
       "get": {
         "tags": [
           "ProcExtrusion"
         ],
         "parameters": [
           {
-            "name": "ot",
+            "name": "date",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "process",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "date-time"
             }
           }
         ],
@@ -3302,7 +3295,7 @@
         }
       }
     },
-    "/api/ProcExtrusion/FirstRollDayExtrusion2/{date}": {
+    "/api/ProcExtrusion/FirstRollDaySealed2/{date}": {
       "get": {
         "tags": [
           "ProcExtrusion"

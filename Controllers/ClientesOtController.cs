@@ -10,6 +10,7 @@ using iText.Layout.Element;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -102,7 +103,9 @@ namespace BagproWebAPI.Controllers
                                               COT.DatosvalorOt,
                                               COT.FechaCrea,
                                               COT.UsrCrea,
-                                              COT.Estado
+                                              COT.Estado,
+                                              NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(COT.Cliente) select cl.IdentNro).FirstOrDefault(),
+                                              COT.Item,
                                           }).ToList();
             if (OT == null)
             {

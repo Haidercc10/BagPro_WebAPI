@@ -562,8 +562,8 @@ namespace BagproWebAPI.Controllers
 
             var ProcSel = (from sel in _context.Set<ProcSellado>()
                           from cl in _context.Set<ClientesOt>()
-                          where sel.FechaEntrada >= fechaInicio &&
-                                sel.FechaEntrada <= fechaFin.AddDays(1) &&
+                          where sel.FechaEntrada >= fechaInicio && //21
+                                sel.FechaEntrada <= fechaFin.AddDays(1) && //21
                                 (orden != "" ? sel.Ot.Trim() == orden : true) &&
                                 (proceso != "" ? proceso == "SELLADO" ? sel.NomStatus == proceso && !machines.Contains(sel.Maquina) || (sel.NomStatus == "Wiketiado" && sel.Maquina == "50") : proceso == "Wiketiado" ? (sel.NomStatus == proceso && sel.Maquina != "50") : proceso == "CAMISILLA" ? sel.NomStatus == "SELLADO" && machines.Contains(sel.Maquina) : false : true) &&
                                 (cliente != "" ? sel.Cliente == cliente : true) &&
@@ -1058,7 +1058,7 @@ namespace BagproWebAPI.Controllers
         //Primer rollo del dia extrusion
         private IQueryable<int> FirstRollDayExtrusion(DateTime date)
         {
-            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
+            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO", "PERFORADO" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                        where PS.Fecha == date &&
@@ -1128,10 +1128,35 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        //Primer rollo del dia sellado 2
+        [HttpGet("FirstRollDaySealed2/{date}")]
+        public ActionResult FirstRollDaySealed2(DateTime date)
+        {
+            //string[] process = { "SELLADO", "Wiketiado" };
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return Ok(from PS in _context.Set<ProcSellado>()
+                   where PS.FechaEntrada == date &&
+                        (!PS.Hora.StartsWith("00") &&
+                        !PS.Hora.StartsWith("01") &&
+                        !PS.Hora.StartsWith("02") &&
+                        !PS.Hora.StartsWith("03") &&
+                        !PS.Hora.StartsWith("04") &&
+                        !PS.Hora.StartsWith("05") &&
+                        !PS.Hora.StartsWith("06") &&
+                        !PS.Hora.StartsWith("07:0") &&
+                        !PS.Hora.StartsWith("07:1") &&
+                        !PS.Hora.StartsWith("07:2")) &&
+                         //process.Contains(PS.NomStatus) &&
+                         PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                   orderby PS.Item ascending
+                   select PS.Item);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         //Rollos de la noche en extrusión
         private IQueryable<int> RollsNightExtrusion(DateTime date)
         {
-            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
+            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO", "PERFORADO" };
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             return from PS in _context.Set<ProcExtrusion>()
                    where PS.Fecha == date &&
