@@ -1940,6 +1940,27 @@
   },
   {
     "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
+    "Method": "getProductionDay",
+    "RelativePath": "api/ProcExtrusion/getProductionDay/{fechaInicio}/{fechaFin}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
     "Method": "GetProductionForExitByNumber",
     "RelativePath": "api/ProcExtrusion/getProductionForExitByNumber/{production}",
     "HttpMethod": "GET",

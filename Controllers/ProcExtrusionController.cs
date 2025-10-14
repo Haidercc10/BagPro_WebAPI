@@ -610,6 +610,77 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore IDE0075 // Simplify conditional expression
         }
 
+        // Consulta que devolverá la producción de las áreas en un rango de fechas
+        [HttpGet("getProductionDay/{fechaInicio}/{fechaFin}")]
+        public ActionResult getProductionDay(DateTime fechaInicio, DateTime fechaFin)
+        {
+#pragma warning disable IDE0075 // Simplify conditional expression
+#pragma warning disable CS8629 // Nullable value type may be null.
+#pragma warning disable CS8604 // Possible null reference argument.
+
+            List<string> turnosDia = new List<string>();
+            turnosDia.Add("DIA");
+            turnosDia.Add("RD");
+
+            List<string> turnosNoche = new List<string>();
+            turnosNoche.Add("NOCHE");
+            turnosNoche.Add("RN");
+
+            string[] machines = { "35", "37", "38", "39" };
+
+            var ProcExt = (from ext in _context.Set<ProcExtrusion>()
+                           where ext.Fecha >= fechaInicio &&
+                                 ext.Fecha <= fechaFin.AddDays(1) &&
+                                 ext.Item >= FirstRollDayExtrusion(fechaInicio).FirstOrDefault() &&
+                                 (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) &&
+                                 ext.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                           group ext by new
+                           {
+                               Fecha = ext.Fecha.Value,
+                               Maquina = ext.Maquina,
+                               Proceso = ext.NomStatus
+                           } into ext
+                           select new
+                           {
+                               Meta = Convert.ToDecimal(0),
+                               Peso = ext.Sum(x => x.Extnetokg),
+                               Fecha = ext.Key.Fecha,
+                               Maquina = Convert.ToInt32(ext.Key.Maquina),
+                               Proceso = Convert.ToString(ext.Key.Proceso),
+                               Porcentaje = Convert.ToDecimal(0),
+                           }).ToList();
+
+
+            var ProcSel = (from sel in _context.Set<ProcSellado>()
+                           where sel.FechaEntrada >= fechaInicio &&
+                                 sel.FechaEntrada <= fechaFin.AddDays(1) &&
+                                 (sel.Item >= FirstRollDaySealed(fechaInicio).FirstOrDefault()) &&
+                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
+                                 && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                           group sel by new { 
+                               Fecha = sel.FechaEntrada,  
+                               Maquina = sel.Maquina,
+                               Proceso = sel.NomStatus
+                           } into sel
+                           select new
+                           {   
+                               Meta = Convert.ToDecimal(0),
+                               Peso = sel.Sum(x => x.Peso),
+                               Fecha = sel.Key.Fecha,
+                               Maquina = Convert.ToInt32(sel.Key.Maquina),
+                               Proceso = Convert.ToString(sel.Key.Proceso),
+                               Porcentaje = Convert.ToDecimal(0),
+                           }).ToList();
+
+            var procesos = ProcExt.Concat(ProcSel);
+
+            return procesos.Any() ? Ok(procesos) : BadRequest("¡No se encontró información!");
+
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8629 // Nullable value type may be null.
+#pragma warning restore IDE0075 // Simplify conditional expression
+        }
+
         [HttpPost("ajusteExistencia")]
         public async Task<ActionResult> AjusteExistencia([FromBody] List<int> rollos)
         {

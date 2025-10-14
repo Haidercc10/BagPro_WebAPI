@@ -2868,6 +2868,38 @@
         }
       }
     },
+    "/api/ProcExtrusion/getProductionDay/{fechaInicio}/{fechaFin}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "fechaInicio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/ProcExtrusion/ajusteExistencia": {
       "post": {
         "tags": [
