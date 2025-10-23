@@ -1146,6 +1146,76 @@ namespace BagproWebAPI.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
+        public ActionResult GetOtControlCalidadExtrusion(string OT, string status)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+            var query = from cl in _context.Set<ClientesOt>()
+                        where Convert.ToString(cl.Item) == OT
+                        select new
+                        {
+                            OT = cl.Item,
+                            Id_Cliente = cl.Cliente,
+                            Cliente = cl.ClienteNom,
+                            Item = cl.ClienteItems,
+                            Referencia = cl.ClienteItemsNom,
+                            Maquina = (from pe in _context.Set<ProcExtrusion>() 
+                                       where pe.Ot == Convert.ToString(cl.Item) && pe.NomStatus == status 
+                                       group pe by new { pe.Maquina } 
+                                       into pe
+                                       select Convert.ToInt32(pe.Key.Maquina)).ToList(),
+                            PigmentoId = cl.ExtPigmento.Trim(),
+                            Pigmento = cl.ExtPigmentoNom.Trim(),
+                            Calibre = cl.ExtCalibre,
+                            Ancho = cl.PtAnchopt,
+                            Largo = cl.PtLargopt,
+                            CantBolsasxPaq = cl.PtQtyPquete,
+                            AnchoFuelle_Derecha = cl.ExtAcho1,
+                            AnchoFuelle_Izquierda = cl.ExtAcho2,
+                            AnchoFuelle_Abajo = cl.ExtAcho3,
+                            TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
+                            Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
+                            Impresion = Convert.ToString(cl.Impresion).Trim(),
+                            FormatoId = Convert.ToString(cl.ExtFormato).Trim(),
+                            Formato = Convert.ToString(cl.ExtFormatoNom).Trim(),
+                        };
+
+            /*var query2 = from cl in _context.Set<ClientesOt>()
+                         where Convert.ToString(cl.Item) == OT
+                         select new
+                         {
+                             OT = cl.Item,
+                             Id_Cliente = cl.Cliente,
+                             Cliente = cl.ClienteNom,
+                             Item = cl.ClienteItems,
+                             Referencia = cl.ClienteItemsNom,
+                             Maquina = (from ps in _context.Set<ProcSellado>() 
+                                        where ps.Ot ==  && 
+                                        ps.NomStatus == status 
+                                        select Convert.ToInt32(ps.Maquina)).ToList(),
+                             PigmentoId = cl.ExtPigmento.Trim(),
+                             Pigmento = cl.ExtPigmentoNom.Trim(),
+                             Calibre = cl.ExtCalibre,
+                             Ancho = cl.PtAnchopt,
+                             Largo = cl.PtLargopt,
+                             CantBolsasxPaq = cl.PtQtyPquete,
+                             AnchoFuelle_Derecha = cl.ExtAcho1,
+                             AnchoFuelle_Izquierda = cl.ExtAcho2,
+                             AnchoFuelle_Abajo = cl.ExtAcho3,
+                             TratadoId = Convert.ToString("No aplica"),
+                             Tratado = Convert.ToString("No aplica"),
+                             Impresion = Convert.ToString(cl.Impresion).Trim(),
+                         };*/
+
+            //if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
+            //return Ok(query.Concat(query2));
+
+            return Ok(query);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
         [HttpPut("putOrdenTrabajo{orden}")]
         public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
         {

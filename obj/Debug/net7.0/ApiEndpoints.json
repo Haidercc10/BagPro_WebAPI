@@ -554,6 +554,27 @@
   },
   {
     "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
+    "Method": "GetOtControlCalidadExtrusion",
+    "RelativePath": "api/ClientesOt/getOtControlCalidadExtrusion/{OT}/{status}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OT",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtController",
     "Method": "getOtsForCustomerOrders",
     "RelativePath": "api/ClientesOt/getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}",
     "HttpMethod": "GET",
@@ -1714,37 +1735,6 @@
     "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
     "Method": "GetObtenerDatosxProcesos",
     "RelativePath": "api/ProcExtrusion/getObtenerDatosxProcesos/{OT}/{status}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "OT",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "status",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "BagproWebAPI.Models.ProcExtrusion",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
-    "Method": "GetOtControlCalidadExtrusion",
-    "RelativePath": "api/ProcExtrusion/getOtControlCalidadExtrusion/{OT}/{status}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

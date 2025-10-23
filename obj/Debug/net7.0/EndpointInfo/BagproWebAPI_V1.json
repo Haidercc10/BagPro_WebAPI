@@ -1155,6 +1155,36 @@
         }
       }
     },
+    "/api/ClientesOt/getOtControlCalidadExtrusion/{OT}/{status}": {
+      "get": {
+        "tags": [
+          "ClientesOt"
+        ],
+        "parameters": [
+          {
+            "name": "OT",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/ClientesOt/putOrdenTrabajo{orden}": {
       "put": {
         "tags": [
@@ -2698,53 +2728,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/ProcExtrusion/getOtControlCalidadExtrusion/{OT}/{status}": {
-      "get": {
-        "tags": [
-          "ProcExtrusion"
-        ],
-        "parameters": [
-          {
-            "name": "OT",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcExtrusion"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcExtrusion"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcExtrusion"
-                }
-              }
-            }
           }
         }
       }

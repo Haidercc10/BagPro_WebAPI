@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\haidercarrillo\\onedrive - plasticaribe s.a.s\\documentos\\github\\bagpro_webapi\\models\\bpclientesitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:models\\bpclientesitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\haidercarrillo\\onedrive - plasticaribe s.a.s\\documentos\\github\\bagpro_webapi\\controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\haidercarrillo\\onedrive - plasticaribe s.a.s\\documentos\\github\\bagpro_webapi\\controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,8 +19,8 @@
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\haidercarrillo\\onedrive - plasticaribe s.a.s\\documentos\\github\\bagpro_webapi\\controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\users\\haidercarrillo\\onedrive - plasticaribe s.a.s\\documentos\\github\\bagpro_webapi\\data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,17 +30,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 233,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ProcExtrusionController.cs",
               "DocumentMoniker": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcExtrusionController.cs",
               "ToolTip": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeToolTip": "Controllers\\ProcExtrusionController.cs",
-              "ViewState": "AgIAABMCAAAAAAAAAAAqwGMCAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAALMBAAAAAAAAAAAgwL8BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.57Z",
               "IsPinned": true,
@@ -40,7 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "ProcSelladoController.cs",
               "DocumentMoniker": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Controllers\\ProcSelladoController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcSelladoController.cs",
@@ -49,7 +57,34 @@
               "ViewState": "AgIAAHwDAAAAAAAAAAAjwNsDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-06T15:45:11.713Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "plasticaribeContext.cs",
+              "DocumentMoniker": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
+              "RelativeDocumentMoniker": "Data\\plasticaribeContext.cs",
+              "ToolTip": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
+              "RelativeToolTip": "Data\\plasticaribeContext.cs",
+              "ViewState": "AgIAAHYCAAAAAAAAAAAAAH8CAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T15:48:07.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BpClientesItem.cs",
+              "DocumentMoniker": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
+              "RelativeDocumentMoniker": "Models\\BpClientesItem.cs",
+              "ToolTip": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
+              "RelativeToolTip": "Models\\BpClientesItem.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAcwFcAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T15:48:03.037Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -85,15 +120,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "ClientesOtController.cs",
               "DocumentMoniker": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClientesOtController.cs",
               "ToolTip": "C:\\Users\\HaiderCarrillo\\OneDrive - PLASTICARIBE S.A.S\\Documentos\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
               "RelativeToolTip": "Controllers\\ClientesOtController.cs",
-              "ViewState": "AgIAAFAAAAAAAAAAAAAIwGQAAABCAAAAAAAAAA==",
+              "ViewState": "AgIAAJMEAAAAAAAAAAAgwKoEAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T22:30:03.021Z"
+              "WhenOpened": "2025-08-20T22:30:03.021Z",
+              "EditorCaption": ""
             }
           ]
         },
