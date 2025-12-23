@@ -1086,8 +1086,8 @@ namespace BagproWebAPI.Controllers
 
                                      AnchoReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtAnchopt : ot.ExtAcho1,
                                      LargoReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtLargopt : ot.ExtAcho2,
-                                     FuelleReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtFuelle : ot.ExtAcho3
-
+                                     FuelleReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtFuelle : ot.ExtAcho3, 
+                                     Peso_Millar = ot.PtPesoMillar,
                                  };
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression
