@@ -56,6 +56,7 @@ namespace BagproWebAPI.Controllers
                              c.ExtCalibre,
                              c.ExtPigmentoNom,
                              c.DatosValorKg,
+                             c.UsrModifica
                              //Fabrication_Day = (from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot && pe.Item == roll && pe.NomStatus == "EXTRUSION" select pe.Fecha).FirstOrDefault(),
                          }; 
             return Ok(client);
@@ -890,11 +891,12 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getCostoOrdenesUltimoMes/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOrdenesUltimoMes(DateTime fecha1, DateTime fecha2)
+        public ActionResult getCostoOrdenesUltimoMes(DateTime fecha1, DateTime fecha2, string? sales)
         {
             var con = from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
+                            && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
                       group ot by new
                       {
                           ot.ExtMaterial
@@ -946,11 +948,12 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getCantOrdenesMateriales/{fecha1}/{fecha2}")]
-        public ActionResult getCantOrdenesMateriales(DateTime fecha1, DateTime fecha2)
+        public ActionResult getCantOrdenesMateriales(DateTime fecha1, DateTime fecha2, string? sales)
         {
             var con = from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
+                            && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
                       group ot by new
                       {
                           ot.ExtMaterialNom
@@ -966,13 +969,14 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getCostoOredenesUltimoMes_Vendedores/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOredenesUltimoMes_Vendedores(DateTime fecha1, DateTime fecha2)
+        public ActionResult getCostoOredenesUltimoMes_Vendedores(DateTime fecha1, DateTime fecha2, string? sales)
         {
             var con = from ot in _context.Set<ClientesOt>()
                       from vendedor in _context.Set<Vendedore>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
                             && vendedor.Id == ot.UsrModifica
+                            && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
                       group ot by new
                       {
                           ot.UsrModifica,
@@ -990,11 +994,12 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getCostoOredenesUltimoMes_Clientes/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOredenesUltimoMes_Clientes(DateTime fecha1, DateTime fecha2)
+        public ActionResult getCostoOredenesUltimoMes_Clientes(DateTime fecha1, DateTime fecha2, string? sales)
         {
             var con = from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
+                            && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
                       group ot by new
                       {
                           ot.ClienteNom
