@@ -543,7 +543,7 @@ namespace BagproWebAPI.Controllers
 
         /**Consulta por item y presentación*/
         [HttpGet("getOrdenDeTrabajo/{orden}")]
-        public ActionResult GetOrdenDeTrabajo(int orden, string? process = "")
+        public ActionResult GetOrdenDeTrabajo(int orden, string? sales, string? process = "")
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
@@ -551,6 +551,7 @@ namespace BagproWebAPI.Controllers
                                from clot in _context.Set<ClientesOt>()
                                where clot.Item == orden
                                      && clot.ClienteItems == ot.ClienteItems
+                                     && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
                                select new
                                {
                                    Id_OT = clot.Id,
@@ -1015,12 +1016,8 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
-        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "")
+        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "")
         {
-
-            /*var client = (from cl in _context.Clientes
-                          where cl.IdentNro == Convert.ToString(cliente)
-                          select cl.CodBagpro).FirstOrDefault();*/
 
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = from ot in _context.Set<ClientesOt>()
@@ -1034,7 +1031,8 @@ namespace BagproWebAPI.Controllers
                                        (ancho != "" ? ot.PtAnchopt == Convert.ToDecimal(ancho) : true) &&
                                        (largo != "" ? ot.PtLargopt == Convert.ToDecimal(largo) : true) &&
                                        (fuelle != "" ? ot.PtFuelle == Convert.ToDecimal(fuelle) : true) &&
-                                       (calibre != "" ? ot.ExtCalibre == Convert.ToDecimal(calibre) : true)
+                                       (calibre != "" ? ot.ExtCalibre == Convert.ToDecimal(calibre) : true) && 
+                                       (sales != "" ? ot.UsrModifica == sales : true)   
                                  select new
                                  {
                                      OrdenTrabajo = ot.Item,
@@ -1093,6 +1091,8 @@ namespace BagproWebAPI.Controllers
                                      LargoReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtLargopt : ot.ExtAcho2,
                                      FuelleReal = ot.PtSelladoPtNom == "LATERAL" ? ot.PtFuelle : ot.ExtAcho3, 
                                      Peso_Millar = ot.PtPesoMillar,
+                                     CantBolsasxPaquete = ot.PtQtyPquete,
+                                     CantBolsasxBulto = ot.PtQtyBulto,
                                  };
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression

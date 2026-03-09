@@ -7,20 +7,24 @@
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:data\\plasticaribecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\models\\bpclientesitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,21 +38,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 233,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "ProcExtrusionController.cs",
               "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcExtrusionController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeToolTip": "Controllers\\ProcExtrusionController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAgwBgAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAABAFAAAAAAAAAAAgwBwFAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.57Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -61,8 +64,7 @@
               "ViewState": "AgIAAMMDAAAAAAAAAAAiwL0DAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-06T15:45:11.713Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -98,41 +100,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ClientesOtItemsController.cs",
-              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ClientesOtItemsController.cs",
-              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
-              "RelativeToolTip": "Controllers\\ClientesOtItemsController.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAwwEoAAABTAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T15:58:42.012Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "plasticaribeContext.cs",
-              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
-              "RelativeDocumentMoniker": "Data\\plasticaribeContext.cs",
-              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
-              "RelativeToolTip": "Data\\plasticaribeContext.cs",
-              "ViewState": "AgIAAHYCAAAAAAAAAAAAAH8CAABVAAAAAAAAAA==",
+              "Title": "ClientesController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ClientesController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesController.cs",
+              "RelativeToolTip": "Controllers\\ClientesController.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAIwE8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T15:48:07.342Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BpClientesItem.cs",
-              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
-              "RelativeDocumentMoniker": "Models\\BpClientesItem.cs",
-              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
-              "RelativeToolTip": "Models\\BpClientesItem.cs",
-              "ViewState": "AgIAADwAAAAAAAAAAAA0wCIAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T15:48:03.037Z"
+              "WhenOpened": "2026-03-02T22:29:51.515Z"
             },
             {
               "$type": "Document",
@@ -142,10 +118,46 @@
               "RelativeDocumentMoniker": "Controllers\\ClientesOtController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
               "RelativeToolTip": "Controllers\\ClientesOtController.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAIwDoAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAADEEAAAAAAAAAAAWwD0EAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-20T22:30:03.021Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ClientesOtItemsController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ClientesOtItemsController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
+              "RelativeToolTip": "Controllers\\ClientesOtItemsController.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAUwEMAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-28T15:58:42.012Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "plasticaribeContext.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
+              "RelativeDocumentMoniker": "Data\\plasticaribeContext.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Data\\plasticaribeContext.cs",
+              "RelativeToolTip": "Data\\plasticaribeContext.cs",
+              "ViewState": "AgIAAHYCAAAAAAAAAAAAAH8CAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T15:48:07.342Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BpClientesItem.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
+              "RelativeDocumentMoniker": "Models\\BpClientesItem.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Models\\BpClientesItem.cs",
+              "RelativeToolTip": "Models\\BpClientesItem.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAA0wCIAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T15:48:03.037Z"
             }
           ]
         },
