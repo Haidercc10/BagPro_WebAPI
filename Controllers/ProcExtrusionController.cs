@@ -355,7 +355,7 @@ namespace BagproWebAPI.Controllers
                                orderby pe.Fecha.Value.Year descending, pe.Fecha.Value.Month descending
                                group pe by new
                                {
-                                   Area = Convert.ToString(pe.NomStatus),
+                                   Area = Convert.ToString(pe.NomStatus.ToUpper()),
                                    Mes = Convert.ToInt32(pe.Fecha.Value.Month),
                                    Anio = Convert.ToInt32(pe.Fecha.Value.Year),
                                } into pe
@@ -375,7 +375,7 @@ namespace BagproWebAPI.Controllers
                                 orderby ps.FechaEntrada.Year descending, ps.FechaEntrada.Month descending
                                 group ps by new
                                 {
-                                    Area = Convert.ToString(ps.NomStatus),
+                                    Area = Convert.ToString(ps.NomStatus.ToUpper()),
                                     Mes = Convert.ToInt32(ps.FechaEntrada.Month),
                                     Anio = Convert.ToInt32(ps.FechaEntrada.Year),
                                 } into ps

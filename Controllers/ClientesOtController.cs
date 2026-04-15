@@ -1185,6 +1185,8 @@ namespace BagproWebAPI.Controllers
                             Impresion = Convert.ToString(cl.Impresion).Trim(),
                             FormatoId = Convert.ToString(cl.ExtFormato).Trim(),
                             Formato = Convert.ToString(cl.ExtFormatoNom).Trim(),
+                            materialId = Convert.ToString(cl.ExtMaterial).Trim(),
+                            Material = Convert.ToString(cl.ExtMaterialNom).Trim(),
                         };
 
             /*var query2 = from cl in _context.Set<ClientesOt>()

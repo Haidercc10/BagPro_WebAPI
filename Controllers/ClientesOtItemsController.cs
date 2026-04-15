@@ -88,7 +88,7 @@ namespace BagproWebAPI.Controllers
 
         //Consultar por Id de Cliente Item
         [HttpPost("OtItem")]
-        public  IActionResult GetIdClientesOtItem([FromBody] List<int> rolls)
+        public  IActionResult GetIdClientesOtItem([FromBody] List<int> rolls, string? sales = "")
         {
             List<Object> items = new List<Object>();
 
@@ -99,6 +99,7 @@ namespace BagproWebAPI.Controllers
                                      from ven in _context.Set<Vendedore>()
                                      where cliOT.ClienteItems == item
                                      && cliOT.UsrModifica == ven.Id
+                                     && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == (sales))
                                      select new //ListItems
                                      {
                                          ClienteItems = cliOT.ClienteItems,
@@ -107,7 +108,8 @@ namespace BagproWebAPI.Controllers
                                          ClienteNom = cliOT.ClienteNom,
                                          PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : "Paquete",
                                          DatosValorKg = cliOT.DatosValorKg,
-                                         NombreCompleto = ven.NombreCompleto
+                                         NombreCompleto = ven.NombreCompleto,
+                                         Codigo_Asesor = cliOT.UsrModifica,
                                      };
 
                 count++;
