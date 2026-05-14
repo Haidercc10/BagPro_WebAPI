@@ -430,7 +430,7 @@ namespace BagproWebAPI.Controllers
 
         // Consulta que devolverá la producción de las áreas en un rango de fechas
         [HttpGet("getProduccionDetalladaAreas/{fechaInicio}/{fechaFin}")]
-        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "", string? maquina = "", string? operario = "")
+        public ActionResult GetProduccionDetalladaAreas(DateTime fechaInicio, DateTime fechaFin, string? orden = "", string? proceso = "", string? cliente = "", string? producto = "", string? turno = "", string? envioZeus = "", string? maquina = "", string? operario = "", string? supervisor = "")
         {
 #pragma warning disable IDE0075 // Simplify conditional expression
 #pragma warning disable CS8629 // Nullable value type may be null.
@@ -461,7 +461,8 @@ namespace BagproWebAPI.Controllers
                                  (RollsNightExtrusion(fechaFin.AddDays(1)).Any() ? ext.Item <= (RollsNightExtrusion(fechaFin.AddDays(1)).FirstOrDefault()) : ext.Fecha <= fechaFin) &&
                                  ext.Observacion != "Etiqueta eliminada desde App Plasticaribe" &&
                                  (maquina != "" ? Convert.ToString(ext.Maquina) == maquina : true) &&
-                                 (operario != "" ? Convert.ToString(ext.Operador) == operario : true)
+                                 (operario != "" ? Convert.ToString(ext.Operador) == operario : true) &&
+                                 (supervisor != "" ? Convert.ToString(ext.TipoSustancias) == supervisor : true)
                            select new
                           {
                               Rollo = Convert.ToInt32(ext.Item),
@@ -484,7 +485,8 @@ namespace BagproWebAPI.Controllers
                               CantPedida = cl.DatosotKg,
                               Observacion = ext.Observaciones,
                               Operario = ext.Operador,
-                          }).ToList();
+                              Supervisor = ext.TipoSustancias,
+                           }).ToList();
 
             var ProcSel = (from sel in _context.Set<ProcSellado>()
                           from cl in _context.Set<ClientesOt>()
@@ -501,8 +503,8 @@ namespace BagproWebAPI.Controllers
                                 (RollsNightSealed(fechaFin.AddDays(1)).Any() ? sel.Item <= (RollsNightSealed(fechaFin.AddDays(1)).FirstOrDefault()) : sel.FechaEntrada <= fechaFin)
                                 && sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" &&
                                 (maquina != "" ? Convert.ToString(sel.Maquina) == maquina : true) &&
-                                (operario != "" ? (Convert.ToString(sel.Operario) == operario || Convert.ToString(sel.Operario2) == operario || Convert.ToString(sel.Operario3) == operario || Convert.ToString(sel.Operario4) == operario) : true)
-                                
+                                (operario != "" ? (Convert.ToString(sel.Operario) == operario || Convert.ToString(sel.Operario2) == operario || Convert.ToString(sel.Operario3) == operario || Convert.ToString(sel.Operario4) == operario) : true) &&
+                                (supervisor != "" ? Convert.ToString(sel.Supervisor) == supervisor : true)
                            select new
                           {
                               Rollo = Convert.ToInt32(sel.Item),
@@ -525,6 +527,7 @@ namespace BagproWebAPI.Controllers
                               CantPedida = sel.Unidad == "KLS" ? cl.DatosotKg : cl.DatoscantBolsa,
                               Observacion = sel.Observaciones,
                               Operario = sel.Operario, 
+                              Supervisor = sel.Supervisor,
                            }).ToList();
 
             var procesos = ProcExt.Concat(ProcSel);
