@@ -62,7 +62,8 @@ namespace BagproWebAPI.Controllers
             foreach (var item in items)
             {
                 string unit = item.unit == "UND" ? "Unidad" : 
-                              item.unit == "PAQ" ? "Paquete" : 
+                              item.unit == "PAQ" ? "Paquete" :
+                              item.unit == "MTS" ? "MTS" :
                               item.unit == "KLS" ? "Kilo" : "";
 
                 var kilos = (from c in _context.Set<ClientesOtItem>()
@@ -106,18 +107,48 @@ namespace BagproWebAPI.Controllers
                                          ClienteItemsNom = cliOT.ClienteItemsNom,
                                          Cliente = cliOT.Cliente,
                                          ClienteNom = cliOT.ClienteNom,
-                                         PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : "Paquete",
+                                         PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" : "Paquete",
                                          DatosValorKg = cliOT.DatosValorKg,
                                          NombreCompleto = ven.NombreCompleto,
                                          Codigo_Asesor = cliOT.UsrModifica,
                                      };
-
                 count++;
                 items.AddRange(idClientesItem.Take(1));
                 if (rolls.Count() == count) return Ok(items);
-                //if (idClientesItem == null) return NotFound();
-                //else return Ok(idClientesItem.Take(1));
             }
+            return Ok(items);
+        }
+
+
+        [HttpPost("OtItem2")]
+        public IActionResult GetIdClientesOtItem2([FromBody] List<int> rolls, string? sales = "")
+        {
+            var items = (
+                from cliOT in _context.Set<ClientesOtItem>()
+                join ven in _context.Set<Vendedore>()
+                    on cliOT.UsrModifica equals ven.Id
+                where rolls.Contains(Convert.ToInt32(cliOT.ClienteItems))
+                      && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == sales)
+                select new
+                {
+                    ClienteItems = cliOT.ClienteItems,
+                    ClienteItemsNom = cliOT.ClienteItemsNom,
+                    Cliente = cliOT.Cliente,
+                    ClienteNom = cliOT.ClienteNom,
+                    PtPresentacionNom =
+                        cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" :
+                        cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" :
+                        cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" :
+                        "Paquete",
+                    DatosValorKg = cliOT.DatosValorKg,
+                    NombreCompleto = ven.NombreCompleto,
+                    Codigo_Asesor = cliOT.UsrModifica
+                }
+            )
+            .GroupBy(x => x.ClienteItems)
+            .Select(g => g.First())
+            .ToList();
+
             return Ok(items);
         }
 
