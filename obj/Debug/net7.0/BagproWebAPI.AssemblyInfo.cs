@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BagproWebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f676f5b8c21c18855f93fb6d3f2b29f29b182fc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50cd3246b54ef5e392ee9034f35f924ccce9f421")]
 [assembly: System.Reflection.AssemblyProductAttribute("BagproWebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BagproWebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

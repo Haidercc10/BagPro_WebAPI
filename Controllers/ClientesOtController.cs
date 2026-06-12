@@ -1064,7 +1064,7 @@ namespace BagproWebAPI.Controllers
                                      Ancho_Extrusion = Convert.ToDecimal(ot.ExtAcho2) > 0 ? Convert.ToString(Convert.ToString(" DE ") + Convert.ToString(ot.ExtAcho1).Trim() + "+" + Convert.ToString(ot.ExtAcho2).Trim() + "+" + Convert.ToString(ot.ExtAcho3).Trim() + " " + ot.ExtUnidadesNom.ToUpper().Trim()) : Convert.ToString(" DE " + Convert.ToString(ot.ExtAcho1).Trim() + " " + ot.ExtUnidadesNom.ToUpper().Trim()),
                                      Pigmento_Extrusion = ot.ExtPigmentoNom != "NATURAL" ? Convert.ToString(" PIG.: " + ot.ExtPigmentoNom.Trim()) : "",
                                      Calibre_Extrusion = Convert.ToString(" CAL. " + Convert.ToString(ot.ExtCalibre) + " MILS``"),
-                                     Maquinas = (from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot.Item && pe.NomStatus == Convert.ToString("EXTRUSION") && pe.Fecha >= fechaInicial group pe by new { pe.Maquina } into pe select pe.Key.Maquina).ToList(),
+                                     Maquinas = "", //(from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot.Item && pe.NomStatus == Convert.ToString("EXTRUSION") && pe.Fecha >= fechaInicial group pe by new { pe.Maquina } into pe select pe.Key.Maquina).ToList(),
                                      //Colores
                                      Color_1 = ot.ImpTinta1Nom.Trim(),
                                      Color_2 = ot.ImpTinta2Nom.Trim(),
