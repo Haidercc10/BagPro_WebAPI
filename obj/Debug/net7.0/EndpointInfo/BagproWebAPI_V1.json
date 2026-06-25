@@ -605,6 +605,13 @@
             }
           },
           {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "process",
             "in": "query",
             "schema": {
@@ -817,6 +824,13 @@
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -881,6 +895,13 @@
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -913,6 +934,13 @@
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -944,6 +972,13 @@
             "schema": {
               "type": "string",
               "format": "date-time"
+            }
+          },
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1036,6 +1071,14 @@
           },
           {
             "name": "calibre",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "sales",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1468,6 +1511,69 @@
       "post": {
         "tags": [
           "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ClientesOtItems/OtItem2": {
+      "post": {
+        "tags": [
+          "ClientesOtItems"
+        ],
+        "parameters": [
+          {
+            "name": "sales",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
         ],
         "requestBody": {
           "content": {
@@ -2842,6 +2948,14 @@
               "type": "string",
               "default": ""
             }
+          },
+          {
+            "name": "supervisor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
         "responses": {
@@ -2852,7 +2966,7 @@
       }
     },
     "/api/ProcExtrusion/getProductionDay/{fechaInicio}/{fechaFin}": {
-      "get": {
+      "post": {
         "tags": [
           "ProcExtrusion"
         ],
@@ -2874,8 +2988,52 @@
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "proceso",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "turno",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success"

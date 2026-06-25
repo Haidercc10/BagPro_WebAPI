@@ -783,6 +783,54 @@ namespace BagproWebAPI.Controllers
             return rollosPesados.Any() ? Ok(rollosPesados) : BadRequest();
         }
 
+        //Consulta que devolverá los rollos pesados en bagpro de un proceso en especifico y de una orden de trabajo en especifico.
+        [HttpGet("getRegistrosPorOT/{orden}/{proceso}")]
+        public async Task<ActionResult> getRegistrosPorOT(string orden, string proceso)
+        {
+            var rollosPesadosProcesos = await (from pe in _context.Set<ProcExtrusion>().AsNoTracking()
+                                               where pe.Ot == orden &&
+                                                     pe.NomStatus == proceso &&
+                                                     pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
+                                               orderby pe.Item descending
+                                               select new
+                                               {
+                                                   Id = Convert.ToInt32(pe.Item),
+                                                   Operario = Convert.ToString(pe.Operador),
+                                                   Cantidad = Convert.ToDecimal(pe.Extnetokg),
+                                                   Peso = Convert.ToDecimal(pe.ExtBruto),
+                                                   Presentacion = Convert.ToString("Kg"),
+                                                   Fecha = Convert.ToString(pe.Fecha),
+                                                   Hora = Convert.ToString(pe.Hora),
+                                                   Maquina = Convert.ToString(pe.Maquina),
+                                                   Turno = Convert.ToString(pe.Turno),
+                                                   Despacho = Convert.ToString(pe.EnvioZeus),
+                                                   Material = Convert.ToString(pe.Material),
+                                               }).ToListAsync();
+
+            var rollosPesadosSellado = await (from pe in _context.Set<ProcSellado>().AsNoTracking()
+                                              where pe.Ot == orden &&
+                                              pe.NomStatus == proceso &&
+                                              pe.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
+                                              orderby pe.Item descending
+                                              select new
+                                              {
+                                                  Id = Convert.ToInt32(pe.Item),
+                                                  Operario = pe.Operario,
+                                                  Cantidad = Convert.ToDecimal(pe.Qty),
+                                                  Peso = Convert.ToDecimal(pe.Peso),
+                                                  Presentacion = Convert.ToString(pe.Unidad),
+                                                  Fecha = Convert.ToString(pe.FechaEntrada),
+                                                  Hora = Convert.ToString(pe.Hora),
+                                                  Maquina = Convert.ToString(pe.Maquina),
+                                                  Turno = Convert.ToString(pe.Turnos),
+                                                  Despacho = Convert.ToString(pe.EnvioZeus),
+                                                  Material = Convert.ToString(pe.Estado),
+                                              }).ToListAsync();
+
+            var rollosPesados = rollosPesadosProcesos.Concat(rollosPesadosSellado);
+            return Ok(rollosPesados);
+        }
+
         //Función que retornará los rollos de Bagpro por ot y proceso sin tener en cuenta los rollos que vienen por parametro.
         [HttpPost("getAvailablesRollsOT/{orden}/{proceso}")]
         public ActionResult getAvailablesRollsOT(string orden, string proceso, [FromBody] List<int> rollos)

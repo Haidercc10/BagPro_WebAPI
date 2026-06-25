@@ -51,39 +51,14 @@ namespace BagproWebAPI.Controllers
             return cliente;
         }
 
-        /** Obtener Nombre Clientes con OT de 2 años hasta la fecha */
-        [HttpGet("UltimosClientes/{fecha}")]
-        public ActionResult GetClienteConOT(DateTime fecha)
-        {
-            if (_context.Clientes == null)
-            {
-                return NotFound();
-            }
-
-            var ClientesOT = _context.ClientesOts.Where(clot => clot.FechaCrea >= fecha).Select(Id => Id.Cliente.ToString()).ToList();
-
-#pragma warning disable CS8604 // Posible argumento de referencia nulo
-            var cliente = _context.Clientes.Where(P => ClientesOT.Contains(P.CodBagpro)).Select(c => new { c.NombreComercial }).ToList();
-#pragma warning restore CS8604 // Posible argumento de referencia nulo
-
-
-            if (cliente == null)
-            {
-                return NotFound();
-            } else
-            {
-                return Ok(cliente);
-            }
-
-            
-        }
-
+        //Función para obtener clientes por su nombre comercial, utilizando el método Contains para permitir búsquedas parciales.
         [HttpGet("getClientesNombre/{nombre}")]
-        public ActionResult GetClientesNombre(string nombre)
+        public async Task<ActionResult> GetClientesNombre(string nombre)
         {
-            var clientes = from c in _context.Clientes
-                           where c.NombreComercial.Contains(nombre)
-                           select c;
+            var clientes = await (from c in _context.Set<Cliente>().AsNoTracking()
+                                  where c.NombreComercial.Contains(nombre)
+                                  select c).ToListAsync();
+            
             return Ok(clientes);
         }
 

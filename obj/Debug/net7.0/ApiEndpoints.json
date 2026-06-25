@@ -371,6 +371,11 @@
         "Name": "fecha2",
         "Type": "System.DateTime",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -408,6 +413,11 @@
         "Name": "fecha2",
         "Type": "System.DateTime",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -429,6 +439,11 @@
         "Name": "fecha2",
         "Type": "System.DateTime",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -450,6 +465,11 @@
         "Name": "fecha2",
         "Type": "System.DateTime",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -466,6 +486,11 @@
         "Name": "orden",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       },
       {
         "Name": "process",
@@ -530,6 +555,11 @@
       },
       {
         "Name": "calibre",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "sales",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -918,6 +948,32 @@
         "Name": "rolls",
         "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BagproWebAPI.Controllers.ClientesOtItemsController",
+    "Method": "GetIdClientesOtItem2",
+    "RelativePath": "api/ClientesOtItems/OtItem2",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolls",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "sales",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -1887,6 +1943,11 @@
         "Name": "operario",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "supervisor",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -1932,7 +1993,7 @@
     "ContainingType": "BagproWebAPI.Controllers.ProcExtrusionController",
     "Method": "getProductionDay",
     "RelativePath": "api/ProcExtrusion/getProductionDay/{fechaInicio}/{fechaFin}",
-    "HttpMethod": "GET",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1945,6 +2006,21 @@
         "Name": "fechaFin",
         "Type": "System.DateTime",
         "IsRequired": true
+      },
+      {
+        "Name": "ot",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "proceso",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "turno",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

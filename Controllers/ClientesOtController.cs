@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using System.Drawing;
+using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BagproWebAPI.Controllers
@@ -40,9 +41,9 @@ namespace BagproWebAPI.Controllers
 
         //Consulta para obtener los clientes por OT. 
         [HttpGet("getClientsForOT/{ot}")]
-        public ActionResult getClientsForOT(int ot) 
+        public async Task<IActionResult> getClientsForOT(int ot) 
         {
-            var client = from c in _context.Set<ClientesOt>()
+            var client = await (from c in _context.Set<ClientesOt>().AsNoTracking()
                          where c.Item == ot
                          select new
                          {
@@ -57,8 +58,7 @@ namespace BagproWebAPI.Controllers
                              c.ExtPigmentoNom,
                              c.DatosValorKg,
                              c.UsrModifica
-                             //Fabrication_Day = (from pe in _context.Set<ProcExtrusion>() where Convert.ToInt32(pe.Ot.Trim()) == ot && pe.Item == roll && pe.NomStatus == "EXTRUSION" select pe.Fecha).FirstOrDefault(),
-                         }; 
+                         }).ToListAsync(); 
             return Ok(client);
         } 
 
@@ -82,13 +82,13 @@ namespace BagproWebAPI.Controllers
 
         /** Obtener costos de clientes OT*/
         [HttpGet("CostosOT/{Item}")]
-        public IActionResult GetCostostOt(int Item)
+        public async Task<IActionResult> GetCostostOt(int Item)
         {
             if (_context.ClientesOts == null)
             {
                 return NotFound();
             }
-            var OT = _context.ClientesOts.Where(OrdTrab => OrdTrab.Item == Item)
+            var OT = await _context.ClientesOts.AsNoTracking().Where(OrdTrab => OrdTrab.Item == Item)
                                           .Select(COT => new
                                           {
                                               COT.ClienteNom,
@@ -107,7 +107,7 @@ namespace BagproWebAPI.Controllers
                                               COT.Estado,
                                               NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(COT.Cliente) select cl.IdentNro).FirstOrDefault(),
                                               COT.Item,
-                                          }).ToList();
+                                          }).ToListAsync();
             if (OT == null)
             {
                 return BadRequest();
@@ -120,9 +120,9 @@ namespace BagproWebAPI.Controllers
 
         // GET: api/ClientesOt/5
         [HttpGet("OT/{item}")]
-        public ActionResult<ClientesOt> GetOt(int item)
+        public async Task<IActionResult> GetOt(int item)
         {
-            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == item).ToList();
+            var clientesOt = await _context.ClientesOts.AsNoTracking().Where(cOt => cOt.Item == item).ToListAsync();
 
             if (clientesOt == null)
             {
@@ -133,16 +133,16 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getOrdenTrabajo/{orden}")]
-        public ActionResult GetOrdenTrabajo(int orden)
+        public async Task<IActionResult> GetOrdenTrabajo(int orden)
         {
-            var vendedor = (from ot in _context.Set<ClientesOt>()
-                            from v in _context.Set<Vendedore>()
-                            where ot.Item == orden &&
-                                 ot.UsrModifica == v.Id
-                            select v.NombreCompleto).FirstOrDefault();
+            var vendedor = await (from ot in _context.Set<ClientesOt>().AsNoTracking()
+                                  from v in _context.Set<Vendedore>().AsNoTracking()
+                                  where ot.Item == orden &&
+                                       ot.UsrModifica == v.Id
+                                  select v.NombreCompleto).FirstOrDefaultAsync();
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var con = from ot in _context.Set<ClientesOt>()
+            var con = await (from ot in _context.Set<ClientesOt>().AsNoTracking()
                       where ot.Item == orden
                       select new
                       {
@@ -330,7 +330,7 @@ namespace BagproWebAPI.Controllers
                           Mezcla_PorcentajePigmto2_Capa3 = ot.Porcpig2cap3,
                           MezPigmto_Id2xCapa3 = ot.Mezpigm2cap3,
                           P2C3_Nombre = ot.Mezpigm2cap3Nom,
-                      };
+                      }).ToListAsync();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             return con.Any() ? Ok(con) : BadRequest($"¡No se encontró una Orden de Trabajo con el consecutivo {orden}!");
@@ -338,10 +338,10 @@ namespace BagproWebAPI.Controllers
 
         /**Consulta por item y presentación*/
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
-        public ActionResult GetItemUltOT(int ClienteItems, string PtPresentacionNom)
+        public async Task<ActionResult> OT_Cliente_Item_Presentacion(int ClienteItems, string PtPresentacionNom)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
+            var ordenTrabajo = await (from ot in _context.Set<ClientesOtItem>().AsNoTracking()
                                where ot.ClienteItems == ClienteItems
                                      && ot.PtPresentacionNom == PtPresentacionNom
                                select new
@@ -535,7 +535,7 @@ namespace BagproWebAPI.Controllers
                                       Mezcla_PorcentajePigmto2_Capa3 = ot.Porcpig2cap3,
                                       MezPigmto_Id2xCapa3 = ot.Mezpigm2cap3.Trim(),
                                       P2C3_Nombre = ot.Mezpigm2cap3.Trim(),
-                               };
+                               }).ToListAsync();
 
             return ordenTrabajo.Any() ? Ok(ordenTrabajo) : NotFound();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -543,12 +543,12 @@ namespace BagproWebAPI.Controllers
 
         /**Consulta por item y presentación*/
         [HttpGet("getOrdenDeTrabajo/{orden}")]
-        public ActionResult GetOrdenDeTrabajo(int orden, string? sales, string? process = "")
+        public async Task<ActionResult> GetOrdenDeTrabajo(int orden, string? sales, string? process = "")
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-            var ordenTrabajo = from ot in _context.Set<ClientesOtItem>()
-                               from clot in _context.Set<ClientesOt>()
+            var ordenTrabajo = await (from ot in _context.Set<ClientesOtItem>().AsNoTracking()
+                               from clot in _context.Set<ClientesOt>().AsNoTracking()
                                where clot.Item == orden
                                      && clot.ClienteItems == ot.ClienteItems
                                      && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
@@ -752,7 +752,7 @@ namespace BagproWebAPI.Controllers
                                    Mezcla_PorcentajePigmto2_Capa3 = clot.Porcpig2cap3,
                                    MezPigmto_Id2xCapa3 = clot.Mezpigm2cap3.Trim(),
                                    P2C3_Nombre = clot.Mezpigm2cap3.Trim(),
-                               };
+                               }).ToListAsync();
 
             return ordenTrabajo.Any() ? Ok(ordenTrabajo) : NotFound();
 #pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
@@ -761,9 +761,9 @@ namespace BagproWebAPI.Controllers
 
         /** Consultar ultima OT*/
         [HttpGet("UltimaOT/")]
-        public ActionResult<ClientesOt> GetUltimaOt()
+        public async Task<ActionResult<ClientesOt>> GetUltimaOt()
         {
-            var clientesOt = _context.ClientesOts.OrderBy(cOt => cOt.Item).Last();
+            var clientesOt = await _context.ClientesOts.AsNoTracking().OrderBy(cOt => cOt.Item).LastAsync();
 
             if (clientesOt == null)
             {
@@ -773,7 +773,7 @@ namespace BagproWebAPI.Controllers
             return Ok(clientesOt);
         }
 
-        /** Consultar el primer item en el rango de fechas elegido y que tenga un precio igual al ingresado */
+        /** //Consultar el primer item en el rango de fechas elegido y que tenga un precio igual al ingresado */
         [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
         public ActionResult consultarItem(DateTime fecha1, DateTime fecha2, int item, decimal precio)
         {
@@ -816,12 +816,12 @@ namespace BagproWebAPI.Controllers
 
         //Consulta que devolerá la ultima presentación que tuvo un Item 
         [HttpGet("getPresentacionItem/{item}")]
-        public ActionResult GetPresentacionItem(int item)
+        public async Task<ActionResult> GetPresentacionItem(int item)
         {
-            var presentacion = (from ot in _context.Set<ClientesOtItem>()
-                                where ot.ClienteItems == item
-                                orderby ot.Item descending
-                                select ot).FirstOrDefault();
+            var presentacion = await (from ot in _context.Set<ClientesOtItem>()
+                                      where ot.ClienteItems == item
+                                      orderby ot.Item descending
+                                      select ot).FirstOrDefaultAsync();
             return Ok(presentacion);
         }
 
@@ -858,23 +858,24 @@ namespace BagproWebAPI.Controllers
 
         /** Actualizar Estado de Ordenes */
         [HttpPut("CambioEstadoOT/{Item}")]
-        public ActionResult PutEstadoClientesOt(int Item, ClientesOt clientesOt, string Estado)
+        public async Task<ActionResult> PutEstadoClientesOt(int Item, ClientesOt clientesOt, string Estado)
         {
-
             if (Item != clientesOt.Item)
             {
                 return BadRequest();
             }
 
-            var Actualizado = _context.ClientesOts.Where(x => x.Item == Item)
-                                                 .First<ClientesOt>();
+            var Actualizado = await _context.ClientesOts.Where(x => x.Item == Item).FirstOrDefaultAsync<ClientesOt>();
+
+            if (Actualizado == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-
                 Actualizado.Estado = Estado;
                 _context.SaveChanges();
-
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -887,71 +888,70 @@ namespace BagproWebAPI.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         [HttpGet("getCostoOrdenesUltimoMes/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOrdenesUltimoMes(DateTime fecha1, DateTime fecha2, string? sales)
+        public async Task<ActionResult> getCostoOrdenesUltimoMes(DateTime fecha1, DateTime fecha2, string? sales)
         {
-            var con = from ot in _context.Set<ClientesOt>()
-                      where ot.FechaCrea >= fecha1
-                            && ot.FechaCrea <= fecha2
-                            && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
-                      group ot by new
-                      {
-                          ot.ExtMaterial
-                      }
-                      into ot
-                      select new
-                      {
-                          costo = ot.Sum(x => x.DatosvalorOt),
-                          peso = ot.Sum(x => x.DatosotKg)
-                      };
+            var con = await (from ot in _context.Set<ClientesOt>()
+                              where ot.FechaCrea >= fecha1
+                                    && ot.FechaCrea <= fecha2
+                                    && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
+                              group ot by new
+                              {
+                                  ot.ExtMaterial
+                              }
+                              into ot
+                              select new
+                              {
+                                  costo = ot.Sum(x => x.DatosvalorOt),
+                                  peso = ot.Sum(x => x.DatosotKg)
+                              }).ToListAsync();
             return Ok(con);
         }
 
         [HttpGet("getPesoProcesosUltimoMes/{fecha1}/{fecha2}")]
-        public ActionResult getPesoProcesosUltimoMes(DateTime fecha1, DateTime fecha2)
+        public async Task<ActionResult> getPesoProcesosUltimoMes(DateTime fecha1, DateTime fecha2)
         {
-            var extrusion = from ot in _context.Set<ProcExtrusion>()
-                            where ot.Fecha >= fecha1
-                                  && ot.Fecha <= fecha2
-                            group ot by new
-                            {
-                                ot.NomStatus
-                            }
-                      into ot
-                            select new
-                            {
-                                ot.Key.NomStatus,
-                                peso = ot.Sum(x => x.Extnetokg),
-                                und = ot.Sum(x => x.Extnetokg),
-                            };
+            var extrusion = await (from ot in _context.Set<ProcExtrusion>()
+                                    where ot.Fecha >= fecha1
+                                          && ot.Fecha <= fecha2
+                                    group ot by new
+                                    {
+                                        ot.NomStatus
+                                    }
+                                    into ot
+                                    select new
+                                    {
+                                        ot.Key.NomStatus,
+                                        peso = ot.Sum(x => x.Extnetokg),
+                                        und = ot.Sum(x => x.Extnetokg),
+                                    }).ToListAsync();
 
-            var sellado = from ot in _context.Set<ProcSellado>()
-                          where ot.FechaEntrada >= fecha1
-                                && ot.FechaEntrada <= fecha2
-                          group ot by new
-                          {
-                              ot.NomStatus
-                          }
-                      into ot
-                          select new
-                          {
-                              ot.Key.NomStatus,
-                              peso = ot.Sum(x => x.Peso),
-                              und = ot.Sum(x => x.Qty)
-                          };
+            var sellado = await (from ot in _context.Set<ProcSellado>()
+                                 where ot.FechaEntrada >= fecha1
+                                       && ot.FechaEntrada <= fecha2
+                                 group ot by new
+                              {
+                                  ot.NomStatus
+                              }
+                                 into ot
+                                 select new
+                                 {
+                                     ot.Key.NomStatus,
+                                     peso = ot.Sum(x => x.Peso),
+                                     und = ot.Sum(x => x.Qty)
+                                 }).ToListAsync();
 
             return Ok(extrusion.Concat(sellado));
 
         }
 
         [HttpGet("getCantOrdenesMateriales/{fecha1}/{fecha2}")]
-        public ActionResult getCantOrdenesMateriales(DateTime fecha1, DateTime fecha2, string? sales)
+        public async Task<ActionResult> getCantOrdenesMateriales(DateTime fecha1, DateTime fecha2, string? sales)
         {
-            var con = from ot in _context.Set<ClientesOt>()
+            var con = await (from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
                             && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
@@ -965,14 +965,14 @@ namespace BagproWebAPI.Controllers
                           peso = ot.Sum(x => x.DatosotKg),
                           cantidad = ot.Count(),
                           costo = ot.Sum(x => x.DatosvalorOt)
-                      };
+                      }).ToListAsync();
             return Ok(con);
         }
 
         [HttpGet("getCostoOredenesUltimoMes_Vendedores/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOredenesUltimoMes_Vendedores(DateTime fecha1, DateTime fecha2, string? sales)
+        public async Task<ActionResult> getCostoOredenesUltimoMes_Vendedores(DateTime fecha1, DateTime fecha2, string? sales)
         {
-            var con = from ot in _context.Set<ClientesOt>()
+            var con = await (from ot in _context.Set<ClientesOt>()
                       from vendedor in _context.Set<Vendedore>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
@@ -990,14 +990,14 @@ namespace BagproWebAPI.Controllers
                           costo = ot.Sum(x => x.DatosvalorOt),
                           cantidad = ot.Count(),
                           peso = ot.Sum(x => x.DatosotKg)
-                      };
+                      }).ToListAsync();
             return Ok(con);
         }
 
         [HttpGet("getCostoOredenesUltimoMes_Clientes/{fecha1}/{fecha2}")]
-        public ActionResult getCostoOredenesUltimoMes_Clientes(DateTime fecha1, DateTime fecha2, string? sales)
+        public async Task<ActionResult> getCostoOredenesUltimoMes_Clientes(DateTime fecha1, DateTime fecha2, string? sales)
         {
-            var con = from ot in _context.Set<ClientesOt>()
+            var con = await (from ot in _context.Set<ClientesOt>()
                       where ot.FechaCrea >= fecha1
                             && ot.FechaCrea <= fecha2
                             && (string.IsNullOrEmpty(sales) || ot.UsrModifica == (sales))
@@ -1011,16 +1011,16 @@ namespace BagproWebAPI.Controllers
                           costo = ot.Sum(x => x.DatosvalorOt),
                           cantidad = ot.Count(),
                           peso = ot.Sum(x => x.DatosotKg)
-                      };
+                      }).ToListAsync();
             return Ok(con);
         }
 
         [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
-        public ActionResult GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "")
+        public async Task<ActionResult> GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "")
         {
 
 #pragma warning disable IDE0075 // Simplify conditional expression
-            var ordenesTrabajo = from ot in _context.Set<ClientesOt>()
+            var ordenesTrabajo = (from ot in _context.Set<ClientesOt>()
                                  //join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
@@ -1093,57 +1093,52 @@ namespace BagproWebAPI.Controllers
                                      Peso_Millar = ot.PtPesoMillar,
                                      CantBolsasxPaquete = ot.PtQtyPquete,
                                      CantBolsasxBulto = ot.PtQtyBulto,
-                                 };
+                                 }).ToListAsync();
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression
         }
 
         //
         [HttpGet("getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}")]
-        public ActionResult getOtsForCustomerOrders(DateTime date1, DateTime date2, int item, string presentation, string idClient, string orderSale)
+        public async Task<ActionResult> getOtsForCustomerOrders(DateTime date1, DateTime date2, int item, string presentation, string idClient, string orderSale)
         {
-            var codBagpro = (from c in _context.Set<Cliente>()
-                             where c.IdentNro == idClient
-                             select c.CodBagpro).FirstOrDefault();
+            var codBagpro = await (from c in _context.Set<Cliente>()
+                                   where c.IdentNro == idClient
+                                   select c.CodBagpro).FirstOrDefaultAsync();
 
-            var ordersProduction = (from cl in _context.Set<ClientesOt>()
-                                    where cl.FechaCrea >= date1 &&
-                                    cl.FechaCrea <= date2 &&
-                                    cl.ClienteItems == item &&
-                                    cl.PtPresentacionNom == presentation &&
-                                    cl.Cliente == Convert.ToInt32(codBagpro)
-                                    select new { 
-                                       OT = cl.Item, 
-                                       Consecutivo = orderSale 
-                                    }).FirstOrDefault();
+            var ordersProduction = await (from cl in _context.Set<ClientesOt>()
+                                          where cl.FechaCrea >= date1 &&
+                                          cl.FechaCrea <= date2 &&
+                                          cl.ClienteItems == item &&
+                                          cl.PtPresentacionNom == presentation &&
+                                          cl.Cliente == Convert.ToInt32(codBagpro)
+                                          select new { 
+                                           OT = cl.Item, 
+                                           Consecutivo = orderSale 
+                                        }).FirstOrDefaultAsync();
 
             return Ok(ordersProduction);
         }
 
-        //
+        //Funcion para obtener las ordenes de trabajo de un cliente en un rango de fechas y con un item especifico
         [HttpPost("getOtsForCustomerOrders2")]
-        public ActionResult getOtsForCustomerOrders([FromBody] List<CustomerOrders> CustomerOrders)
+        public async Task<ActionResult> getOtsForCustomerOrders([FromBody] List<CustomerOrders> CustomerOrders)
         {
             List<Object> orders = new List<Object>();
             int counter = 0;
             foreach (var item in CustomerOrders)
             {
-                //var codBagpro = (from c in _context.Set<Cliente>()
-                //                 where c.IdentNro == item.idClient
-                //                 select c.CodBagpro).FirstOrDefault();
-
-                var ordersProduction = (from cl in _context.Set<ClientesOt>()
+                
+                var ordersProduction = await (from cl in _context.Set<ClientesOt>()
                                         where cl.FechaCrea >= item.date1 &&
                                               cl.FechaCrea <= item.date2 &&
-                                              cl.ClienteItems == item.item //&&
-                                              //cl.PtPresentacionNom == item.presentation //&&
-                                              //cl.Cliente == Convert.ToInt32(codBagpro)
+                                              cl.ClienteItems == item.item
                                         select new
                                         { 
                                             OT = cl.Item,
                                             Consecutivo = item.consecutivo,
                                             Item = cl.ClienteItems
-                                        }).FirstOrDefault();
+                                        }).FirstOrDefaultAsync();
 
                 counter++;
                 orders.Add(ordersProduction);
@@ -1152,78 +1147,50 @@ namespace BagproWebAPI.Controllers
             return Ok(orders);
         }
 
+        //Función para obtener la información de control de calidad de una orden de trabajo en el proceso de extrusión
         [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
-        public ActionResult GetOtControlCalidadExtrusion(string OT, string status)
+        public async Task<ActionResult> GetOtControlCalidadExtrusion(string OT, string status)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-            var query = from cl in _context.Set<ClientesOt>()
-                        where Convert.ToString(cl.Item) == OT
-                        select new
-                        {
-                            OT = cl.Item,
-                            Id_Cliente = cl.Cliente,
-                            Cliente = cl.ClienteNom,
-                            Item = cl.ClienteItems,
-                            Referencia = cl.ClienteItemsNom,
-                            Maquina = (from pe in _context.Set<ProcExtrusion>() 
-                                       where pe.Ot == Convert.ToString(cl.Item) && pe.NomStatus == status 
-                                       group pe by new { pe.Maquina } 
-                                       into pe
-                                       select Convert.ToInt32(pe.Key.Maquina)).ToList(),
-                            PigmentoId = cl.ExtPigmento.Trim(),
-                            Pigmento = cl.ExtPigmentoNom.Trim(),
-                            Calibre = cl.ExtCalibre,
-                            Ancho = cl.PtAnchopt,
-                            Largo = cl.PtLargopt,
-                            CantBolsasxPaq = cl.PtQtyPquete,
-                            AnchoFuelle_Derecha = cl.ExtAcho1,
-                            AnchoFuelle_Izquierda = cl.ExtAcho2,
-                            AnchoFuelle_Abajo = cl.ExtAcho3,
-                            TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
-                            Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
-                            Impresion = Convert.ToString(cl.Impresion).Trim(),
-                            FormatoId = Convert.ToString(cl.ExtFormato).Trim(),
-                            Formato = Convert.ToString(cl.ExtFormatoNom).Trim(),
-                            materialId = Convert.ToString(cl.ExtMaterial).Trim(),
-                            Material = Convert.ToString(cl.ExtMaterialNom).Trim(),
-                        };
-
-            /*var query2 = from cl in _context.Set<ClientesOt>()
-                         where Convert.ToString(cl.Item) == OT
-                         select new
-                         {
-                             OT = cl.Item,
-                             Id_Cliente = cl.Cliente,
-                             Cliente = cl.ClienteNom,
-                             Item = cl.ClienteItems,
-                             Referencia = cl.ClienteItemsNom,
-                             Maquina = (from ps in _context.Set<ProcSellado>() 
-                                        where ps.Ot ==  && 
-                                        ps.NomStatus == status 
-                                        select Convert.ToInt32(ps.Maquina)).ToList(),
-                             PigmentoId = cl.ExtPigmento.Trim(),
-                             Pigmento = cl.ExtPigmentoNom.Trim(),
-                             Calibre = cl.ExtCalibre,
-                             Ancho = cl.PtAnchopt,
-                             Largo = cl.PtLargopt,
-                             CantBolsasxPaq = cl.PtQtyPquete,
-                             AnchoFuelle_Derecha = cl.ExtAcho1,
-                             AnchoFuelle_Izquierda = cl.ExtAcho2,
-                             AnchoFuelle_Abajo = cl.ExtAcho3,
-                             TratadoId = Convert.ToString("No aplica"),
-                             Tratado = Convert.ToString("No aplica"),
-                             Impresion = Convert.ToString(cl.Impresion).Trim(),
-                         };*/
-
-            //if (query == null && query2 == null) return BadRequest("La OT consultada no se encuentra en el proceso seleccionado!");
-            //return Ok(query.Concat(query2));
+            var query = await (from cl in _context.Set<ClientesOt>()
+                                where Convert.ToString(cl.Item) == OT
+                                select new
+                                {
+                                    OT = cl.Item,
+                                    Id_Cliente = cl.Cliente,
+                                    Cliente = cl.ClienteNom,
+                                    Item = cl.ClienteItems,
+                                    Referencia = cl.ClienteItemsNom,
+                                    Maquina = (from pe in _context.Set<ProcExtrusion>() 
+                                               where pe.Ot == Convert.ToString(cl.Item) && pe.NomStatus == status 
+                                               group pe by new { pe.Maquina } 
+                                               into pe
+                                               select Convert.ToInt32(pe.Key.Maquina)).ToList(),
+                                    PigmentoId = cl.ExtPigmento.Trim(),
+                                    Pigmento = cl.ExtPigmentoNom.Trim(),
+                                    Calibre = cl.ExtCalibre,
+                                    Ancho = cl.PtAnchopt,
+                                    Largo = cl.PtLargopt,
+                                    CantBolsasxPaq = cl.PtQtyPquete,
+                                    AnchoFuelle_Derecha = cl.ExtAcho1,
+                                    AnchoFuelle_Izquierda = cl.ExtAcho2,
+                                    AnchoFuelle_Abajo = cl.ExtAcho3,
+                                    TratadoId = Convert.ToString(cl.ExtTratado).Trim(),
+                                    Tratado = Convert.ToString(cl.ExtTratadoNom).Trim(),
+                                    Impresion = Convert.ToString(cl.Impresion).Trim(),
+                                    FormatoId = Convert.ToString(cl.ExtFormato).Trim(),
+                                    Formato = Convert.ToString(cl.ExtFormatoNom).Trim(),
+                                    materialId = Convert.ToString(cl.ExtMaterial).Trim(),
+                                    Material = Convert.ToString(cl.ExtMaterialNom).Trim(),
+                                }).FirstOrDefaultAsync();
 
             return Ok(query);
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        //Función para actualizar la información de control de calidad de una orden de trabajo en el proceso de extrusión
         [HttpPut("putOrdenTrabajo{orden}")]
         public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
         {
