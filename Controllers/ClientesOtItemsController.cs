@@ -55,7 +55,7 @@ namespace BagproWebAPI.Controllers
 
         //Consultar através de un LIKE 
         [HttpPost("CalcularKilosItem")]
-        public ActionResult CalcularKilosItem([FromBody] List<Items> items)
+        public async Task<ActionResult> CalcularKilosItem([FromBody] List<Items> items)
         {
             List<Object> references = new List<Object>();
             int counter = 0;
@@ -66,19 +66,19 @@ namespace BagproWebAPI.Controllers
                               item.unit == "MTS" ? "MTS" :
                               item.unit == "KLS" ? "Kilo" : "";
 
-                var kilos = (from c in _context.Set<ClientesOtItem>()
-                            where c.ClienteItems == item.item
-                            && c.PtPresentacionNom == unit
-                            select new
-                            {
-                                Item = c.ClienteItems, 
-                                Reference = c.ClienteItemsNom, 
-                                Weight = c.PtPresentacionNom == "Kilo" ? item.qty :
-                                         c.PtPresentacionNom == "Unidad" ? Convert.ToDecimal((Convert.ToDecimal(item.qty) * Convert.ToDecimal(c.PtPesoMillar.Value)) / Convert.ToInt32(1000)) :
-                                         c.PtPresentacionNom == "Paquete" && c.PtQtyBulto == 1 ? (c.PtQtyBulto * c.PtPesoMillar * item.qty) :
-                                         c.PtPresentacionNom == "Paquete" && c.PtQtyBulto > 1 ? ((c.PtQtyBulto * c.PtPesoMillar * c.PtQtyPquete) / 1000) * (item.qty / c.PtQtyBulto) : 0,
-                                Unit = c.PtPresentacionNom
-                            }).FirstOrDefault();
+                var kilos = await (from c in _context.Set<ClientesOtItem>().AsNoTracking()
+                                   where c.ClienteItems == item.item
+                                   && c.PtPresentacionNom == unit
+                                   select new
+                                {
+                                    Item = c.ClienteItems, 
+                                    Reference = c.ClienteItemsNom, 
+                                    Weight = c.PtPresentacionNom == "Kilo" ? item.qty :
+                                             c.PtPresentacionNom == "Unidad" ? Convert.ToDecimal((Convert.ToDecimal(item.qty) * Convert.ToDecimal(c.PtPesoMillar.Value)) / Convert.ToInt32(1000)) :
+                                             c.PtPresentacionNom == "Paquete" && c.PtQtyBulto == 1 ? (c.PtQtyBulto * c.PtPesoMillar * item.qty) :
+                                             c.PtPresentacionNom == "Paquete" && c.PtQtyBulto > 1 ? ((c.PtQtyBulto * c.PtPesoMillar * c.PtQtyPquete) / 1000) * (item.qty / c.PtQtyBulto) : 0,
+                                    Unit = c.PtPresentacionNom
+                                }).FirstOrDefaultAsync();
                 counter++;
                 references.Add(kilos);
                 if (items.Count() == counter) return Ok(references);
@@ -89,29 +89,29 @@ namespace BagproWebAPI.Controllers
 
         //Consultar por Id de Cliente Item
         [HttpPost("OtItem")]
-        public  IActionResult GetIdClientesOtItem([FromBody] List<int> rolls, string? sales = "")
+        public async Task<IActionResult> GetIdClientesOtItem([FromBody] List<int> rolls, string? sales = "")
         {
             List<Object> items = new List<Object>();
 
             int count = 0;
             foreach (var item in rolls)
             {
-                var idClientesItem = from cliOT in _context.Set<ClientesOtItem>()
-                                     from ven in _context.Set<Vendedore>()
-                                     where cliOT.ClienteItems == item
-                                     && cliOT.UsrModifica == ven.Id
-                                     && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == (sales))
-                                     select new //ListItems
-                                     {
-                                         ClienteItems = cliOT.ClienteItems,
-                                         ClienteItemsNom = cliOT.ClienteItemsNom,
-                                         Cliente = cliOT.Cliente,
-                                         ClienteNom = cliOT.ClienteNom,
-                                         PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" : "Paquete",
-                                         DatosValorKg = cliOT.DatosValorKg,
-                                         NombreCompleto = ven.NombreCompleto,
-                                         Codigo_Asesor = cliOT.UsrModifica,
-                                     };
+                var idClientesItem = await (from cliOT in _context.Set<ClientesOtItem>().AsNoTracking()
+                                            from ven in _context.Set<Vendedore>().AsNoTracking()
+                                            where cliOT.ClienteItems == item
+                                            && cliOT.UsrModifica == ven.Id
+                                            && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == (sales))
+                                            select new //ListItems
+                                            {
+                                                ClienteItems = cliOT.ClienteItems,
+                                                ClienteItemsNom = cliOT.ClienteItemsNom,
+                                                Cliente = cliOT.Cliente,
+                                                ClienteNom = cliOT.ClienteNom,
+                                                PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" : "Paquete",
+                                                DatosValorKg = cliOT.DatosValorKg,
+                                                NombreCompleto = ven.NombreCompleto,
+                                                Codigo_Asesor = cliOT.UsrModifica,
+                                            }).ToListAsync();
                 count++;
                 items.AddRange(idClientesItem.Take(1));
                 if (rolls.Count() == count) return Ok(items);
@@ -119,11 +119,11 @@ namespace BagproWebAPI.Controllers
             return Ok(items);
         }
 
-
+        //Consultar por Id de Cliente Item
         [HttpPost("OtItem2")]
-        public IActionResult GetIdClientesOtItem2([FromBody] List<int> rolls, string? sales = "")
+        public async Task<IActionResult> GetIdClientesOtItem2([FromBody] List<int> rolls, string? sales = "")
         {
-            var items = (
+            var items = await (
                 from cliOT in _context.Set<ClientesOtItem>()
                 join ven in _context.Set<Vendedore>()
                     on cliOT.UsrModifica equals ven.Id
@@ -147,18 +147,23 @@ namespace BagproWebAPI.Controllers
             )
             .GroupBy(x => x.ClienteItems)
             .Select(g => g.First())
-            .ToList();
+            .ToListAsync();
 
             return Ok(items);
         }
 
         //Consultar através de un LIKE 
         [HttpGet("likeReferencia/{referencia}")]
-        public IActionResult LikeReferencia(string referencia)
+        public async Task<IActionResult> LikeReferencia(string referencia)
         {
-            var nombreItem = (from c in _context.Set<ClientesOtItem>()
-                              where c.ClienteItemsNom.Contains(referencia)
-                              select new { Item = c.ClienteItems, Referencia = c.ClienteItemsNom, PrecioKg = c.DatosValorKg, Categoria = 0 }).Take(50);
+            var nombreItem = await (from c in _context.Set<ClientesOtItem>().AsNoTracking()
+                                    where c.ClienteItemsNom.Contains(referencia)
+                                    select new { 
+                                        Item = c.ClienteItems, 
+                                        Referencia = c.ClienteItemsNom, 
+                                        PrecioKg = c.DatosValorKg, 
+                                        Categoria = 0 
+                                    }).Take(50).ToListAsync();
 
             if (nombreItem == null) return NotFound();
             else return Ok(nombreItem);

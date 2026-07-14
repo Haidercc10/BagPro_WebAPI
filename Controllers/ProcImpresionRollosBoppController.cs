@@ -44,11 +44,15 @@ namespace BagproWebAPI.Controllers
 
         //Consulta por numero de orden de trabajo de Impresion
         [HttpGet("consultaOtImpresion/{ot}")]
-        public ActionResult Get(string ot)
+        public async Task<ActionResult> consultaOtImpresion(string ot)
         {
-            var con = _context.ProcImpresionRollosBopps.Where(imp => imp.OtImp == ot).Select(imp => new {
-                imp.Ot
-            });
+            var con = await _context.ProcImpresionRollosBopps
+                            .AsNoTracking()
+                            .Where(imp => imp.OtImp == ot)
+                            .Select(imp => new {
+                                imp.Ot
+                            }).ToListAsync();
+
             return Ok(con);
         }
 

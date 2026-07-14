@@ -7,20 +7,40 @@
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procextrusioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientesotitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\authenticationcontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\authenticationcontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procselladocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\wiketiandocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\wiketiandocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procimpresionrollosboppcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procimpresionrollosboppcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\procdesperdiciocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\procdesperdiciocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|c:\\dev\\github\\bagpro_webapi\\controllers\\operariosprocesoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{803FA335-4FE6-4691-8EDB-5600E44189E5}|BagproWebAPI.csproj|solutionrelative:controllers\\operariosprocesoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,17 +50,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 233,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ProcExtrusionController.cs",
               "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcExtrusionController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcExtrusionController.cs",
               "RelativeToolTip": "Controllers\\ProcExtrusionController.cs",
-              "ViewState": "AgIAAGgCAAAAAAAAAAAqwBADAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABADAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-09T21:34:18.57Z",
               "IsPinned": true,
@@ -48,40 +68,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "ProcSelladoController.cs",
               "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcSelladoController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProcSelladoController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcSelladoController.cs",
               "RelativeToolTip": "Controllers\\ProcSelladoController.cs",
-              "ViewState": "AgIAALkDAAAAAAAAAAAgwMIDAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC8AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-06T15:45:11.713Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ClientesOtController.cs",
-              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ClientesOtController.cs",
-              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
-              "RelativeToolTip": "Controllers\\ClientesOtController.cs",
-              "ViewState": "AgIAAFUEAAAAAAAAAAAkwPQEAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T22:30:03.021Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "ClientesOtItemsController.cs",
               "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClientesOtItemsController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtItemsController.cs",
               "RelativeToolTip": "Controllers\\ClientesOtItemsController.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAArwEYAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ4AAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-28T15:58:42.012Z",
               "IsPinned": true,
@@ -125,15 +131,88 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "ClientesOtController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ClientesOtController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesOtController.cs",
+              "RelativeToolTip": "Controllers\\ClientesOtController.cs",
+              "ViewState": "AgIAAGwEAAAAAAAAAAAAAH4EAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T21:42:35.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthenticationController .cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\AuthenticationController .cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthenticationController .cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\AuthenticationController .cs",
+              "RelativeToolTip": "Controllers\\AuthenticationController .cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA1wB4AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T18:38:48.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "WiketiandoController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\WiketiandoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WiketiandoController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\WiketiandoController.cs",
+              "RelativeToolTip": "Controllers\\WiketiandoController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T18:34:40.805Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "ClientesController.cs",
               "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClientesController.cs",
               "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ClientesController.cs",
               "RelativeToolTip": "Controllers\\ClientesController.cs",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAwwC4AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAowDcAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-22T18:16:24.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProcImpresionRollosBoppController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcImpresionRollosBoppController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProcImpresionRollosBoppController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcImpresionRollosBoppController.cs",
+              "RelativeToolTip": "Controllers\\ProcImpresionRollosBoppController.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAA9wDYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T18:33:04.977Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ProcdesperdicioController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcdesperdicioController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProcdesperdicioController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\ProcdesperdicioController.cs",
+              "RelativeToolTip": "Controllers\\ProcdesperdicioController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T18:29:52.895Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "OperariosProcesosController.cs",
+              "DocumentMoniker": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\OperariosProcesosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\OperariosProcesosController.cs",
+              "ToolTip": "C:\\Dev\\GitHub\\BagPro_WebAPI\\Controllers\\OperariosProcesosController.cs",
+              "RelativeToolTip": "Controllers\\OperariosProcesosController.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAwwDUAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T18:28:20.858Z"
             }
           ]
         },

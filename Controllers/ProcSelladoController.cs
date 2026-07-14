@@ -33,10 +33,11 @@ namespace BagproWebAPI.Controllers
 
         // Consulta para traer las unidades, paquetes o kilos pesados en una OT.
         [HttpGet("OT/{ot}")]
-        public ActionResult<ProcSellado> GetOT(string ot)
+        public async Task<ActionResult> GetOT(string ot)
         {
-            var con = from ps in _context.Set<ProcSellado>()
-                      where ps.Ot == ot &&
+            var con = await 
+                      (from ps in _context.Set<ProcSellado>().AsNoTracking()
+                       where ps.Ot == ot &&
                       ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       group ps by new
                       {
@@ -47,17 +48,17 @@ namespace BagproWebAPI.Controllers
                           Proceso = ps.Key.NomStatus,
                           TotalPeso = ps.Sum(x => x.Peso),
                           TotalUnd = ps.Sum(x => x.Qty)
-                      };
+                      }).ToListAsync();
 
             return Ok(con);
         }
 
         /*** Consulta para obtener la ultima fecha en que se realizó el proceso de sellado en una OT */
         [HttpGet("FechaFinOT/{ot}")]
-        public ActionResult<ProcSellado> GetFechaFinOTSellado(string ot)
+        public async Task<ActionResult> GetFechaFinOTSellado(string ot)
         {
             var nomStatus = "SELLADO";
-            var procSellado = _context.ProcSellados.Where(prSella => prSella.Ot == ot &&
+            var procSellado = await _context.ProcSellados.AsNoTracking().Where(prSella => prSella.Ot == ot &&
                                                           prSella.NomStatus == nomStatus &&
                                                           prSella.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe")
                                                        .OrderByDescending(x => x.FechaEntrada)
@@ -66,7 +67,7 @@ namespace BagproWebAPI.Controllers
                                                            ProSellado.Ot,
                                                            ProSellado.NomStatus,
                                                            ProSellado.FechaEntrada
-                                                       }).First();
+                                                       }).FirstOrDefaultAsync();
 
             if (procSellado == null) return NotFound();
             else return Ok(procSellado);
@@ -362,16 +363,6 @@ namespace BagproWebAPI.Controllers
                    select PS2.Item;
         }
 
-        [HttpGet("UltimosRolloPesados/{fecha}")]
-        public ActionResult UltimosRolloPesados(DateTime fecha)
-        {
-            return Ok(from PS2 in _context.Set<ProcSellado>()
-                      where PS2.FechaEntrada <= fecha &&
-                            PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                      orderby PS2.Item descending
-                      select PS2.Item);
-        }
-
         // Funcion que devolverá todos los rollos que hayan sido pesados en la fecha que se le pase y que sean solamente de las horas 7, 8 y 9
         private IQueryable<int> RollosPesadosMadrugada(DateTime fecha)
         {
@@ -385,23 +376,6 @@ namespace BagproWebAPI.Controllers
                          PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS2.Item ascending
                    select PS2.Item;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
-        // Funcion que devolverá todos los rollos que hayan sido pesados en la fecha que se le pase y que sean solamente de las horas 7, 8 y 9
-        [HttpGet("RollosPesadosMadrugada2/{fecha}")]
-        public ActionResult RollosPesadosMadrugada2(DateTime fecha)
-        {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            return Ok(from PS2 in _context.Set<ProcSellado>()
-                   where (PS2.Hora.StartsWith("07") ||
-                         PS2.Hora.StartsWith("08") ||
-                         PS2.Hora.StartsWith("09") ||
-                         !PS2.Hora.StartsWith("0")) &&
-                         PS2.FechaEntrada == fecha &&
-                         PS2.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                   orderby PS2.Item ascending
-                   select PS2.Item);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -939,14 +913,14 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("putEnvioZeus/{rollo}")]
-        public ActionResult PutEnvioZeusProcSellado(int rollo)
+        public async Task<ActionResult> PutEnvioZeusProcSellado(int rollo)
         {
-            var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro);
+            var procSellado = await (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefaultAsync();
 
-            if (procSellado.Any())
+            if (procSellado != null)
             {
                 var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET EnvioZeus = '1' WHERE Item = {rollo}");
-                procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro);
+                procSellado = await (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefaultAsync();
                 return Ok(procSellado);
             }
             else
@@ -956,9 +930,9 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getProduccionSellado/{ot}")]
-        public ActionResult<ProcSellado> GetProduccionSellado(string ot)
+        public async Task<ActionResult> GetProduccionSellado(string ot)
         {
-            var con = from ps in _context.Set<ProcSellado>()
+            var con = await (from ps in _context.Set<ProcSellado>()
                       where ps.Ot == ot && 
                       ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                       orderby ps.Item ascending
@@ -980,17 +954,17 @@ namespace BagproWebAPI.Controllers
                         Fecha = ps.FechaEntrada.ToString("dd/MM/yyyy"),
                         Hora = ps.Hora,
                         Proceso = ps.NomStatus
-                      };
+                      }).ToListAsync();
 
             if (con == null) return BadRequest("No existe producción en sellado para esta Orden de Trabajo.");
             else return Ok(con);
         }
 
         [HttpGet("getEtiquetaBagpro/{rollo}/{reimpresion}")]
-        public ActionResult<ProcSellado> GetEtiquetaBagpro(int rollo, int reimpresion)
+        public async Task<ActionResult> GetEtiquetaBagpro(int rollo, int reimpresion)
         {
-            var con1 = from ps in _context.Set<ProcSellado>()
-                      where ps.Observaciones == "Rollo #" + Convert.ToString(rollo) + " en PBDD.dbo.Produccion_Procesos"
+            var con1 = await (from ps in _context.Set<ProcSellado>().AsNoTracking()
+                              where ps.Observaciones == "Rollo #" + Convert.ToString(rollo) + " en PBDD.dbo.Produccion_Procesos"
                       select new
                       {
                           Bulto = ps.Item,
@@ -1003,10 +977,10 @@ namespace BagproWebAPI.Controllers
                           Und_Extrusion = "",
                           Calibre_Extrusion = 0,
                           Material = ps.Estado.Split("-", StringSplitOptions.RemoveEmptyEntries)[0],
-                      };
+                      }).ToListAsync();
 
-            var con2 = from ps in _context.Set<ProcSellado>()
-                       where ps.Item == rollo
+            var con2 = await (from ps in _context.Set<ProcSellado>().AsNoTracking()
+                              where ps.Item == rollo
                        select new
                        {
                            Bulto = ps.Item,
@@ -1019,33 +993,27 @@ namespace BagproWebAPI.Controllers
                            Und_Extrusion = "",
                            Calibre_Extrusion = 0,
                            Material = ps.Estado.Split("-", StringSplitOptions.RemoveEmptyEntries)[0], 
-                       };
+                       }).ToListAsync();
 
             if (reimpresion == 0) return Ok(con1.Take(1));
             else if (reimpresion == 1) return Ok(con2.Take(1));
             else return BadRequest("No existe el bulto.");
         }
 
-        //Función que recibirá los rollos a los que se les revertirá (actualizará) el Envio Zeus a 0
+
         [HttpPost("putReversionEnvioZeus_ProcSellado")]
-        public ActionResult putReversionEnvioZeus_ProcSellado([FromBody] List<int> rolls)
+        public IActionResult PutReversionEnvioZeus_ProcSellado([FromBody] List<int> rolls)
         {
-            int count = 0;
-            foreach (var roll in rolls)
-            {
-                var procSellado = (from pro in _context.Set<ProcSellado>() where pro.Item == roll select pro).FirstOrDefault();
-                
-                if (procSellado != null)
-                {
-                    var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET EnvioZeus = '0' WHERE Item = {roll}");
-                }
-                else
-                {
-                    return BadRequest();
-                }
-                count++;
-                if (count == rolls.Count()) return NoContent();
-            }
+            if (rolls == null || rolls.Count == 0)
+                return BadRequest();
+
+            var items = string.Join(",", rolls);
+
+            _context.Database.ExecuteSqlRaw($@"
+                UPDATE ProcSellado
+                SET EnvioZeus = 0
+                WHERE Item IN ({items})");
+
             return NoContent();
         }
 

@@ -51,11 +51,11 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("getHorarioProceso/{proceso}")]
-        public ActionResult GetHorarioProceso(string proceso)
+        public async Task<ActionResult> GetHorarioProceso(string proceso)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS0219 // Variable is assigned but its value is never used
-            var horario = (from h in _context.Set<Horario>() where h.Procesoplanta == proceso select h).FirstOrDefault();
+            var horario = await (from h in _context.Set<Horario>().AsNoTracking() where h.Procesoplanta == proceso select h).FirstOrDefaultAsync();
             
             string horaActual = DateTime.Now.ToString("HH:mm");
             string horaInicio = $"{horario.Hora}:{horario.Minuto}";

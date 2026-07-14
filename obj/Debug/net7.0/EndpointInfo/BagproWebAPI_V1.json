@@ -219,29 +219,6 @@
         }
       }
     },
-    "/api/Clientes/UltimosClientes/{fecha}": {
-      "get": {
-        "tags": [
-          "Clientes"
-        ],
-        "parameters": [
-          {
-            "name": "fecha",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/api/Clientes/getClientesNombre/{nombre}": {
       "get": {
         "tags": [
@@ -513,24 +490,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientesOt"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientesOt"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientesOt"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -2241,24 +2201,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Procdesperdicio"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Procdesperdicio"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Procdesperdicio"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -3137,6 +3080,36 @@
         }
       }
     },
+    "/api/ProcExtrusion/getRegistrosPorOT/{orden}/{proceso}": {
+      "get": {
+        "tags": [
+          "ProcExtrusion"
+        ],
+        "parameters": [
+          {
+            "name": "orden",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proceso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/ProcExtrusion/getAvailablesRollsOT/{orden}/{proceso}": {
       "post": {
         "tags": [
@@ -3882,24 +3855,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -3921,24 +3877,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -3992,52 +3931,6 @@
           },
           {
             "name": "fechaFin",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/ProcSellado/UltimosRolloPesados/{fecha}": {
-      "get": {
-        "tags": [
-          "ProcSellado"
-        ],
-        "parameters": [
-          {
-            "name": "fecha",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/ProcSellado/RollosPesadosMadrugada2/{fecha}": {
-      "get": {
-        "tags": [
-          "ProcSellado"
-        ],
-        "parameters": [
-          {
-            "name": "fecha",
             "in": "path",
             "required": true,
             "schema": {
@@ -4368,24 +4261,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -4417,24 +4293,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProcSellado"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }

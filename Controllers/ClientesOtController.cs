@@ -1,4 +1,4 @@
-ï»¿//using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 
 using Aspose.Pdf.Facades;
 using BagproWebAPI.Models;
@@ -146,7 +146,7 @@ namespace BagproWebAPI.Controllers
                       where ot.Item == orden
                       select new
                       {
-                          // InformaciÃ³n de la OT
+                          // Información de la OT
                           Numero_Orden = ot.Item,
                           Id_SedeCliente = ot.Cliente,
                           Id_Cliente = ot.Cliente,
@@ -177,7 +177,7 @@ namespace BagproWebAPI.Controllers
                           Peso_Neto = ot.DatosotKg,
                           Precio_Producto = ot.PtPresentacionNom == "Kilo" ? ot.DatosValorKg : ot.DatosvalorBolsa,
 
-                          // InformaciÃ³n de ExtrusiÃ³n
+                          // Información de Extrusión
                           Id_Material = ot.ExtMaterial,
                           Material = ot.ExtMaterialNom,
                           Id_Pigmento_Extrusion = ot.ExtPigmento,
@@ -193,7 +193,7 @@ namespace BagproWebAPI.Controllers
                           Ancho3_Extrusion = ot.ExtAcho3,
                           Peso_Extrusion = ot.ExtPeso,
 
-                          // InformaciÃ³n de ImpresiÃ³n
+                          // Información de Impresión
                           Id_Tipo_Imptesion = ot.ImpFlexoNom,
                           Tipo_Impresion = ot.ImpFlexoNom,
                           Rodillo = ot.ImpRodillo,
@@ -215,7 +215,7 @@ namespace BagproWebAPI.Controllers
                           Id_Tinta8 = ot.ImpTinta8,
                           Tinta8 = ot.ImpTinta8Nom,
 
-                          // InformaciÃ³n de Laminado
+                          // Información de Laminado
                           Id_Capa1 = ot.LamCapa1,
                           Laminado_Capa1 = ot.LamCapa1Nom,
                           Calibre_Laminado_Capa1 = ot.LamCalibre1,
@@ -229,7 +229,7 @@ namespace BagproWebAPI.Controllers
                           Calibre_Laminado_Capa3 = ot.LamCalibre3,
                           Cantidad_Laminado_Capa3 = ot.Cant3,
 
-                          // InformaciÃ³n de Sellado
+                          // Información de Sellado
                           Id_Formato_Producto = ot.PtFormatopt,
                           Formato_Producto = ot.PtFormatoptNom,
                           SelladoCorte_Ancho = ot.PtAnchopt,
@@ -249,7 +249,7 @@ namespace BagproWebAPI.Controllers
                           SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
                           SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
 
-                          // InformaciÃ³n de Mezclas
+                          // Información de Mezclas
                           Mezcla_Id = ot.MezModo,
                           Mezcla_Nombre = ot.MezModoNom,
                           Mezcla_NroCapas = ot.Ncapas,
@@ -333,10 +333,10 @@ namespace BagproWebAPI.Controllers
                       }).ToListAsync();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-            return con.Any() ? Ok(con) : BadRequest($"Â¡No se encontrÃ³ una Orden de Trabajo con el consecutivo {orden}!");
+            return con.Any() ? Ok(con) : BadRequest($"¡No se encontró una Orden de Trabajo con el consecutivo {orden}!");
         }
 
-        /**Consulta por item y presentaciÃ³n*/
+        /**Consulta por item y presentación*/
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
         public async Task<ActionResult> OT_Cliente_Item_Presentacion(int ClienteItems, string PtPresentacionNom)
         {
@@ -380,7 +380,7 @@ namespace BagproWebAPI.Controllers
                                       ValorUnidad = ot.DatosvalorBolsa,
                                       NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(ot.Cliente) select cl.IdentNro).FirstOrDefault(),
 
-                                      // InformaciÃ³n de ExtrusiÃ³n
+                                      // Información de Extrusión
                                       Id_Material = Convert.ToInt32(ot.ExtMaterial),
                                       Material = ot.ExtMaterialNom != null ? ot.ExtMaterialNom.Trim() : ot.ExtMaterialNom,
                                       Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
@@ -396,7 +396,7 @@ namespace BagproWebAPI.Controllers
                                       Ancho3_Extrusion = ot.ExtAcho3,
                                       Peso_Extrusion = ot.ExtPeso,
 
-                                      // InformaciÃ³n de ImpresiÃ³n
+                                      // Información de Impresión
                                       Id_Tipo_Imptesion = ot.ImpFlexo.Trim(),
                                       Tipo_Impresion = ot.ImpFlexoNom.Trim(),
                                       Rodillo = ot.ImpRodillo,
@@ -418,7 +418,7 @@ namespace BagproWebAPI.Controllers
                                       Id_Tinta8 = ot.ImpTinta8.Trim(),
                                       Tinta8 = ot.ImpTinta8Nom.Trim() == "" ? "NO APLICA" : ot.ImpTinta8Nom.Trim(),
 
-                                      // InformaciÃ³n de Laminado
+                                      // Información de Laminado
                                       Id_Capa1 = ot.LamCapa1.Trim(),
                                       Laminado_Capa1 = ot.LamCapa1Nom.Trim(),
                                       Calibre_Laminado_Capa1 = ot.LamCalibre1,
@@ -432,7 +432,7 @@ namespace BagproWebAPI.Controllers
                                       Calibre_Laminado_Capa3 = ot.LamCalibre3,
                                       Cantidad_Laminado_Capa3 = ot.Cant3,
 
-                                      // InformaciÃ³n de Sellado
+                                      // Información de Sellado
                                       Id_Formato_Producto = ot.PtFormatopt.Trim(),
                                       Formato_Producto = ot.PtFormatoptNom.Trim(),
                                       SelladoCorte_Ancho = ot.PtAnchopt,
@@ -456,7 +456,7 @@ namespace BagproWebAPI.Controllers
                                       SelladoCorte_PrecioDia_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
                                       SelladoCorte_PrecioNoche_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == ot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
 
-                                      // InformaciÃ³n de Mezclas
+                                      // Información de Mezclas
                                       Mezcla_Id = ot.MezModo.Trim(),
                                       Mezcla_Nombre = ot.MezModoNom.Trim(),
                                       Mezcla_NroCapas = ot.Ncapas,
@@ -541,7 +541,7 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        /**Consulta por item y presentaciÃ³n*/
+        /**Consulta por item y presentación*/
         [HttpGet("getOrdenDeTrabajo/{orden}")]
         public async Task<ActionResult> GetOrdenDeTrabajo(int orden, string? sales, string? process = "")
         {
@@ -586,9 +586,6 @@ namespace BagproWebAPI.Controllers
                                    Peso_Neto = clot.DatosotKg,
                                    ValorKg = clot.DatosValorKg,
                                    ValorUnidad = clot.DatosvalorBolsa,
-                                   //Cantidad_Extrusion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "EXTRUSION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
-                                   //Cantidad_Impresion = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "IMPRESION" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
-                                   //Cantidad_Rotograbado = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus == "ROTOGRABADO" && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
                                    Cantidad_Proceso = (from pe in _context.ProcExtrusions where pe.Ot == Convert.ToString(orden) && pe.NomStatus.StartsWith(process) && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Extnetokg == null ? 0 : pe.Extnetokg).Sum(),
                                    Cantidad_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus.StartsWith(process) && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Qty).Sum(),
                                    Peso_Sellado = (from s in _context.ProcSellados where s.Ot == Convert.ToString(orden) && s.NomStatus.StartsWith(process) && s.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select s.Qty == null ? 0 : s.Peso).Sum(),
@@ -596,7 +593,7 @@ namespace BagproWebAPI.Controllers
                                    Wicket = (from w in _context.Wiketiandos where w.Id == Convert.ToString(clot.ClienteItems) select w.Id.Trim()).FirstOrDefault(),
                                    
 
-                                   // InformaciÃ³n de ExtrusiÃ³n
+                                   // Información de Extrusión
                                    Id_Material = Convert.ToInt32(clot.ExtMaterial),
                                    Material = clot.ExtMaterialNom.Trim(),
                                    Id_Pigmento_Extrusion = Convert.ToInt32(clot.ExtPigmento),
@@ -612,7 +609,7 @@ namespace BagproWebAPI.Controllers
                                    Ancho3_Extrusion = clot.ExtAcho3,
                                    Peso_Extrusion = clot.ExtPeso,
 
-                                   // InformaciÃ³n de ImpresiÃ³n
+                                   // Información de Impresión
                                    Id_Tipo_Imptesion = clot.ImpFlexo.Trim(),
                                    Tipo_Impresion = clot.ImpFlexoNom.Trim(),
                                    Rodillo = clot.ImpRodillo,
@@ -634,7 +631,7 @@ namespace BagproWebAPI.Controllers
                                    Id_Tinta8 = clot.ImpTinta8.Trim(),
                                    Tinta8 = clot.ImpTinta8Nom.Trim() == "" ? "NO APLICA" : clot.ImpTinta8Nom.Trim(),
 
-                                   // InformaciÃ³n de Laminado
+                                   // Información de Laminado
                                    Id_Capa1 = clot.LamCapa1.Trim(),
                                    Laminado_Capa1 = clot.LamCapa1Nom.Trim(),
                                    Calibre_Laminado_Capa1 = clot.LamCalibre1,
@@ -648,7 +645,7 @@ namespace BagproWebAPI.Controllers
                                    Calibre_Laminado_Capa3 = clot.LamCalibre3,
                                    Cantidad_Laminado_Capa3 = clot.Cant3,
 
-                                   // InformaciÃ³n de Sellado
+                                   // Información de Sellado
                                    Id_Formato_Producto = clot.PtFormatopt.Trim(),
                                    Formato_Producto = clot.PtFormatoptNom.Trim(),
                                    SelladoCorte_Ancho    = clot.PtAnchopt,
@@ -673,7 +670,7 @@ namespace BagproWebAPI.Controllers
                                    //SelladoCorte_PrecioDia_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Dia).First() == null ? Convert.ToDecimal(ot.Dia) : (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Dia).First(),
                                    //SelladoCorte_PrecioNoche_Wik_Mq9 = (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Noche).First() == null ? Convert.ToDecimal(ot.Noche) : (from wik in _context.Set<Wiketiando>() where Convert.ToInt32(wik.Codigo) == clot.ClienteItems && wik.Mq == 9 select wik.Noche).First(),
 
-                                   // InformaciÃ³n de Mezclas
+                                   // Información de Mezclas
                                    Mezcla_Id = clot.MezModo.Trim(),
                                    Mezcla_Nombre = clot.MezModoNom.Trim(),
                                    Mezcla_NroCapas = clot.Ncapas,
@@ -814,7 +811,7 @@ namespace BagproWebAPI.Controllers
             }
         }
 
-        //Consulta que devolerÃ¡ la ultima presentaciÃ³n que tuvo un Item 
+        //Consulta que devolerá la ultima presentación que tuvo un Item 
         [HttpGet("getPresentacionItem/{item}")]
         public async Task<ActionResult> GetPresentacionItem(int item)
         {
@@ -1020,7 +1017,7 @@ namespace BagproWebAPI.Controllers
         {
 
 #pragma warning disable IDE0075 // Simplify conditional expression
-            var ordenesTrabajo = (from ot in _context.Set<ClientesOt>()
+            var ordenesTrabajo = await (from ot in _context.Set<ClientesOt>()
                                  //join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
@@ -1147,13 +1144,13 @@ namespace BagproWebAPI.Controllers
             return Ok(orders);
         }
 
-        //FunciÃ³n para obtener la informaciÃ³n de control de calidad de una orden de trabajo en el proceso de extrusiÃ³n
+        //Función para obtener la información de control de calidad de una orden de trabajo en el proceso de extrusión
         [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
-        public async Task<ActionResult> GetOtControlCalidadExtrusion(string OT, string status)
+        public ActionResult GetOtControlCalidadExtrusion(string OT, string status)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
-            var query = await (from cl in _context.Set<ClientesOt>()
+            var query = (from cl in _context.Set<ClientesOt>()
                                 where Convert.ToString(cl.Item) == OT
                                 select new
                                 {
@@ -1183,14 +1180,14 @@ namespace BagproWebAPI.Controllers
                                     Formato = Convert.ToString(cl.ExtFormatoNom).Trim(),
                                     materialId = Convert.ToString(cl.ExtMaterial).Trim(),
                                     Material = Convert.ToString(cl.ExtMaterialNom).Trim(),
-                                }).FirstOrDefaultAsync();
+                                }).ToList();
 
             return Ok(query);
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        //FunciÃ³n para actualizar la informaciÃ³n de control de calidad de una orden de trabajo en el proceso de extrusiÃ³n
+        //Función para actualizar la información de control de calidad de una orden de trabajo en el proceso de extrusión
         [HttpPut("putOrdenTrabajo{orden}")]
         public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
         {

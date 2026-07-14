@@ -51,9 +51,9 @@ namespace BagproWebAPI.Controllers
         }
 
         [HttpGet("OT/{ot}")]
-        public ActionResult<Procdesperdicio> GetOT(string ot)
+        public async Task<ActionResult> GetOT(string ot)
         {
-            var procdesperdicio = _context.Procdesperdicios.Where(prdesp => prdesp.Ot == ot).ToList();
+            var procdesperdicio = await _context.Procdesperdicios.AsNoTracking().Where(prdesp => prdesp.Ot == ot).ToListAsync();
 
             if (procdesperdicio == null)
             {
@@ -63,13 +63,14 @@ namespace BagproWebAPI.Controllers
             return Ok(procdesperdicio);
         }
 
+        //Consulta para dedicio por OT y Proceso, si el proceso es "CORTE" se cambia a "CORTADORES" para que coincida con los datos en la base de datos.
         [HttpGet("getOtProcesoDesperdicio/{ot}")]
-        public ActionResult GetOtProcesoDesperdicio(string ot, string? proceso = "")
+        public async Task<ActionResult> GetOtProcesoDesperdicio(string ot, string? proceso = "")
         {
             if (proceso == "CORTE") proceso = "CORTADORES";
 #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
 #pragma warning disable CS8629 // Nullable value type may be null.
-            var procDesperdicio = from d in _context.Set<Procdesperdicio>()
+            var procDesperdicio = await (from d in _context.Set<Procdesperdicio>().AsNoTracking()
                                   where d.Ot == ot &&
                                   d.NomStatus.Contains("DESP_" + proceso)
                                   select new
@@ -87,10 +88,10 @@ namespace BagproWebAPI.Controllers
                                       Proceso = Convert.ToString(d.NomStatus),
                                       Turno = Convert.ToString(d.TurnoD),
                                       Observacion = Convert.ToString(""),
-                                  };
+                                  }).ToListAsync();
 
-            var procExtrusion = from p in _context.Set<ProcExtrusion>()
-                                  where p.Ot == ot &&
+            var procExtrusion = await (from p in _context.Set<ProcExtrusion>().AsNoTracking()
+                                where p.Ot == ot &&
                                   p.NomStatus.Contains("DESP_" + proceso)
                                   select new
                                   {
@@ -107,7 +108,7 @@ namespace BagproWebAPI.Controllers
                                       Proceso = Convert.ToString(p.NomStatus),
                                       Turno = Convert.ToString(p.Turno),
                                       Observacion = Convert.ToString(""),
-                                  };
+                                  }).ToListAsync();
 
 #pragma warning disable CS8604 // Possible null reference argument.
             if (procDesperdicio == null && procExtrusion == null) return NotFound();

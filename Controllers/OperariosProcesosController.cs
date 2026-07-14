@@ -44,15 +44,16 @@ namespace BagproWebAPI.Controllers
 
         /** Cargar nombre de Operarios */
         [HttpGet("NombreOperarios")]
-        public ActionResult GetNombreOperariosProceso()
+        public async Task<ActionResult> GetNombreOperariosProceso()
         {
             var Proceso = "EXTRUSION";
-            var operariosProceso = _context.OperariosProcesos.Where(P => P.Planta == Proceso)
-                                                              .Select(Ope => new
-                                                              {
-                                                                Ope.Nombre
-                                                              })
-                                                              .ToList();
+            var operariosProceso = await _context.OperariosProcesos.AsNoTracking()
+                                         .Where(P => P.Planta == Proceso)
+                                         .Select(Ope => new
+                                         {
+                                           Ope.Nombre
+                                         })
+                                         .ToListAsync();
                                                               
 
             if (operariosProceso == null)
