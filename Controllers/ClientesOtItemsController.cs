@@ -97,7 +97,8 @@ namespace BagproWebAPI.Controllers
             foreach (var item in rolls)
             {
                 var idClientesItem = await (from cliOT in _context.Set<ClientesOtItem>().AsNoTracking()
-                                            from ven in _context.Set<Vendedore>().AsNoTracking()
+                                            join ven in _context.Set<Vendedore>().AsNoTracking() 
+                                                on cliOT.UsrModifica equals ven.Id
                                             where cliOT.ClienteItems == item
                                             && cliOT.UsrModifica == ven.Id
                                             && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == (sales))
@@ -107,7 +108,10 @@ namespace BagproWebAPI.Controllers
                                                 ClienteItemsNom = cliOT.ClienteItemsNom,
                                                 Cliente = cliOT.Cliente,
                                                 ClienteNom = cliOT.ClienteNom,
-                                                PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" : cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" : "Paquete",
+                                                PtPresentacionNom = cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" : 
+                                                                    cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" :
+                                                                    cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" :
+                                                                    "Paquete",
                                                 DatosValorKg = cliOT.DatosValorKg,
                                                 NombreCompleto = ven.NombreCompleto,
                                                 Codigo_Asesor = cliOT.UsrModifica,

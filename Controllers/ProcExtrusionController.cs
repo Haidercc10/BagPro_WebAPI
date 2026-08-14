@@ -1334,7 +1334,7 @@ namespace BagproWebAPI.Controllers
 
         //Función que agregará una observacion de los rollos eliminados.
         [HttpPost("putObservationDeletedRolls")]
-        async public Task<IActionResult> putObservationDeletedRolls([FromBody] List<rollsToDelete> rollsToDelete)
+        public async Task<IActionResult> putObservationDeletedRolls([FromBody] List<rollsToDelete> rollsToDelete)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             string[] processProduction = { "EMP", "EXT", "IMP", "ROT", "LAM", "DBLD", "PERF" };
