@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../PlasticaribeWebAPI"
+		},
+		{
+			"path": "../WorkspaceAngular"
+		},
+		{
+			"path": "../ZeusContabilidadAPI"
+		},
+		{
+			"path": "../ZeusInventarioAPI"
+		}
+	]
+}

@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "sfx9fRAxnz6d/8Ke0GkZI4SApvpDv6eQ/2LLcqpYmTE=",
-  "Source": "BagproWebAPI",
-  "BasePath": "_content/BagproWebAPI",
-  "Mode": "Default",
-  "ManifestType": "Publish",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"d8zkAZ2oMl3BIWrurdZgZhbt5C6MX2E3Q50dUbsoFyo=","Source":"BagproWebAPI","BasePath":"/","Mode":"Root","ManifestType":"Publish","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

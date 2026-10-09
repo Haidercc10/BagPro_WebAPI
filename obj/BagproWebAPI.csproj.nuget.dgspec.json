@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\GitHub\\BagPro_WebAPI\\BagproWebAPI.csproj": {}
+    "C:\\Dev\\GitHub\\BagPro_WebApi\\BagproWebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\GitHub\\BagPro_WebAPI\\BagproWebAPI.csproj": {
+    "C:\\Dev\\GitHub\\BagPro_WebApi\\BagproWebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\GitHub\\BagPro_WebAPI\\BagproWebAPI.csproj",
+        "projectUniqueName": "C:\\Dev\\GitHub\\BagPro_WebApi\\BagproWebAPI.csproj",
         "projectName": "BagproWebAPI",
-        "projectPath": "C:\\Dev\\GitHub\\BagPro_WebAPI\\BagproWebAPI.csproj",
-        "packagesPath": "C:\\Users\\HaiderCarrillo\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\GitHub\\BagPro_WebAPI\\obj\\",
+        "projectPath": "C:\\Dev\\GitHub\\BagPro_WebApi\\BagproWebAPI.csproj",
+        "packagesPath": "C:\\Users\\ErickChamorro\\.nuget\\packages\\",
+        "outputPath": "C:\\Dev\\GitHub\\BagPro_WebApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HaiderCarrillo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ErickChamorro\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,10 +26,12 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
+            "framework": "net7.0",
             "targetAlias": "net7.0",
             "projectReferences": {}
           }
@@ -44,10 +46,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net7.0": {
+          "framework": "net7.0",
           "targetAlias": "net7.0",
           "dependencies": {
             "Aspose.PDF": {
@@ -166,24 +169,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[7.0.20, 7.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[7.0.20, 7.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[7.0.20, 7.0.20]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[7.0.20, 7.0.20]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -192,7 +177,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
