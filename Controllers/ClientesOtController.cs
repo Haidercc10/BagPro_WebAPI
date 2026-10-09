@@ -1018,7 +1018,6 @@ namespace BagproWebAPI.Controllers
 
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = await (from ot in _context.Set<ClientesOt>()
-                                 //join cli in _context.Set<Cliente>() on Convert.ToString(ot.Cliente) equals cli.CodBagpro
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
                                        (cliente != "" ? Convert.ToString(ot.Cliente).Contains(cliente) : true) &&
@@ -1035,9 +1034,6 @@ namespace BagproWebAPI.Controllers
                                      OrdenTrabajo = ot.Item,
                                      FechaCreacion = ot.FechaCrea,
                                      IdCliente = ot.Cliente,
-                                     /*NitCliente = (from cl in _context.Clientes
-                                                   where cl.CodBagpro == Convert.ToString(ot.Cliente)
-                                                   select cl.IdentNro).FirstOrDefault(),*/
                                      Cliente = ot.ClienteNom,
                                      Item = ot.ClienteItems,
                                      Referencia = ot.ClienteItemsNom,
