@@ -1018,6 +1018,7 @@ namespace BagproWebAPI.Controllers
         /// <param name="fechaInicial">Fecha minima de creacion de la orden.</param>
         /// <param name="fechaFinal">Fecha maxima de creacion de la orden.</param>
         /// <param name="cliente">Identificador del cliente que se buscara parcialmente.</param>
+        /// <param name="nombreCliente">Texto parcial para buscar en el nombre del cliente.</param>
         /// <param name="item">Codigo exacto del item.</param>
         /// <param name="material">Nombre del material de extrusion.</param>
         /// <param name="pigmento">Nombre del pigmento de extrusion.</param>
@@ -1029,14 +1030,16 @@ namespace BagproWebAPI.Controllers
         /// <param name="referencia">Texto parcial a buscar en el nombre de referencia del item.</param>
         /// <returns>Ordenes de trabajo que coinciden con los filtros recibidos.</returns>
         [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
-        public async Task<ActionResult> GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "", string? referencia = "")
+        public async Task<ActionResult> GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "", string? referencia = "", string? nombreCliente = "")
         {
             referencia = referencia?.Trim();
+            nombreCliente = nombreCliente?.Trim();
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = await (from ot in _context.Set<ClientesOt>()
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
                                        (cliente != "" ? Convert.ToString(ot.Cliente).Contains(cliente) : true) &&
+                                       (!string.IsNullOrEmpty(nombreCliente) ? ot.ClienteNom.Contains(nombreCliente) : true) &&
                                        (item != "" ? Convert.ToString(ot.ClienteItems) == item : true) &&
                                        (!string.IsNullOrEmpty(referencia) ? ot.ClienteItemsNom.Contains(referencia) : true) &&
                                        (material != "" ? ot.ExtMaterialNom == material : true) &&
