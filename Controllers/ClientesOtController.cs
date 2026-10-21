@@ -1012,16 +1012,33 @@ namespace BagproWebAPI.Controllers
             return Ok(con);
         }
 
+        /// <summary>
+        /// Consulta ordenes de trabajo aplicando filtros opcionales por cliente, item, referencia y proceso.
+        /// </summary>
+        /// <param name="fechaInicial">Fecha minima de creacion de la orden.</param>
+        /// <param name="fechaFinal">Fecha maxima de creacion de la orden.</param>
+        /// <param name="cliente">Identificador del cliente que se buscara parcialmente.</param>
+        /// <param name="item">Codigo exacto del item.</param>
+        /// <param name="material">Nombre del material de extrusion.</param>
+        /// <param name="pigmento">Nombre del pigmento de extrusion.</param>
+        /// <param name="ancho">Ancho del producto terminado.</param>
+        /// <param name="largo">Largo del producto terminado.</param>
+        /// <param name="fuelle">Fuelle del producto terminado.</param>
+        /// <param name="calibre">Calibre de extrusion.</param>
+        /// <param name="sales">Identificador del vendedor que modifico la orden.</param>
+        /// <param name="referencia">Texto parcial a buscar en el nombre de referencia del item.</param>
+        /// <returns>Ordenes de trabajo que coinciden con los filtros recibidos.</returns>
         [HttpGet("getOrdenesTrabajo/{fechaInicial}/{fechaFinal}")]
-        public async Task<ActionResult> GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "")
+        public async Task<ActionResult> GetOrdenesTrabajo(DateTime fechaInicial, DateTime fechaFinal, string? cliente = "", string? item = "", string? material = "", string? pigmento = "", string? ancho = "", string? largo = "", string? fuelle = "", string? calibre = "", string? sales = "", string? referencia = "")
         {
-
+            referencia = referencia?.Trim();
 #pragma warning disable IDE0075 // Simplify conditional expression
             var ordenesTrabajo = await (from ot in _context.Set<ClientesOt>()
                                  where ot.FechaCrea >= fechaInicial &&
                                        ot.FechaCrea <= fechaFinal &&
                                        (cliente != "" ? Convert.ToString(ot.Cliente).Contains(cliente) : true) &&
                                        (item != "" ? Convert.ToString(ot.ClienteItems) == item : true) &&
+                                       (!string.IsNullOrEmpty(referencia) ? ot.ClienteItemsNom.Contains(referencia) : true) &&
                                        (material != "" ? ot.ExtMaterialNom == material : true) &&
                                        (pigmento != "" ? ot.ExtPigmentoNom == pigmento : true) &&
                                        (ancho != "" ? ot.PtAnchopt == Convert.ToDecimal(ancho) : true) &&
