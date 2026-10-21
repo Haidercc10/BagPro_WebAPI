@@ -5,6 +5,8 @@ C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\Release\Release\web.co
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\Release\web.config
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\appsettings.Development.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\appsettings.json
+C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\appsettings.Production.json
+C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\appsettings.ProductionLocal.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\Connected Services\ServiceReference1\ConnectedService.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\Release\appsettings.Development.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\PubTmp\Out\Release\appsettings.json
