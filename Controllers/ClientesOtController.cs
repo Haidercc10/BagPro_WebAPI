@@ -571,7 +571,7 @@ namespace BagproWebAPI.Controllers
                                    Estado_Orden = "",
                                    Estado = "",
                                    Id_Pedido = "",
-                                   Id_Vendedor = "",
+                                   Id_Vendedor = clot.UsrModifica,
                                    Vendedor = "",
                                    Observacion = clot.Observacion.Trim(),
                                    Cyrel = clot.Cyrel.Trim() == "1" ? true : false,

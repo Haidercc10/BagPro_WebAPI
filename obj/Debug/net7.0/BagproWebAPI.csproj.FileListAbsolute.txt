@@ -2478,7 +2478,6 @@ C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\staticwebassets.build.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\staticwebassets.build.json.cache
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\staticwebassets.development.json
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\staticwebassets.build.endpoints.json
-C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\BagproWe.B446BC5E.Up2Date
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\BagproWebAPI.dll
 C:\Dev\GitHub\BagPro_WebAPI\obj\Debug\net7.0\refint\BagproWebAPI.dll
