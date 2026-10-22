@@ -2485,4 +2485,5 @@ C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\refint\BagproWebAPI.dll
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\BagproWebAPI.pdb
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\BagproWebAPI.genruntimeconfig.cache
 C:\Dev\GitHub\BagPro_WebAPI\obj\Release\net7.0\ref\BagproWebAPI.dll
-C:\Dev\GitHub\BagPro_WebApi\obj\Release\net7.0\swae.build.ex.cache
+C:\Dev\GitHub\BagPro_WebAPI\bin\Release\net7.0\appsettings.Production.json
+C:\Dev\GitHub\BagPro_WebAPI\bin\Release\net7.0\appsettings.ProductionLocal.json
