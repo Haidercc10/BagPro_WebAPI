@@ -19,5 +19,8 @@
 			"path": "../ZeusInventarioAPI/ZeusInventarioWebAPI",
 			"name": "ZeusInventarioAPI"
 		}
-	]
+	],
+	"settings": {
+		"git.openRepositoryInParentFolders": "always"
+	}
 }
