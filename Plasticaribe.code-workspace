@@ -4,16 +4,20 @@
 			"path": "."
 		},
 		{
-			"path": "../PlasticaribeWebAPI"
+			"path": "../PlasticaribeWebAPI",
+			"name": "PlasticaribeWebAPI"
 		},
 		{
-			"path": "../WorkspaceAngular"
+			"path": "../WorkspaceAngular/Proyecto/ProyectoPlasticaribe",
+			"name": "WorkspaceAngular"
 		},
 		{
-			"path": "../ZeusContabilidadAPI"
+			"path": "../ZeusContabilidadAPI",
+			"name": "ZeusContabilidadAPI"
 		},
 		{
-			"path": "../ZeusInventarioAPI"
+			"path": "../ZeusInventarioAPI/ZeusInventarioWebAPI",
+			"name": "ZeusInventarioAPI"
 		}
 	]
 }
