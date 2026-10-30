@@ -336,14 +336,21 @@ namespace BagproWebAPI.Controllers
             return con.Any() ? Ok(con) : BadRequest($"¡No se encontró una Orden de Trabajo con el consecutivo {orden}!");
         }
 
-        /**Consulta por item y presentación*/
+        /// <summary>
+        /// Consulta la ficha actual de un item en ClientesOtItem por item y presentación, con la misma forma que GetOrdenDeTrabajo.
+        /// </summary>
+        /// <param name="ClienteItems">Código del item.</param>
+        /// <param name="PtPresentacionNom">Presentación en BagPro (Kilo, Unidad, Paquete, Rollo).</param>
+        /// <param name="sales">Código del vendedor; si se envía, solo devuelve items de ese vendedor.</param>
+        /// <returns>200 con las filas del item o 404 si no existe.</returns>
         [HttpGet("OT_Cliente_Item_Presentacion/{ClienteItems}/{PtPresentacionNom}")]
-        public async Task<ActionResult> OT_Cliente_Item_Presentacion(int ClienteItems, string PtPresentacionNom)
+        public async Task<ActionResult> OT_Cliente_Item_Presentacion(int ClienteItems, string PtPresentacionNom, string? sales)
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var ordenTrabajo = await (from ot in _context.Set<ClientesOtItem>().AsNoTracking()
                                where ot.ClienteItems == ClienteItems
                                      && ot.PtPresentacionNom == PtPresentacionNom
+                                     && (string.IsNullOrEmpty(sales) || ot.UsrModifica == sales)
                                select new
                                {
                                       Id_OT = ot.Id,
@@ -363,7 +370,7 @@ namespace BagproWebAPI.Controllers
                                       Estado_Orden = "",
                                       Estado = "",
                                       Id_Pedido = "",
-                                      Id_Vendedor = "",
+                                      Id_Vendedor = ot.UsrModifica,
                                       Vendedor = "",
                                       Observacion = ot.Observacion.Trim(),
                                       Cyrel = ot.Cyrel.Trim() == "1" ? true : false,
@@ -379,6 +386,7 @@ namespace BagproWebAPI.Controllers
                                       ValorKg = ot.DatosValorKg,
                                       ValorUnidad = ot.DatosvalorBolsa,
                                       NitCliente = (from cl in _context.Clientes where cl.CodBagpro == Convert.ToString(ot.Cliente) select cl.IdentNro).FirstOrDefault(),
+                                      Wicket = (from w in _context.Wiketiandos where w.Id == Convert.ToString(ot.ClienteItems.Value) select w.Id.Trim()).FirstOrDefault(),
 
                                       // Información de Extrusión
                                       Id_Material = Convert.ToInt32(ot.ExtMaterial),
@@ -1048,7 +1056,8 @@ namespace BagproWebAPI.Controllers
                                        (largo != "" ? ot.PtLargopt == Convert.ToDecimal(largo) : true) &&
                                        (fuelle != "" ? ot.PtFuelle == Convert.ToDecimal(fuelle) : true) &&
                                        (calibre != "" ? ot.ExtCalibre == Convert.ToDecimal(calibre) : true) && 
-                                       (sales != "" ? ot.UsrModifica == sales : true)   
+                                       (sales != "" ? ot.UsrModifica == sales : true)
+                                       orderby ot.FechaCrea descending
                                  select new
                                  {
                                      OrdenTrabajo = ot.Item,
@@ -1058,8 +1067,10 @@ namespace BagproWebAPI.Controllers
                                      Item = ot.ClienteItems,
                                      Referencia = ot.ClienteItemsNom,
                                      Item_Referencia = ot.ClienteItems + " " + ot.ClienteItemsNom,
-                                     Cantidad = ot.PtPresentacionNom == "Kilo" ? ot.DatoscantKg : ot.DatoscantBolsa,
+                                     Cantidad = ot.PtPresentacionNom == "Kilo" ? ot.DatosotKg : ot.DatoscantBolsa,
+                                     Cantidad_Kilos = ot.DatosotKg,
                                      Precio = ot.PtPresentacionNom == "Kilo" ? ot.DatosValorKg : ot.DatosvalorBolsa,
+                                     Precio_Kilo = ot.DatosValorKg,
                                      Existencia = 0,
                                      Presentacion = ot.PtPresentacionNom.Trim(),
                                      Material = ot.ExtMaterialNom.Trim(),
