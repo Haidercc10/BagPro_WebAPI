@@ -448,6 +448,7 @@ namespace BagproWebAPI.Controllers
                                       SelladoCorte_Fuelle = ot.PtFuelle,
                                       SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim(),
                                       SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim(),
+                                      SelladoCorte_Calibre = (ot.EtiquetaLargo ?? "").Trim() == "" || (ot.EtiquetaLargo ?? "").Trim() == "0" ? Convert.ToString(ot.ExtCalibre) : ot.EtiquetaLargo.Trim(),
                                       SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim(),
                                       TpSellado_Id = ot.PtSelladoPt.Trim(),
                                       TpSellados_Nombre = ot.PtSelladoPtNom.Trim(),
@@ -549,7 +550,14 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        /**Consulta por item y presentación*/
+        /// <summary>
+        /// Consulta una orden de trabajo de BagPro (ClientesOt) junto con la ficha de su item (ClientesOtItem).
+        /// SelladoCorte_Calibre (texto) toma EtiquetaLargo de la OT o, si viene vacía o en "0", ExtCalibre.
+        /// </summary>
+        /// <param name="orden">Número de la orden de trabajo en BagPro.</param>
+        /// <param name="sales">Código del vendedor; si se envía, solo devuelve items de ese vendedor.</param>
+        /// <param name="process">Prefijo de estado para totalizar cantidades producidas por proceso.</param>
+        /// <returns>200 con las filas de la OT o 404 si no existe.</returns>
         [HttpGet("getOrdenDeTrabajo/{orden}")]
         public async Task<ActionResult> GetOrdenDeTrabajo(int orden, string? sales, string? process = "")
         {
@@ -661,6 +669,7 @@ namespace BagproWebAPI.Controllers
                                    SelladoCorte_Fuelle = clot.PtFuelle,
                                    SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
                                    SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
+                                   SelladoCorte_Calibre = (clot.EtiquetaLargo ?? "").Trim() == "" || (clot.EtiquetaLargo ?? "").Trim() == "0" ? Convert.ToString(clot.ExtCalibre) : clot.EtiquetaLargo.Trim(),
                                    SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
                                    TpSellado_Id = clot.PtSelladoPt.Trim(),
                                    TpSellados_Nombre = clot.PtSelladoPtNom.Trim(),
