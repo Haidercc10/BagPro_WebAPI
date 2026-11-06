@@ -22,17 +22,6 @@ namespace BagproWebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/ProcExtrusion
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProcExtrusion>>> GetProcExtrusions()
-        {
-            if (_context.ProcExtrusions == null)
-            {
-                return NotFound();
-            }
-            return await _context.ProcExtrusions.ToListAsync();
-        }
-
         // GET: api/ProcExtrusion/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProcExtrusion>> GetProcExtrusion(int id)
@@ -162,60 +151,6 @@ namespace BagproWebAPI.Controllers
         }
 
         /** Mostrar Datos Consolidados de ProcExtrusión Para modal en Vista Estados Procesos OT*/
-        [HttpGet("getDatosConsolidados/{OT}/{Proceso}")]
-        public ActionResult<ProcExtrusion> GetDatosConsolidados(string OT, string Proceso)
-        {
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-            var query1 = _context.ProcExtrusions.Where(prExt => prExt.Ot == OT
-                                                       && prExt.NomStatus == Proceso
-                                                       && prExt.Observacion != "Etiqueta eliminada desde App Plasticaribe")
-                                                 .GroupBy(agr => new { agr.Fecha, agr.Operador, agr.ClienteItemNombre, agr.Ot, agr.NomStatus })
-                                                 .Select(ProEx => new
-                                                 {
-                                                     SumaCantidad1 = ProEx.Sum(ProSel => ProSel.Extnetokg),
-                                                     SumaCantidad2 = ProEx.Sum(ProSel => ProSel.Extnetokg),
-                                                     Ot = ProEx.Key.Ot,
-                                                     Referencia = ProEx.Key.ClienteItemNombre,
-                                                     Operario = ProEx.Key.Operador,
-                                                     Fecha = Convert.ToString(ProEx.Key.Fecha),
-                                                     Proceso = ProEx.Key.NomStatus,
-                                                     Registros = ProEx.Count(),
-                                                 }).ToList();
-
-            var query2 = _context.ProcSellados.Where(prExt => prExt.Ot == OT
-                                                      && prExt.NomStatus == Proceso
-                                                      && prExt.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe")
-                                                .GroupBy(agr => new { agr.FechaEntrada, agr.Operario, agr.NomReferencia, agr.Ot, agr.NomStatus })
-                                                .Select(ProSella => new
-                                                {
-                                                    SumaCantidad1 = ProSella.Sum(ProSel => ProSel.Peso),
-                                                    SumaCantidad2 = ProSella.Sum(ProSel => ProSel.Qty),
-                                                    Ot = ProSella.Key.Ot,
-                                                    Referencia = ProSella.Key.NomReferencia,
-                                                    Operario = ProSella.Key.Operario,
-                                                    Fecha = Convert.ToString(ProSella.Key.FechaEntrada),
-                                                    Proceso = ProSella.Key.NomStatus,
-                                                    Registros = ProSella.Count(),
-                                                }).ToList();
-
-
-            if (query1 == null && query2 == null) return BadRequest("No se encontraron rollos consolidados para mostrar");
-            else return Ok(query1.Concat(query2));
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-#pragma warning restore CS8604 // Possible null reference argument.
-        }
-
-        //Consultar toda la informacion de un rollo
-        [HttpGet("consultarRollo/{rollo}")]
-        public ActionResult consultarRollo(int rollo)
-        {
-            var con = from x in _context.Set<ProcExtrusion>()
-                      where x.Item == rollo && x.NomStatus == "EXTRUSION" && x.Observacion != "Etiqueta eliminada desde App Plasticaribe"
-                      select x;
-            return Ok(con);
-        }
-
         //Consultar toda la informacion de un item por ot y por rollo 
         [HttpGet("getInformationRoll/{rollo}/{ot}")]
         public ActionResult getInformationRoll(int rollo, string ot)
@@ -877,70 +812,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        [HttpGet("getProductionForExitByNumber/{production}")]
-        public ActionResult GetProductionForExitByNumber(int production)
-        {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from pe in _context.Set<ProcExtrusion>()
-                        where pe.Item == production &&
-                              pe.NomStatus == "EMPAQUE" &&
-                              pe.Observaciones.StartsWith("Rollo #") &&
-                              pe.EnvioZeus.Trim() == "1" &&
-                              pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
-                        select pe;
-            if (datos.Count() > 0) return Ok(datos);
-            else
-            {
-                var datos2 = from ps in _context.Set<ProcSellado>()
-                             where ps.Item == production &&
-                                   ps.Observaciones.StartsWith("Rollo #") &&
-                                   ps.EnvioZeus.Trim() == "1" &&
-                                   ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                             select ps;
-                return Ok(datos2);
-            }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
-        [HttpGet("getNumberReelByNumberAndProcess/{number}/{process}")]
-        public ActionResult GetNumberReelByNumberAndProcess(int number, string process)
-        {
-            if (process == "WIKETIADO") process = "Wiketiado";
-
-            var itemPE = from pe in _context.Set<ProcExtrusion>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process && pe.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pe.Item;
-
-            if (itemPE.Any()) return Ok(itemPE);
-            else {
-                var itemPS = from pe in _context.Set<ProcSellado>() where pe.Observaciones == $"Rollo #{number} en PBDD.dbo.Produccion_Procesos" && pe.NomStatus == process && pe.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe" select pe.Item;
-                return Ok(itemPS);
-            }
-        }
-
-        // Consulta que devolverá la información del rollo
-        [HttpGet("getProductionByProduction/{production}")]
-        public ActionResult GetProductionByProduction(int production)
-        {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var datos = from ps in _context.Set<ProcSellado>()
-                        where ps.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
-                              ps.NomStatus == "SELLADO" &&
-                              ps.EnvioZeus.Trim() == "0" &&
-                              ps.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                        select ps;
-            if (datos.Any()) return Ok(datos);
-            else
-            {
-                var datos2 = from pe in _context.Set<ProcExtrusion>()
-                        where pe.Observaciones == $"Rollo #{production} en PBDD.dbo.Produccion_Procesos" &&
-                              pe.EnvioZeus.Trim() == "0" && 
-                              pe.Observacion != "Etiqueta eliminada desde App Plasticaribe"
-                             /*pe.NomStatus == "EMPAQUE"*/
-                             select pe;
-                return Ok(datos2);
-            }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
         //Consulta que devolverá el numero del bulto desde cualquier proceso
         [HttpGet("getRollProduction/{roll}")]
         public ActionResult getRollProduction(int roll, string? process = "")
@@ -1131,31 +1002,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        //Primer rollo del dia extrusion
-        [HttpGet("FirstRollDayExtrusion2/{date}")]
-        public ActionResult FirstRollDayExtrusion2(DateTime date)
-        {
-            string[] process = { "EXTRUSION", "IMPRESION", "ROTOGRABADO", "EMPAQUE", "DOBLADO", "LAMINADO" };
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            return Ok(from PS in _context.Set<ProcExtrusion>()
-                      where PS.Fecha == date &&
-                           (!PS.Hora.StartsWith("00") &&
-                           !PS.Hora.StartsWith("01") &&
-                           !PS.Hora.StartsWith("02") &&
-                           !PS.Hora.StartsWith("03") &&
-                           !PS.Hora.StartsWith("04") &&
-                           !PS.Hora.StartsWith("05") &&
-                           !PS.Hora.StartsWith("06") &&
-                           !PS.Hora.StartsWith("07:0") &&
-                           !PS.Hora.StartsWith("07:1") &&
-                           !PS.Hora.StartsWith("07:2")) &&
-                           process.Contains(PS.NomStatus) &&
-                           PS.Observacion != "Etiqueta eliminada desde App Plasticaribe"
-                      orderby PS.Item ascending
-                      select PS.Item);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
         //Primer rollo del dia sellado
         private IQueryable<int> FirstRollDaySealed(DateTime date)
         {
@@ -1177,31 +1023,6 @@ namespace BagproWebAPI.Controllers
                               PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
                    orderby PS.Item ascending
                         select PS.Item;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
-        //Primer rollo del dia sellado 2
-        [HttpGet("FirstRollDaySealed2/{date}")]
-        public ActionResult FirstRollDaySealed2(DateTime date)
-        {
-            //string[] process = { "SELLADO", "Wiketiado" };
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            return Ok(from PS in _context.Set<ProcSellado>()
-                   where PS.FechaEntrada == date &&
-                        (!PS.Hora.StartsWith("00") &&
-                        !PS.Hora.StartsWith("01") &&
-                        !PS.Hora.StartsWith("02") &&
-                        !PS.Hora.StartsWith("03") &&
-                        !PS.Hora.StartsWith("04") &&
-                        !PS.Hora.StartsWith("05") &&
-                        !PS.Hora.StartsWith("06") &&
-                        !PS.Hora.StartsWith("07:0") &&
-                        !PS.Hora.StartsWith("07:1") &&
-                        !PS.Hora.StartsWith("07:2")) &&
-                         //process.Contains(PS.NomStatus) &&
-                         PS.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                   orderby PS.Item ascending
-                   select PS.Item);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
@@ -1305,32 +1126,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-
-        //Función que recibirá los rollos a los que se les revertirá (actualizará) el Envio Zeus a 0
-        [HttpPost("putReversionEnvioZeus_ProcExtrusion")]
-        async public Task<IActionResult> putReversionEnvioZeus_ProcExtrusion([FromBody] List<int> rolls)
-        {
-            int count = 0;
-            foreach (var roll in rolls)
-            {
-                var procExtrusion = (from pro in _context.Set<ProcExtrusion>() where pro.Item == roll && pro.Observacion != "Etiqueta eliminada desde App Plasticaribe" select pro).FirstOrDefault();
-                procExtrusion.EnvioZeus = "0";
-                _context.Entry(procExtrusion).State = EntityState.Modified;
-                _context.SaveChanges();
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProcExtrusionExists(roll)) return NotFound();
-                    else throw;
-                }
-                count++;
-                if (count == rolls.Count()) return NoContent();
-            }
-            return NoContent();
-        }
 
         //Función que agregará una observacion de los rollos eliminados.
         [HttpPost("putObservationDeletedRolls")]

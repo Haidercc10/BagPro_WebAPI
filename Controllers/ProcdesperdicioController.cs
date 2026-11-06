@@ -21,17 +21,6 @@ namespace BagproWebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Procdesperdicio
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Procdesperdicio>>> GetProcdesperdicios()
-        {
-          if (_context.Procdesperdicios == null)
-          {
-              return NotFound();
-          }
-            return await _context.Procdesperdicios.ToListAsync();
-        }
-
         // GET: api/Procdesperdicio/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Procdesperdicio>> GetProcdesperdicio(int id)

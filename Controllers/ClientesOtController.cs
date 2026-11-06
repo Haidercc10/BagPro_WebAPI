@@ -4,9 +4,6 @@ using Aspose.Pdf.Facades;
 using BagproWebAPI.Models;
 using Intercom.Core;
 using Intercom.Data;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -788,46 +785,7 @@ namespace BagproWebAPI.Controllers
         }
 
         /** //Consultar el primer item en el rango de fechas elegido y que tenga un precio igual al ingresado */
-        [HttpGet("consultarItem/{fecha1}/{fecha2}/{item}/{precio}")]
-        public ActionResult consultarItem(DateTime fecha1, DateTime fecha2, int item, decimal precio)
-        {
-            var con = (from ot in _context.Set<ClientesOt>()
-                       where ot.FechaCrea >= fecha1
-                             && ot.FechaCrea <= fecha2
-                             && ot.ClienteItems == item
-                             && (ot.DatosValorKg == precio || ot.DatosvalorBolsa == precio)
-                       orderby ot.Id
-                       select ot.FechaCrea).FirstOrDefault();
-
-            return Ok(con);
-        }
-
         /** Obtener OT's por Usuario Vendedor. */
-        [HttpGet("BuscarOTxVendedores/{OT}")]
-        public ActionResult GetOtXUsuarioVendedor(int OT)
-        {
-            var clientesOt = _context.ClientesOts.Where(cOt => cOt.Item == OT)
-                                                 .Select(coti => new
-                                                 {
-                                                     coti.Item,
-                                                     coti.Cliente,
-                                                     coti.ClienteNom,
-                                                     coti.ClienteItems,
-                                                     coti.ClienteItemsNom,
-                                                     coti.UsrModifica
-                                                 })
-                                                 .ToList();
-
-            if (clientesOt == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(clientesOt);
-            }
-        }
-
         //Consulta que devolerá la ultima presentación que tuvo un Item 
         [HttpGet("getPresentacionItem/{item}")]
         public async Task<ActionResult> GetPresentacionItem(int item)
@@ -923,43 +881,6 @@ namespace BagproWebAPI.Controllers
                                   peso = ot.Sum(x => x.DatosotKg)
                               }).ToListAsync();
             return Ok(con);
-        }
-
-        [HttpGet("getPesoProcesosUltimoMes/{fecha1}/{fecha2}")]
-        public async Task<ActionResult> getPesoProcesosUltimoMes(DateTime fecha1, DateTime fecha2)
-        {
-            var extrusion = await (from ot in _context.Set<ProcExtrusion>()
-                                    where ot.Fecha >= fecha1
-                                          && ot.Fecha <= fecha2
-                                    group ot by new
-                                    {
-                                        ot.NomStatus
-                                    }
-                                    into ot
-                                    select new
-                                    {
-                                        ot.Key.NomStatus,
-                                        peso = ot.Sum(x => x.Extnetokg),
-                                        und = ot.Sum(x => x.Extnetokg),
-                                    }).ToListAsync();
-
-            var sellado = await (from ot in _context.Set<ProcSellado>()
-                                 where ot.FechaEntrada >= fecha1
-                                       && ot.FechaEntrada <= fecha2
-                                 group ot by new
-                              {
-                                  ot.NomStatus
-                              }
-                                 into ot
-                                 select new
-                                 {
-                                     ot.Key.NomStatus,
-                                     peso = ot.Sum(x => x.Peso),
-                                     und = ot.Sum(x => x.Qty)
-                                 }).ToListAsync();
-
-            return Ok(extrusion.Concat(sellado));
-
         }
 
         [HttpGet("getCantOrdenesMateriales/{fecha1}/{fecha2}")]
@@ -1131,55 +1052,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore IDE0075 // Simplify conditional expression
         }
 
-        //
-        [HttpGet("getOtsForCustomerOrders1/{date1}/{date2}/{item}/{presentation}/{idClient}/{orderSale}")]
-        public async Task<ActionResult> getOtsForCustomerOrders(DateTime date1, DateTime date2, int item, string presentation, string idClient, string orderSale)
-        {
-            var codBagpro = await (from c in _context.Set<Cliente>()
-                                   where c.IdentNro == idClient
-                                   select c.CodBagpro).FirstOrDefaultAsync();
-
-            var ordersProduction = await (from cl in _context.Set<ClientesOt>()
-                                          where cl.FechaCrea >= date1 &&
-                                          cl.FechaCrea <= date2 &&
-                                          cl.ClienteItems == item &&
-                                          cl.PtPresentacionNom == presentation &&
-                                          cl.Cliente == Convert.ToInt32(codBagpro)
-                                          select new { 
-                                           OT = cl.Item, 
-                                           Consecutivo = orderSale 
-                                        }).FirstOrDefaultAsync();
-
-            return Ok(ordersProduction);
-        }
-
-        //Funcion para obtener las ordenes de trabajo de un cliente en un rango de fechas y con un item especifico
-        [HttpPost("getOtsForCustomerOrders2")]
-        public async Task<ActionResult> getOtsForCustomerOrders([FromBody] List<CustomerOrders> CustomerOrders)
-        {
-            List<Object> orders = new List<Object>();
-            int counter = 0;
-            foreach (var item in CustomerOrders)
-            {
-                
-                var ordersProduction = await (from cl in _context.Set<ClientesOt>()
-                                        where cl.FechaCrea >= item.date1 &&
-                                              cl.FechaCrea <= item.date2 &&
-                                              cl.ClienteItems == item.item
-                                        select new
-                                        { 
-                                            OT = cl.Item,
-                                            Consecutivo = item.consecutivo,
-                                            Item = cl.ClienteItems
-                                        }).FirstOrDefaultAsync();
-
-                counter++;
-                orders.Add(ordersProduction);
-                if (CustomerOrders.Count() == counter) return Ok(orders);
-            }
-            return Ok(orders);
-        }
-
         //Función para obtener la información de control de calidad de una orden de trabajo en el proceso de extrusión
         [HttpGet("getOtControlCalidadExtrusion/{OT}/{status}")]
         public ActionResult GetOtControlCalidadExtrusion(string OT, string status)
@@ -1221,33 +1093,6 @@ namespace BagproWebAPI.Controllers
             return Ok(query);
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
-        //Función para actualizar la información de control de calidad de una orden de trabajo en el proceso de extrusión
-        [HttpPut("putOrdenTrabajo{orden}")]
-        public async Task<IActionResult> PutOrdenTrabajo(int orden, ClientesOt clientesOt)
-        {
-            if (orden != clientesOt.Item)  return BadRequest();
-
-            _context.Entry(clientesOt).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientesOtExists(orden))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/ClientesOt
@@ -1303,38 +1148,5 @@ namespace BagproWebAPI.Controllers
         {
             return (_context.ClientesOts?.Any(e => e.Item == id)).GetValueOrDefault();
         }
-
-        [HttpGet("Prueba")]
-        public IActionResult GeneratePDF()
-        {
-            using (var stream = new System.IO.MemoryStream())
-            {
-                using (var writer = new PdfWriter(stream))
-                {
-                    using (var pdf = new PdfDocument(writer))
-                    {
-                        var doc = new Document(pdf);
-                        doc.Add(new Paragraph("Hola mundo"));
-                    }
-                }
-                Response.Headers.Add("content-disposition", "attachment; filename = test.pdf");
-                return File(stream.ToArray(), "application / pdf");
-            }    
-        }
     }
-}
-
-public class CustomerOrders
-{
-    public DateTime date1 { get; set; }
-
-    public DateTime date2 { get; set; }
-
-    public int item { get; set; }
-
-    //public string presentation { get; set; }
-
-    //public string idClient { get; set; }
-
-    public string consecutivo { get; set; }
 }

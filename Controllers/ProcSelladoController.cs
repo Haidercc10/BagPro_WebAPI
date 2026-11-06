@@ -20,17 +20,6 @@ namespace BagproWebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/ProcExtrusion
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProcSellado>>> GetProcExtrusions()
-        {
-            if (_context.ProcExtrusions == null)
-            {
-                return NotFound();
-            }
-            return await _context.ProcSellados.ToListAsync();
-        }
-
         // Consulta para traer las unidades, paquetes o kilos pesados en una OT.
         [HttpGet("OT/{ot}")]
         public async Task<ActionResult> GetOT(string ot)
@@ -612,25 +601,6 @@ namespace BagproWebAPI.Controllers
 #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
         }
 
-        // Consulta que devolverá la información de una orden de trabajo en un proceso en especifico
-        [HttpGet("getInformacionOrden_Proceso/{orden}/{proceso}")]
-        public ActionResult GetInformacionOrden_Proceso(string orden, string proceso)
-        {
-#pragma warning disable CS8604 // Possible null reference argument
-            List<string> procesos = new List<string>();
-            foreach (var item in proceso.Split("|"))
-            {
-                procesos.Add(item);
-            }
-            var sellado = from sel in _context.Set<ProcSellado>()
-                          where sel.Ot == orden &&
-                                procesos.Contains(sel.NomStatus) && 
-                                sel.RemplazoItem != "Etiqueta eliminada desde App Plasticaribe"
-                          select sel;
-#pragma warning restore CS8604 // Possible null reference argument.
-            return sellado.Any() ? Ok(sellado) : BadRequest();
-        }
-
         /** Eliminar bultos de procsellado*/
         [HttpDelete("EliminarRollosSellado_Wiketiado/{id}")]
         public ActionResult<ProcSellado> DeleteRollos_Sellado(int id)
@@ -912,23 +882,6 @@ namespace BagproWebAPI.Controllers
             return Convert.ToString(response.Status) == "SUCCESS" ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("putEnvioZeus/{rollo}")]
-        public async Task<ActionResult> PutEnvioZeusProcSellado(int rollo)
-        {
-            var procSellado = await (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefaultAsync();
-
-            if (procSellado != null)
-            {
-                var update = _context.Database.ExecuteSql($"UPDATE ProcSellado SET EnvioZeus = '1' WHERE Item = {rollo}");
-                procSellado = await (from pro in _context.Set<ProcSellado>() where pro.Item == rollo select pro).FirstOrDefaultAsync();
-                return Ok(procSellado);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
         [HttpGet("getProduccionSellado/{ot}")]
         public async Task<ActionResult> GetProduccionSellado(string ot)
         {
@@ -1000,22 +953,6 @@ namespace BagproWebAPI.Controllers
             else return BadRequest("No existe el bulto.");
         }
 
-
-        [HttpPost("putReversionEnvioZeus_ProcSellado")]
-        public IActionResult PutReversionEnvioZeus_ProcSellado([FromBody] List<int> rolls)
-        {
-            if (rolls == null || rolls.Count == 0)
-                return BadRequest();
-
-            var items = string.Join(",", rolls);
-
-            _context.Database.ExecuteSqlRaw($@"
-                UPDATE ProcSellado
-                SET EnvioZeus = 0
-                WHERE Item IN ({items})");
-
-            return NoContent();
-        }
 
     }
 }

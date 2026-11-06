@@ -43,29 +43,6 @@ namespace BagproWebAPI.Controllers
         }
 
         /** Cargar nombre de Operarios */
-        [HttpGet("NombreOperarios")]
-        public async Task<ActionResult> GetNombreOperariosProceso()
-        {
-            var Proceso = "EXTRUSION";
-            var operariosProceso = await _context.OperariosProcesos.AsNoTracking()
-                                         .Where(P => P.Planta == Proceso)
-                                         .Select(Ope => new
-                                         {
-                                           Ope.Nombre
-                                         })
-                                         .ToListAsync();
-                                                              
-
-            if (operariosProceso == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(operariosProceso);
-            }             
-        }
-
         // PUT: api/OperariosProcesos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -23,17 +23,6 @@ namespace BagproWebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/ClientesOtItems
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClientesOtItem>>> GetClientesOtItems()
-        {
-          if (_context.ClientesOtItems == null)
-          {
-              return NotFound();
-          }
-            return await _context.ClientesOtItems.ToListAsync();
-        }
-
         // GET: api/ClientesOtItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientesOtItem>> GetClientesOtItem(int id)
@@ -120,39 +109,6 @@ namespace BagproWebAPI.Controllers
                 items.AddRange(idClientesItem.Take(1));
                 if (rolls.Count() == count) return Ok(items);
             }
-            return Ok(items);
-        }
-
-        //Consultar por Id de Cliente Item
-        [HttpPost("OtItem2")]
-        public async Task<IActionResult> GetIdClientesOtItem2([FromBody] List<int> rolls, string? sales = "")
-        {
-            var items = await (
-                from cliOT in _context.Set<ClientesOtItem>()
-                join ven in _context.Set<Vendedore>()
-                    on cliOT.UsrModifica equals ven.Id
-                where rolls.Contains(Convert.ToInt32(cliOT.ClienteItems))
-                      && (string.IsNullOrEmpty(sales) || cliOT.UsrModifica == sales)
-                select new
-                {
-                    ClienteItems = cliOT.ClienteItems,
-                    ClienteItemsNom = cliOT.ClienteItemsNom,
-                    Cliente = cliOT.Cliente,
-                    ClienteNom = cliOT.ClienteNom,
-                    PtPresentacionNom =
-                        cliOT.PtPresentacionNom.Trim() == "Kilo" ? "Kg" :
-                        cliOT.PtPresentacionNom.Trim() == "Unidad" ? "Und" :
-                        cliOT.PtPresentacionNom.Trim() == "MTS" ? "MTS" :
-                        "Paquete",
-                    DatosValorKg = cliOT.DatosValorKg,
-                    NombreCompleto = ven.NombreCompleto,
-                    Codigo_Asesor = cliOT.UsrModifica
-                }
-            )
-            .GroupBy(x => x.ClienteItems)
-            .Select(g => g.First())
-            .ToListAsync();
-
             return Ok(items);
         }
 

@@ -42,20 +42,6 @@ namespace BagproWebAPI.Controllers
             return procImpresionRollosBopp;
         }
 
-        //Consulta por numero de orden de trabajo de Impresion
-        [HttpGet("consultaOtImpresion/{ot}")]
-        public async Task<ActionResult> consultaOtImpresion(string ot)
-        {
-            var con = await _context.ProcImpresionRollosBopps
-                            .AsNoTracking()
-                            .Where(imp => imp.OtImp == ot)
-                            .Select(imp => new {
-                                imp.Ot
-                            }).ToListAsync();
-
-            return Ok(con);
-        }
-
         // PUT: api/ProcImpresionRollosBopp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
