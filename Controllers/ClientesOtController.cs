@@ -247,6 +247,7 @@ namespace BagproWebAPI.Controllers
                           SelladoCorte_PesoProducto = ot.PtPesopt,
                           SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
                           SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
+                          SelladoCorte_CalibreCliente = (ot.EtiquetaLargo ?? "").Trim(), // EtiquetaLargo sin respaldo al Largo: Calibre Cliente de corte en Plasticaribe
                           SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
 
                           // Información de Mezclas
@@ -669,6 +670,7 @@ namespace BagproWebAPI.Controllers
                                    SelladoCorte_Fuelle = clot.PtFuelle,
                                    SelladoCorte_Etiqueta_Ancho = ot.Etiqueta.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtAnchopt) : ot.Etiqueta.Trim(),
                                    SelladoCorte_Etiqueta_Largo = ot.EtiquetaLargo.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtLargopt) : ot.EtiquetaLargo.Trim(),
+                                   SelladoCorte_CalibreCliente = (clot.EtiquetaLargo ?? "").Trim(), // EtiquetaLargo de la OT sin respaldo al Largo: Calibre Cliente de corte en Plasticaribe
                                    SelladoCorte_Calibre = (clot.EtiquetaLargo ?? "").Trim() == "" || (clot.EtiquetaLargo ?? "").Trim() == "0" ? Convert.ToString(clot.ExtCalibre) : clot.EtiquetaLargo.Trim(),
                                    SelladoCorte_Etiqueta_Fuelle = ot.EtiquetaFuelle.Trim() == "" || ot.Etiqueta.Trim() == "0" ? Convert.ToString(ot.PtFuelle) : ot.EtiquetaFuelle.Trim(),
                                    TpSellado_Id = clot.PtSelladoPt.Trim(),
