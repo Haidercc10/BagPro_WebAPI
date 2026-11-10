@@ -1128,6 +1128,13 @@ namespace BagproWebAPI.Controllers
                                      Peso_Millar = ot.PtPesoMillar,
                                      CantBolsasxPaquete = ot.PtQtyPquete,
                                      CantBolsasxBulto = ot.PtQtyBulto,
+                                     // Procesos por los que pasa la orden de trabajo
+                                     Extrusion = ot.Extrusion.Trim() == "1" ? true : false,
+                                     Impresion = ot.Impresion.Trim() == "1" ? true : false,
+                                     Rotograbado = ot.Lamiando.Trim() == "1" ? true : false,
+                                     Laminado = ot.Laminado2.Trim() == "1" ? true : false,
+                                     Corte = ot.Corte.Trim() == "1" ? true : false,
+                                     Sellado = ot.Pterminado.Trim() == "1" ? true : false,
                                  }).ToListAsync();
             return Ok(ordenesTrabajo);
 #pragma warning restore IDE0075 // Simplify conditional expression
