@@ -834,10 +834,11 @@ namespace BagproWebAPI.Controllers
         [HttpGet("getPresentacionItem/{item}")]
         public async Task<ActionResult> GetPresentacionItem(int item)
         {
-            var presentacion = await (from ot in _context.Set<ClientesOtItem>()
+            // Solo se devuelve la presentacion (el front solo usa ptPresentacionNom); antes viajaba la fila completa del item
+            var presentacion = await (from ot in _context.Set<ClientesOtItem>().AsNoTracking()
                                       where ot.ClienteItems == item
                                       orderby ot.Item descending
-                                      select ot).FirstOrDefaultAsync();
+                                      select new { ot.PtPresentacionNom }).FirstOrDefaultAsync();
             return Ok(presentacion);
         }
 
