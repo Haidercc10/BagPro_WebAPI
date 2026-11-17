@@ -19,6 +19,7 @@ namespace BagproWebAPI.Controllers
         private const string RecursoBloqueo = "CrearClienteItem";
         private const int TiempoBloqueoMs = 10000;
         private static readonly Regex NombreBaseValido = new(@"^[A-Za-z0-9_]+$", RegexOptions.Compiled);
+        private static readonly Regex ServidorValido = new(@"^[A-Za-z0-9_.\-]+$", RegexOptions.Compiled);
 
         /// <summary>
         /// Indica si el item de la ficha ya existe por nombre normalizado o por ficha técnica.
@@ -34,7 +35,7 @@ namespace BagproWebAPI.Controllers
 
         /// <summary>
         /// Crea un item con una presentación. En una transacción: bloqueo de numeración (sp_getapplock),
-        /// revalidación de duplicados, código = MAX(ClienteItems) + 1, comprobación de que el código no exista
+        /// revalidación de duplicados, código = mayor entre MAX(ClienteItems), MAX(Productos.Prod_Id) y MAX(Articulo.Codigo de Zeus) + 1, comprobación de que el código no exista
         /// en Plasticaribe (Productos) e inserción de una fila en ClientesOT_Item.
         /// </summary>
         /// <param name="dto">Ficha del item.</param>
@@ -45,8 +46,17 @@ namespace BagproWebAPI.Controllers
             string? baseDatos = ObtenerBasePlasticaribe();
             if (baseDatos == null) return Problem("Falta la configuración CreacionItems:BasePlasticaribe o no es válida.");
 
+            var zeus = ObtenerZeus();
+            if (zeus == null) return Problem("Falta la configuración CreacionItems:ServidorZeus / CreacionItems:BaseZeus o no es válida.");
+
             var item = await ConstruirFilaAsync(dto);
             if (item == null) return ValidationProblem(ModelState);
+
+            // Máximo de Zeus fuera de la transacción, para no involucrar al servidor vinculado en ella. Las altas web
+            // se serializan con el bloqueo sobre BagPro; Zeus solo evita reutilizar códigos que ya existen allá.
+            int maxZeus;
+            try { maxZeus = await MaxArticuloZeusAsync(zeus.Value.Servidor, zeus.Value.Base); }
+            catch (SqlException ex) { return Problem($"No se pudo consultar el consecutivo de Zeus: {ex.Message}", statusCode: StatusCodes.Status502BadGateway); }
 
             var estrategia = _context.Database.CreateExecutionStrategy();
             return await estrategia.ExecuteAsync<IActionResult>(async () =>
@@ -59,7 +69,10 @@ namespace BagproWebAPI.Controllers
                 var duplicado = await BuscarDuplicadoAsync(dto);
                 if (duplicado != null) return Conflict(duplicado);
 
-                int codigo = (await _context.ClientesOtItems.MaxAsync(c => c.ClienteItems) ?? 0) + 1;
+                // El consecutivo es el mayor entre BagPro, Plasticaribe y Zeus, por si las bases se desfasan.
+                int maxBagPro = await _context.ClientesOtItems.MaxAsync(c => c.ClienteItems) ?? 0;
+                int maxPlasticaribe = await MaxProductoPlasticaribeAsync(baseDatos);
+                int codigo = Math.Max(Math.Max(maxBagPro, maxPlasticaribe), maxZeus) + 1;
                 if (await ExisteProductoPlasticaribeAsync(baseDatos, codigo))
                     return Conflict(new { mensaje = $"El código {codigo} ya existe en Plasticaribe (Productos). Revise la numeración antes de reintentar.", codigo });
 
@@ -485,6 +498,48 @@ namespace BagproWebAPI.Controllers
                 $"SET @existe = CASE WHEN EXISTS (SELECT 1 FROM [{baseDatos}].dbo.Productos WHERE Prod_Id = @codigo) THEN 1 ELSE 0 END;",
                 existe, new SqlParameter("@codigo", SqlDbType.Int) { Value = codigo });
             return existe.Value is bool b && b;
+        }
+
+        /// <summary>
+        /// Mayor Prod_Id de Productos en la base de Plasticaribe del mismo servidor.
+        /// </summary>
+        /// <param name="baseDatos">Nombre validado de la base de Plasticaribe.</param>
+        /// <returns>El mayor código, o 0 si no hay productos.</returns>
+        private async Task<int> MaxProductoPlasticaribeAsync(string baseDatos)
+        {
+            var maximo = new SqlParameter("@maximo", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            await _context.Database.ExecuteSqlRawAsync(
+                $"SELECT @maximo = ISNULL(MAX(Prod_Id), 0) FROM [{baseDatos}].dbo.Productos;", maximo);
+            return maximo.Value is int m ? m : 0;
+        }
+
+        /// <summary>
+        /// Mayor código numérico de 6 dígitos de los artículos de Zeus, leído con OPENQUERY por el servidor vinculado
+        /// (la consulta se ejecuta en Zeus y solo regresa el máximo).
+        /// </summary>
+        /// <param name="servidor">Servidor vinculado validado (ej. 192.168.0.85).</param>
+        /// <param name="baseZeus">Base validada de Zeus (Inventario_Prea21 en pruebas, Inventario en producción).</param>
+        /// <returns>El mayor código, o 0 si no hay.</returns>
+        private async Task<int> MaxArticuloZeusAsync(string servidor, string baseZeus)
+        {
+            var maximo = new SqlParameter("@maximo", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            string consultaRemota = $"SELECT MAX(CONVERT(int, RTRIM(Codigo))) AS Maximo FROM [{baseZeus}].dbo.Articulo WHERE LEN(RTRIM(Codigo)) = 6 AND RTRIM(Codigo) NOT LIKE ''%[^0-9]%''";
+            await _context.Database.ExecuteSqlRawAsync(
+                $"SELECT @maximo = ISNULL(Maximo, 0) FROM OPENQUERY([{servidor}], '{consultaRemota}');", maximo);
+            return maximo.Value is int m ? m : 0;
+        }
+
+        /// <summary>
+        /// Lee CreacionItems:ServidorZeus y CreacionItems:BaseZeus.
+        /// </summary>
+        /// <returns>Servidor y base si ambos son válidos; si no, null.</returns>
+        private (string Servidor, string Base)? ObtenerZeus()
+        {
+            string? servidor = _configuration["CreacionItems:ServidorZeus"];
+            string? baseZeus = _configuration["CreacionItems:BaseZeus"];
+            bool valido = !string.IsNullOrWhiteSpace(servidor) && ServidorValido.IsMatch(servidor)
+                && !string.IsNullOrWhiteSpace(baseZeus) && NombreBaseValido.IsMatch(baseZeus);
+            return valido ? (servidor!, baseZeus!) : null;
         }
 
         /// <summary>

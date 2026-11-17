@@ -18,14 +18,15 @@ namespace BagproWebAPI.Service
         private static readonly Regex NumeroUnidadRegex = new(@"(\d)\s+(CMS|GR)\b", RegexOptions.Compiled);
 
         /// <summary>
-        /// Presentaciones de BagPro (PtPresentacionNom) con su código (PtPresentacion), igual que en TR_CrearOTs.
+        /// Presentaciones de BagPro (PtPresentacionNom) con su código (PtPresentacion), según los datos de ClientesOT_Item (Kilo 2, Unidad 4, Paquete 5, MTS 7).
         /// </summary>
         private static readonly Dictionary<string, (string Nombre, int Codigo)> Presentaciones = new(StringComparer.OrdinalIgnoreCase)
         {
             ["Kilo"] = ("Kilo", 2), ["Kg"] = ("Kilo", 2), ["KLS"] = ("Kilo", 2),
             ["Unidad"] = ("Unidad", 4), ["Und"] = ("Unidad", 4),
             ["Paquete"] = ("Paquete", 5), ["PAQ"] = ("Paquete", 5),
-            ["MTS"] = ("MTS", 3),
+            // En ClientesOT_Item, MTS tiene código 7 (el 3 es Rollo), según los datos de plasticaribe2.
+            ["MTS"] = ("MTS", 7), ["Metro"] = ("MTS", 7),
         };
 
         /// <summary>
