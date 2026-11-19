@@ -1,4 +1,5 @@
 using System.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using BagproWebAPI.Models;
 using BagproWebAPI.Models.Dtos;
@@ -17,25 +18,50 @@ namespace BagproWebAPI.Controllers
     {
         private const string UsuarioCreacion = "APP PLASTICARIBE";
         private const string RecursoBloqueo = "CrearClienteItem";
+        /// <summary>Código que BagPro escritorio guarda en tintas, capas, sellado y productos de mezcla sin usar.</summary>
+        private const string CodigoVacio = "1";
+
+        /// <summary>Referencia de tinta con color hexadecimal: #RRGGBB.</summary>
+        private static readonly Regex ColorHexadecimal = new(@"^#[0-9A-Fa-f]{6}$", RegexOptions.Compiled);
+        /// <summary>Código que BagPro escritorio guarda en los pigmentos de mezcla sin usar.</summary>
+        private const string PigmentoVacio = "2001";
+        /// <summary>Tipo de impresión que BagPro escritorio deja cuando el item no lleva impresión (FLEXOGRAFIA).</summary>
+        private const int FlexoPorDefecto = 2;
         private const int TiempoBloqueoMs = 10000;
         private static readonly Regex NombreBaseValido = new(@"^[A-Za-z0-9_]+$", RegexOptions.Compiled);
         private static readonly Regex ServidorValido = new(@"^[A-Za-z0-9_.\-]+$", RegexOptions.Compiled);
 
         /// <summary>
-        /// Indica si el item de la ficha ya existe por nombre normalizado o por ficha técnica.
+        /// Valida la ficha antes de crear: el nombre normalizado repetido bloquea (409). Si no hay duplicado devuelve
+        /// el consecutivo que tendría el item (estimado: se fija al crear, bajo bloqueo) y los items con la misma
+        /// ficha técnica, solo como aviso (pueden ser el mismo producto con otras características).
         /// </summary>
         /// <param name="dto">Ficha del item.</param>
-        /// <returns>200 { duplicado:false } o 409 { tipo:"nombre"|"ficha", codigo, nombre }.</returns>
+        /// <returns>200 { duplicado:false, siguienteCodigo, similares:[{ codigo, nombre }] } o 409 { tipo:"nombre", codigo, nombre }.</returns>
         [HttpPost("validarDuplicado")]
         public async Task<IActionResult> ValidarDuplicado([FromBody] CrearItemDto dto)
         {
             var duplicado = await BuscarDuplicadoAsync(dto);
-            return duplicado != null ? Conflict(duplicado) : Ok(new { duplicado = false });
+            if (duplicado != null) return Conflict(duplicado);
+
+            string? baseDatos = ObtenerBasePlasticaribe();
+            if (baseDatos == null) return Problem("Falta la configuración CreacionItems:BasePlasticaribe o no es válida.");
+            var zeus = ObtenerZeus();
+            if (zeus == null) return Problem("Falta la configuración CreacionItems:ServidorZeus / CreacionItems:BaseZeus o no es válida.");
+
+            int desde = Math.Max(await _context.ClientesOtItems.MaxAsync(c => c.ClienteItems) ?? 0, await MaxProductoPlasticaribeAsync(baseDatos)) + 1;
+            HashSet<int> ocupadosZeus;
+            try { ocupadosZeus = await CodigosArticuloZeusDesdeAsync(zeus.Value.Servidor, zeus.Value.Base, desde); }
+            catch (SqlException ex) { return Problem($"No se pudo consultar los códigos de Zeus: {ex.Message}", statusCode: StatusCodes.Status502BadGateway); }
+            int siguienteCodigo = desde;
+            while (ocupadosZeus.Contains(siguienteCodigo)) siguienteCodigo++;
+
+            return Ok(new { duplicado = false, siguienteCodigo, similares = await BuscarSimilaresAsync(dto) });
         }
 
         /// <summary>
         /// Crea un item con una presentación. En una transacción: bloqueo de numeración (sp_getapplock),
-        /// revalidación de duplicados, código = mayor entre MAX(ClienteItems), MAX(Productos.Prod_Id) y MAX(Articulo.Codigo de Zeus) + 1, comprobación de que el código no exista
+        /// revalidación del nombre duplicado, código = mayor entre MAX(ClienteItems) y MAX(Productos.Prod_Id) + 1 saltando los códigos que ya existen en Zeus, comprobación de que el código no exista
         /// en Plasticaribe (Productos) e inserción de una fila en ClientesOT_Item.
         /// </summary>
         /// <param name="dto">Ficha del item.</param>
@@ -52,11 +78,13 @@ namespace BagproWebAPI.Controllers
             var item = await ConstruirFilaAsync(dto);
             if (item == null) return ValidationProblem(ModelState);
 
-            // Máximo de Zeus fuera de la transacción, para no involucrar al servidor vinculado en ella. Las altas web
-            // se serializan con el bloqueo sobre BagPro; Zeus solo evita reutilizar códigos que ya existen allá.
-            int maxZeus;
-            try { maxZeus = await MaxArticuloZeusAsync(zeus.Value.Servidor, zeus.Value.Base); }
-            catch (SqlException ex) { return Problem($"No se pudo consultar el consecutivo de Zeus: {ex.Message}", statusCode: StatusCodes.Status502BadGateway); }
+            // Códigos de Zeus ocupados desde el siguiente consecutivo estimado, leídos fuera de la transacción para no
+            // involucrar al servidor vinculado en ella. Dentro del bloqueo el consecutivo solo puede ser igual o mayor,
+            // así que este conjunto cubre todos los candidatos.
+            int desde = Math.Max(await _context.ClientesOtItems.MaxAsync(c => c.ClienteItems) ?? 0, await MaxProductoPlasticaribeAsync(baseDatos)) + 1;
+            HashSet<int> ocupadosZeus;
+            try { ocupadosZeus = await CodigosArticuloZeusDesdeAsync(zeus.Value.Servidor, zeus.Value.Base, desde); }
+            catch (SqlException ex) { return Problem($"No se pudo consultar los códigos de Zeus: {ex.Message}", statusCode: StatusCodes.Status502BadGateway); }
 
             var estrategia = _context.Database.CreateExecutionStrategy();
             return await estrategia.ExecuteAsync<IActionResult>(async () =>
@@ -69,10 +97,12 @@ namespace BagproWebAPI.Controllers
                 var duplicado = await BuscarDuplicadoAsync(dto);
                 if (duplicado != null) return Conflict(duplicado);
 
-                // El consecutivo es el mayor entre BagPro, Plasticaribe y Zeus, por si las bases se desfasan.
+                // El consecutivo sigue a BagPro y Plasticaribe (el mayor de los dos); si el código ya existe en Zeus
+                // se salta al siguiente libre. Los códigos sueltos y altos de Zeus no arrastran la numeración.
                 int maxBagPro = await _context.ClientesOtItems.MaxAsync(c => c.ClienteItems) ?? 0;
                 int maxPlasticaribe = await MaxProductoPlasticaribeAsync(baseDatos);
-                int codigo = Math.Max(Math.Max(maxBagPro, maxPlasticaribe), maxZeus) + 1;
+                int codigo = Math.Max(maxBagPro, maxPlasticaribe) + 1;
+                while (ocupadosZeus.Contains(codigo)) codigo++;
                 if (await ExisteProductoPlasticaribeAsync(baseDatos, codigo))
                     return Conflict(new { mensaje = $"El código {codigo} ya existe en Plasticaribe (Productos). Revise la numeración antes de reintentar.", codigo });
 
@@ -225,14 +255,14 @@ namespace BagproWebAPI.Controllers
             if (c == null) return NotFound(new { mensaje = $"El item {codigo} no existe." });
 
             var tintas = new[] { c.ImpTinta1, c.ImpTinta2, c.ImpTinta3, c.ImpTinta4, c.ImpTinta5, c.ImpTinta6, c.ImpTinta7, c.ImpTinta8 }
-                .Select(EnteroONulo).Where(t => t is > 0).Select(t => t!.Value).ToList();
+                .Select(EnteroONulo).Where(t => t is > 1).Select(t => t!.Value).ToList(); // 1 = sin tinta
             var capas = new[]
             {
                 (Capa: c.LamCapa1, Calibre: c.LamCalibre1, Cantidad: c.Cant1),
                 (Capa: c.LamCapa2, Calibre: c.LamCalibre2, Cantidad: c.Cant2),
                 (Capa: c.LamCapa3, Calibre: c.LamCalibre3, Cantidad: c.Cant3),
             }
-            .Where(x => EnteroONulo(x.Capa) is > 0)
+            .Where(x => EnteroONulo(x.Capa) is > 1) // 1 = sin capa
             .Select(x => new { capa = EnteroONulo(x.Capa), calibre = x.Calibre, cantidad = x.Cantidad })
             .ToList();
 
@@ -274,7 +304,9 @@ namespace BagproWebAPI.Controllers
                 pista = c.ImpPista,
                 tintas,
                 capasLaminado = capas,
-                tipoSellado = EnteroONulo(c.PtSelladoPt),
+                tipoSellado = EnteroONulo(c.PtSelladoPt) is > 1 ? EnteroONulo(c.PtSelladoPt) : null, // 1 = sin sellado
+                mezcla = EnteroONulo(c.MezModo),
+                mezclaNom = c.MezModoNom?.Trim(),
                 tipoSelladoNom = c.PtSelladoPtNom?.Trim(),
                 cantidadPaquete = c.PtQtyPquete,
                 cantidadBulto = c.PtQtyBulto,
@@ -288,11 +320,11 @@ namespace BagproWebAPI.Controllers
         }
 
         /// <summary>
-        /// Busca un item duplicado: primero por nombre normalizado (en todos los items) y luego por ficha
-        /// (mismo cliente, formato, material, ancho, largo, fuelle y calibre). Ambos bloquean la creación.
+        /// Busca un item duplicado por nombre normalizado (en todos los items). Bloquea la creación.
+        /// La coincidencia de ficha técnica no bloquea: ver <see cref="BuscarSimilaresAsync"/>.
         /// </summary>
         /// <param name="dto">Ficha del item.</param>
-        /// <returns>null si no hay duplicado; si lo hay, { tipo, codigo, nombre }.</returns>
+        /// <returns>null si no hay duplicado; si lo hay, { tipo = "nombre", codigo, nombre }.</returns>
         private async Task<object?> BuscarDuplicadoAsync(CrearItemDto dto)
         {
             string nombre = NombreItemNormalizador.Normalizar(dto.Nombre);
@@ -307,23 +339,42 @@ namespace BagproWebAPI.Controllers
                 .OrderBy(c => c.ClienteItems)
                 .FirstOrDefault();
             if (porNombre != null) return new { tipo = "nombre", codigo = porNombre.ClienteItems, nombre = porNombre.ClienteItemsNom?.Trim() };
+            return null;
+        }
 
+        /// <summary>
+        /// Items con la misma ficha técnica (cliente, formato, material, pigmento, mezcla, ancho, largo, fuelle y calibre). Solo es un
+        /// aviso: puede ser el mismo producto con otras características (color, talla, cantidad...).
+        /// </summary>
+        /// <param name="dto">Ficha del item.</param>
+        /// <returns>Hasta 5 items { codigo, nombre }, del más antiguo al más nuevo.</returns>
+        private async Task<List<ItemSimilar>> BuscarSimilaresAsync(CrearItemDto dto)
+        {
             string formato = dto.Formato!.Value.ToString();
             string material = dto.Material!.Value.ToString();
+            string pigmento = dto.Pigmento?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+            string mezcla = dto.Mezcla?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
             decimal ancho = Math.Round(dto.Ancho, 2), largo = Math.Round(dto.Largo, 2), fuelle = Math.Round(dto.Fuelle, 2), calibre = Math.Round(dto.Calibre, 2);
-            var porFicha = await _context.ClientesOtItems.AsNoTracking()
+            var similares = await _context.ClientesOtItems.AsNoTracking()
                 .Where(c => c.Cliente == dto.Cliente
                     && c.PtFormatopt!.Trim() == formato
                     && c.ExtMaterial!.Trim() == material
+                    && (c.ExtPigmento ?? string.Empty).Trim() == pigmento
+                    && (c.MezModo ?? string.Empty).Trim() == mezcla
                     && (c.PtAnchopt ?? 0) == ancho
                     && (c.PtLargopt ?? 0) == largo
                     && (c.PtFuelle ?? 0) == fuelle
                     && (c.ExtCalibre ?? 0) == calibre)
-                .OrderBy(c => c.ClienteItems)
                 .Select(c => new { c.ClienteItems, c.ClienteItemsNom })
-                .FirstOrDefaultAsync();
-            return porFicha == null ? null : new { tipo = "ficha", codigo = porFicha.ClienteItems, nombre = porFicha.ClienteItemsNom.Trim() };
+                .Distinct()
+                .OrderBy(c => c.ClienteItems)
+                .Take(5)
+                .ToListAsync();
+            return similares.Select(c => new ItemSimilar(c.ClienteItems ?? 0, (c.ClienteItemsNom ?? string.Empty).Trim())).ToList();
         }
+
+        /// <summary>Item con la misma ficha técnica, para el aviso de confirmación.</summary>
+        private sealed record ItemSimilar(int codigo, string nombre);
 
         /// <summary>
         /// Arma la fila de ClientesOT_Item a partir de la ficha: resuelve los nombres de catálogo de BagPro y aplica
@@ -366,11 +417,11 @@ namespace BagproWebAPI.Controllers
                 selladoNom = await _context.SelladoPts.AsNoTracking().Where(x => x.Id == dto.TipoSellado).Select(x => x.NombreFormato).FirstOrDefaultAsync();
                 if (selladoNom == null) ModelState.AddModelError(nameof(dto.TipoSellado), "El tipo de sellado no existe.");
             }
-            if (dto.Impresion && dto.TipoImpresion != null)
-            {
-                flexoNom = await _context.ImpresionFlexos.AsNoTracking().Where(x => x.Id == dto.TipoImpresion).Select(x => x.NombreMaterial).FirstOrDefaultAsync();
-                if (flexoNom == null) ModelState.AddModelError(nameof(dto.TipoImpresion), "El tipo de impresión no existe.");
-            }
+            // Sin impresión, BagPro escritorio deja el tipo por defecto (2, FLEXOGRAFIA).
+            int flexo = dto.Impresion && dto.TipoImpresion != null ? dto.TipoImpresion.Value : FlexoPorDefecto;
+            flexoNom = await _context.ImpresionFlexos.AsNoTracking().Where(x => x.Id == flexo).Select(x => x.NombreMaterial).FirstOrDefaultAsync();
+            if (flexoNom == null && dto.Impresion && dto.TipoImpresion != null)
+                ModelState.AddModelError(nameof(dto.TipoImpresion), "El tipo de impresión no existe.");
 
             var tintas = dto.Impresion ? (dto.Tintas ?? new List<int>()) : new List<int>();
             var nombresTintas = tintas.Count == 0 ? new Dictionary<int, string>()
@@ -385,6 +436,9 @@ namespace BagproWebAPI.Controllers
             foreach (int c in idsCapas.Where(c => !nombresCapas.ContainsKey(c)).Distinct())
                 ModelState.AddModelError(nameof(dto.CapasLaminado), $"La capa de laminado {c} no existe.");
 
+            var mezcla = await _context.BpMezclasPreDefs.AsNoTracking().FirstOrDefaultAsync(m => m.Item == dto.Mezcla);
+            if (mezcla == null) ModelState.AddModelError(nameof(dto.Mezcla), "La mezcla no existe.");
+
             string? vendedor = string.IsNullOrWhiteSpace(dto.Vendedor) ? null : dto.Vendedor.Trim();
             if (vendedor != null && !await _context.Vendedores.AsNoTracking().AnyAsync(v => v.Id == vendedor))
                 ModelState.AddModelError(nameof(dto.Vendedor), "El vendedor no existe.");
@@ -392,13 +446,14 @@ namespace BagproWebAPI.Controllers
             if (!ModelState.IsValid) return null;
 
             decimal precio = Math.Round(dto.Precio ?? 0, 2);
-            string? Tinta(int i) => i < tintas.Count ? tintas[i].ToString() : null;
-            string? TintaNom(int i) => i < tintas.Count ? Recortar(nombresTintas[tintas[i]], 30) : null;
+            // Los huecos sin tinta o sin capa quedan como en BagPro escritorio: código 1 y nombre vacío.
+            string Tinta(int i) => i < tintas.Count ? tintas[i].ToString() : CodigoVacio;
+            string TintaNom(int i) => i < tintas.Count ? Recortar(nombresTintas[tintas[i]], 30) ?? string.Empty : string.Empty;
             CapaLaminadoDto? Capa(int i) => i < capas.Count ? capas[i] : null;
-            string? CapaNom(int i) => i < capas.Count ? Recortar(nombresCapas[capas[i].Capa], 30) : null;
+            string CapaNom(int i) => i < capas.Count ? Recortar(nombresCapas[capas[i].Capa], 30) ?? string.Empty : string.Empty;
             DateTime ahora = DateTime.Now;
 
-            return new ClientesOtItem
+            var item = new ClientesOtItem
             {
                 Item = 0,
                 Cliente = dto.Cliente,
@@ -414,16 +469,17 @@ namespace BagproWebAPI.Controllers
                 ExtUnidades = dto.Unidad!.Value.ToString(),
                 ExtUnidadesNom = Recortar(unidadNom, 30),
                 ExtCalibre = Math.Round(dto.Calibre, 2),
+                ExtPeso = 0,
                 ExtAcho1 = Redondear(dto.AnchoExtrusion1),
                 ExtAcho2 = Redondear(dto.AnchoExtrusion2),
                 ExtAcho3 = Redondear(dto.AnchoExtrusion3),
                 ExtTratado = dto.Tratado?.ToString(),
                 ExtTratadoNom = Recortar(tratadoNom, 30),
                 Impresion = Indicador(dto.Impresion),
-                ImpFlexo = dto.Impresion ? dto.TipoImpresion?.ToString() : null,
-                ImpFlexoNom = Recortar(flexoNom, 30),
-                ImpRodillo = dto.Impresion ? dto.Rodillo : null,
-                ImpPista = dto.Impresion ? dto.Pista : null,
+                ImpFlexo = flexo.ToString(),
+                ImpFlexoNom = Recortar(flexoNom, 30) ?? string.Empty,
+                ImpRodillo = dto.Impresion ? dto.Rodillo ?? 0 : 0,
+                ImpPista = dto.Impresion ? dto.Pista ?? 0 : 0,
                 ImpTinta1 = Tinta(0), ImpTinta1Nom = TintaNom(0),
                 ImpTinta2 = Tinta(1), ImpTinta2Nom = TintaNom(1),
                 ImpTinta3 = Tinta(2), ImpTinta3Nom = TintaNom(2),
@@ -433,9 +489,9 @@ namespace BagproWebAPI.Controllers
                 ImpTinta7 = Tinta(6), ImpTinta7Nom = TintaNom(6),
                 ImpTinta8 = Tinta(7), ImpTinta8Nom = TintaNom(7),
                 Laminado2 = Indicador(dto.Laminado),
-                LamCapa1 = Capa(0)?.Capa.ToString(), LamCapa1Nom = CapaNom(0), LamCalibre1 = Redondear(Capa(0)?.Calibre), Cant1 = Capa(0)?.Cantidad,
-                LamCapa2 = Capa(1)?.Capa.ToString(), LamCapa2Nom = CapaNom(1), LamCalibre2 = Redondear(Capa(1)?.Calibre), Cant2 = Capa(1)?.Cantidad,
-                LamCapa3 = Capa(2)?.Capa.ToString(), LamCapa3Nom = CapaNom(2), LamCalibre3 = Redondear(Capa(2)?.Calibre), Cant3 = Capa(2)?.Cantidad,
+                LamCapa1 = Capa(0)?.Capa.ToString() ?? CodigoVacio, LamCapa1Nom = CapaNom(0), LamCalibre1 = Redondear(Capa(0)?.Calibre) ?? 0, Cant1 = Capa(0)?.Cantidad ?? 0,
+                LamCapa2 = Capa(1)?.Capa.ToString() ?? CodigoVacio, LamCapa2Nom = CapaNom(1), LamCalibre2 = Redondear(Capa(1)?.Calibre) ?? 0, Cant2 = Capa(1)?.Cantidad ?? 0,
+                LamCapa3 = Capa(2)?.Capa.ToString() ?? CodigoVacio, LamCapa3Nom = CapaNom(2), LamCalibre3 = Redondear(Capa(2)?.Calibre) ?? 0, Cant3 = Capa(2)?.Cantidad ?? 0,
                 Lamiando = Indicador(dto.Rotograbado),
                 Pterminado = Indicador(dto.Sellado),
                 PtFormatopt = dto.Formato!.Value.ToString(),
@@ -444,17 +500,25 @@ namespace BagproWebAPI.Controllers
                 PtMargen = 0,
                 PtPesoMillar = Redondear(dto.PesoMillar) ?? 0,
                 PtPesoRollo = 0,
-                PtQtyBulto = dto.CantidadBulto,
+                PtQtyBulto = dto.CantidadBulto ?? 0,
                 PtPresentacion = codigoPresentacion.ToString(),
                 PtPresentacionNom = presentacion,
-                PtQtyPquete = dto.CantidadPaquete,
-                PtSelladoPt = dto.TipoSellado?.ToString(),
-                PtSelladoPtNom = Recortar(selladoNom, 50),
+                PtQtyPquete = dto.CantidadPaquete ?? 0,
+                PtSelladoPt = dto.TipoSellado?.ToString() ?? CodigoVacio,
+                PtSelladoPtNom = Recortar(selladoNom, 50) ?? string.Empty,
                 PtAnchopt = Math.Round(dto.Ancho, 2),
                 PtLargopt = Math.Round(dto.Largo, 2),
                 PtFuelle = Math.Round(dto.Fuelle, 2),
+                // Sin OT: cantidades y valores de OT en 0, como BagPro escritorio deja los campos que no aplican.
+                DatosFechaDespachar = ahora.Date,
+                DatoscantBolsa = 0,
                 DatosvalorBolsa = precio,
-                DatosValorKg = presentacion == "Kilo" ? precio : null,
+                DatoscantKg = 0,
+                DatosmargenKg = 0,
+                DatosotKg = 0,
+                DatoscantBolsa2 = 0,
+                DatosValorKg = presentacion == "Kilo" ? precio : 0,
+                DatosvalorOt = 0,
                 Corte = Indicador(dto.Corte),
                 UsrCrea = UsuarioCreacion,
                 FechaCrea = ahora,
@@ -462,13 +526,98 @@ namespace BagproWebAPI.Controllers
                 FechaModifica = ahora,
                 Pedido = string.Empty,
                 Cyrel = Indicador(dto.Cyrel),
-                Observacion = string.IsNullOrWhiteSpace(dto.Observacion) ? null : dto.Observacion.Trim(),
+                Observacion = dto.Observacion?.Trim() ?? string.Empty,
                 Etiqueta = "0",
-                EtiquetaLargo = "0",
+                // BagPro escritorio guarda aquí el calibre de extrusión con dos decimales.
+                EtiquetaLargo = Math.Round(dto.Calibre, 2).ToString("0.00", CultureInfo.InvariantCulture),
                 EtiquetaFuelle = "0",
-                Dia = string.Empty,
-                Noche = string.Empty,
+                Pesopaquete = string.Empty,
+                PesoBulto = string.Empty,
+                Dia = "0",
+                Noche = "0",
+                DiaC = 0,
+                NocheC = 0,
             };
+            AplicarMezcla(item, mezcla!);
+            return item;
+        }
+
+        /// <summary>
+        /// Copia al item la mezcla predefinida de BagPro (bpMezclasPreDef), como SPCrearItem_DesdePlasticaribeBDD:
+        /// cabecera (Mezcla, MezModo, MezModoNom, Ncapas, % por capa) y los 4 productos y 2 pigmentos de cada capa.
+        /// Los componentes vacíos quedan como en BagPro escritorio: producto '1', pigmento '2001', nombre '0', 0 %.
+        /// </summary>
+        /// <param name="item">Fila de ClientesOT_Item.</param>
+        /// <param name="mezcla">Mezcla predefinida elegida.</param>
+        /// <returns>No retorna un valor.</returns>
+        private void AplicarMezcla(ClientesOtItem item, BpMezclasPreDef mezcla)
+        {
+            var entidad = _context.Model.FindEntityType(typeof(ClientesOtItem))!;
+            object? Leer(string propiedad) => typeof(BpMezclasPreDef).GetProperty(propiedad)!.GetValue(mezcla);
+            void Asignar(string propiedad, object? valor)
+            {
+                // Los textos se recortan al largo de la columna de destino (algunas columnas de nombre son de 30).
+                if (valor is string texto) valor = Recortar(texto, entidad.FindProperty(propiedad)?.GetMaxLength() ?? texto.Length);
+                typeof(ClientesOtItem).GetProperty(propiedad)!.SetValue(item, valor);
+            }
+            string Texto(object? valor, string vacio) => string.IsNullOrWhiteSpace(valor?.ToString()) ? vacio : valor!.ToString()!.Trim();
+
+            item.Mezcla = "Mezcla";
+            item.MezModo = mezcla.Item.ToString(CultureInfo.InvariantCulture);
+            Asignar(nameof(ClientesOtItem.MezModoNom), mezcla.Nombre.Trim());
+            item.Ncapas = mezcla.MezclasNro ?? 0;
+            for (int capa = 1; capa <= 3; capa++)
+            {
+                Asignar($"Mezporc{capa}", Leer($"Material{capa}X100") as decimal? ?? 0m);
+                for (int producto = 1; producto <= 4; producto++)
+                {
+                    Asignar($"Mezprod{producto}cap{capa}", Texto(Leer($"M{capa}p{producto}id"), CodigoVacio));
+                    Asignar($"Mezprod{producto}cap{capa}Nom", Texto(Leer($"M{capa}p{producto}nombre"), "0"));
+                    Asignar($"Porc{producto}cap{capa}", Leer($"M{capa}p{producto}x100") as decimal? ?? 0m);
+                }
+                for (int pigmento = 1; pigmento <= 2; pigmento++)
+                {
+                    Asignar($"Mezpigm{pigmento}cap{capa}", Texto(Leer($"M{capa}pig{pigmento}Id"), PigmentoVacio));
+                    Asignar($"Mezpigm{pigmento}cap{capa}Nom", Texto(Leer($"M{capa}pig{pigmento}Nombre"), "0"));
+                    Asignar($"Porcpig{pigmento}cap{capa}", Leer($"M{capa}pig{pigmento}X100") as decimal? ?? 0m);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Mezclas predefinidas de BagPro para el selector de la creación de items.
+        /// </summary>
+        /// <returns>200 con [{ item, nombre, capas }] ordenadas por nombre.</returns>
+        [HttpGet("catalogos/mezclas")]
+        public async Task<IActionResult> GetMezclasPredefinidas()
+        {
+            var mezclas = await _context.BpMezclasPreDefs.AsNoTracking()
+                .OrderBy(m => m.Nombre)
+                .Select(m => new { item = m.Item, nombre = m.Nombre.Trim(), capas = m.MezclasNro })
+                .ToListAsync();
+            return Ok(mezclas);
+        }
+
+        /// <summary>
+        /// Tintas de impresión de BagPro (sin la tinta 1, que BagPro usa para "sin tinta") cuya referencia es un
+        /// color hexadecimal (#RRGGBB).
+        /// </summary>
+        /// <returns>200 con [{ id, nombre, color }] ordenadas por nombre.</returns>
+        [HttpGet("catalogos/tintas")]
+        public async Task<IActionResult> GetTintas()
+        {
+            var tintas = await _context.ImpresionTinta.AsNoTracking()
+                .Where(t => t.Id > 1 && t.NombreMaterial.Trim() != string.Empty)
+                .OrderBy(t => t.NombreMaterial)
+                .Select(t => new { id = t.Id, nombre = t.NombreMaterial.Trim(), referencia = t.Referencia })
+                .ToListAsync();
+            // Solo las tintas cuya referencia es un color hexadecimal (#RRGGBB); algunas traen espacios antes del #
+            var conColor = tintas
+                .Select(t => new { t.id, t.nombre, color = (t.referencia ?? string.Empty).Trim() })
+                .Where(t => ColorHexadecimal.IsMatch(t.color))
+                .Select(t => new { t.id, t.nombre, color = t.color.ToUpperInvariant() })
+                .ToList();
+            return Ok(conColor);
         }
 
         /// <summary>
@@ -514,19 +663,22 @@ namespace BagproWebAPI.Controllers
         }
 
         /// <summary>
-        /// Mayor código numérico de 6 dígitos de los artículos de Zeus, leído con OPENQUERY por el servidor vinculado
-        /// (la consulta se ejecuta en Zeus y solo regresa el máximo).
+        /// Códigos numéricos de 6 dígitos de los artículos de Zeus iguales o mayores que <paramref name="desde"/>, leídos
+        /// con OPENQUERY por el servidor vinculado (la consulta se ejecuta en Zeus y solo regresa esos códigos).
         /// </summary>
         /// <param name="servidor">Servidor vinculado validado (ej. 192.168.0.85).</param>
         /// <param name="baseZeus">Base validada de Zeus (Inventario_Prea21 en pruebas, Inventario en producción).</param>
-        /// <returns>El mayor código, o 0 si no hay.</returns>
-        private async Task<int> MaxArticuloZeusAsync(string servidor, string baseZeus)
+        /// <param name="desde">Primer código candidato.</param>
+        /// <returns>Códigos ocupados en Zeus desde ese valor.</returns>
+        private async Task<HashSet<int>> CodigosArticuloZeusDesdeAsync(string servidor, string baseZeus, int desde)
         {
-            var maximo = new SqlParameter("@maximo", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            string consultaRemota = $"SELECT MAX(CONVERT(int, RTRIM(Codigo))) AS Maximo FROM [{baseZeus}].dbo.Articulo WHERE LEN(RTRIM(Codigo)) = 6 AND RTRIM(Codigo) NOT LIKE ''%[^0-9]%''";
-            await _context.Database.ExecuteSqlRawAsync(
-                $"SELECT @maximo = ISNULL(Maximo, 0) FROM OPENQUERY([{servidor}], '{consultaRemota}');", maximo);
-            return maximo.Value is int m ? m : 0;
+            // desde es un int, así que puede ir en el texto de OPENQUERY (que no admite parámetros).
+            string consultaRemota = $"SELECT DISTINCT CONVERT(int, RTRIM(Codigo)) AS Codigo FROM [{baseZeus}].dbo.Articulo " +
+                $"WHERE LEN(RTRIM(Codigo)) = 6 AND RTRIM(Codigo) NOT LIKE ''%[^0-9]%'' AND CONVERT(int, RTRIM(Codigo)) >= {desde.ToString(CultureInfo.InvariantCulture)}";
+            var codigos = await _context.Database
+                .SqlQueryRaw<int>($"SELECT Codigo AS Value FROM OPENQUERY([{servidor}], '{consultaRemota}')")
+                .ToListAsync();
+            return codigos.ToHashSet();
         }
 
         /// <summary>

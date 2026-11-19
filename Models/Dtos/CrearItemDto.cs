@@ -33,6 +33,10 @@ namespace BagproWebAPI.Models.Dtos
         [Required, Range(1, int.MaxValue)]
         public int? Material { get; set; }
 
+        /// <summary>Mezcla predefinida (bpMezclasPreDef.Item); llena MezModo y los componentes de la mezcla.</summary>
+        [Required, Range(1, int.MaxValue)]
+        public int? Mezcla { get; set; }
+
         /// <summary>Pigmento (ExtPigmento). Opcional.</summary>
         [Range(1, int.MaxValue)]
         public int? Pigmento { get; set; }
