@@ -14,13 +14,20 @@ namespace BagproWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]
-    public class ClientesOtItemsController : ControllerBase
+    public partial class ClientesOtItemsController : ControllerBase
     {
         private readonly plasticaribeContext _context;
+        private readonly IConfiguration _configuration;
 
-        public ClientesOtItemsController(plasticaribeContext context)
+        /// <summary>
+        /// Crea el controlador de ClientesOT_Item.
+        /// </summary>
+        /// <param name="context">Contexto de BagPro.</param>
+        /// <param name="configuration">Configuración; se usa para el nombre de la base de Plasticaribe en la creación de items.</param>
+        public ClientesOtItemsController(plasticaribeContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/ClientesOtItems
