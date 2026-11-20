@@ -1378,7 +1378,8 @@ namespace BagproWebAPI.Controllers
         /// Versión optimizada de <c>putObservationDeletedRolls</c>: hace un UPDATE por tabla (ProcExtrusion y ProcSellado) en
         /// lugar de una consulta y dos guardados por cada rollo. Compara el proceso completo (EXT → EXTRUSION, DBLD → DOBLADO,
         /// PERF → PERFORADO...) en vez de los 3 primeros caracteres, que nunca coincidían con DBLD/PERF y causaban un error 500.
-        /// Usa SQL directo porque ProcExtrusion tiene trigger y ProcSellado no tiene llave.
+        /// Usa SQL directo porque ProcExtrusion tiene trigger y ProcSellado no tiene llave. Cada tabla se actualiza con
+        /// "WHERE Item IN (...)" (los triggers de ambas tablas ya soportan varias filas por sentencia).
         /// </summary>
         /// <returns>200 con la cantidad de filas actualizadas y los rollos que no se encontraron en BagPro.</returns>
         [HttpPost("putObservationDeletedRolls2")]
@@ -1432,7 +1433,7 @@ namespace BagproWebAPI.Controllers
 
                     if (found.Count > 0)
                     {
-                        await ExecuteUpdatePerItemAsync("UPDATE ProcExtrusion SET Observacion = {0} WHERE Item = {{item}};", observation, found, cancellationToken);
+                        await ExecuteUpdateByItemsAsync("UPDATE ProcExtrusion SET Observacion = {0} WHERE Item IN ({items});", observation, found, cancellationToken);
                         updatedExtrusion = found.Count;
                     }
                 }
@@ -1449,7 +1450,7 @@ namespace BagproWebAPI.Controllers
 
                     if (found.Count > 0)
                     {
-                        await ExecuteUpdatePerItemAsync("UPDATE ProcSellado SET RemplazoItem = {0} WHERE NomStatus = 'SELLADO' AND Item = {{item}};", observation, found, cancellationToken);
+                        await ExecuteUpdateByItemsAsync("UPDATE ProcSellado SET RemplazoItem = {0} WHERE NomStatus = 'SELLADO' AND Item IN ({items});", observation, found, cancellationToken);
                         updatedSellado = found.Count;
                     }
                 }
@@ -1460,17 +1461,18 @@ namespace BagproWebAPI.Controllers
             });
         }
 
-        // Envía en un solo lote un UPDATE por item (los triggers de ProcExtrusion/ProcSellado solo soportan una fila por
-        // sentencia: con "WHERE Item IN (...)" fallan con "Subquery returned more than 1 value").
+        // Un UPDATE por bloque de items ("WHERE Item IN (...)"). Requiere los triggers TR_ActualizacionProduccion_Areas y
+        // TR_ActualizacionProduccion_Areas_Sellado en su versión que soporta varias filas por sentencia.
         // Los items van como parámetros (@p1, @p2...), en bloques de 1000 para no pasar el límite de 2100 parámetros de SQL Server.
-        // sqlTemplate usa {0} para el valor y {{item}} para el item de cada sentencia.
-        private async Task ExecuteUpdatePerItemAsync(string sqlTemplate, string value, List<int> items, CancellationToken cancellationToken)
+        // sqlTemplate usa {0} para el valor y {items} para la lista de parámetros del bloque.
+        private async Task ExecuteUpdateByItemsAsync(string sqlTemplate, string value, List<int> items, CancellationToken cancellationToken)
         {
             foreach (var chunk in items.Chunk(1000))
             {
                 var parameters = new List<object> { value };
                 parameters.AddRange(chunk.Cast<object>());
-                var sql = string.Join("\n", chunk.Select((_, i) => sqlTemplate.Replace("{{item}}", $"{{{i + 1}}}")));
+                var placeholders = string.Join(", ", chunk.Select((_, i) => $"{{{i + 1}}}"));
+                var sql = sqlTemplate.Replace("{items}", placeholders);
                 await _context.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
             }
         }
