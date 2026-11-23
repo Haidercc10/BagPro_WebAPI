@@ -18,6 +18,9 @@
 		{
 			"path": "../ZeusInventarioAPI/ZeusInventarioWebAPI",
 			"name": "ZeusInventarioAPI"
+		},
+		{
+			"path": "../PlasticaribeDB"
 		}
 	],
 	"settings": {
