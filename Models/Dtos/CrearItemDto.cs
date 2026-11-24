@@ -127,6 +127,12 @@ namespace BagproWebAPI.Models.Dtos
         public string? Observacion { get; set; }
 
         /// <summary>
+        /// Composición de la mezcla editada para este item. Opcional: si no viene se copia la mezcla predefinida
+        /// tal cual. Si viene, reemplaza capas, porcentajes y componentes en el item (no modifica bpMezclasPreDef).
+        /// </summary>
+        public MezclaPersonalizadaDto? MezclaPersonalizada { get; set; }
+
+        /// <summary>
         /// Reglas entre campos: presentación válida, calibre con extrusión, unidades por paquete,
         /// máximo de tintas y de capas.
         /// </summary>
@@ -173,6 +179,99 @@ namespace BagproWebAPI.Models.Dtos
         /// <summary>Cantidad de la capa.</summary>
         [Range(0, int.MaxValue)]
         public int? Cantidad { get; set; }
+    }
+
+    /// <summary>
+    /// Composición de mezcla editada para un item (columnas Ncapas, Mezporc1..3, Mezprod/Porc y Mezpigm/Porcpig de
+    /// ClientesOT_Item). Composicion[0] es la capa 1, [1] la capa 2 y [2] la capa 3.
+    /// Reglas (las mismas del formulario de mezclas de Plasticaribe): los % de las capas suman 100, cada capa usada
+    /// tiene % mayor que 0 y en cada capa los materiales suman 100; los pigmentos son aditivos y no entran en esa suma.
+    /// </summary>
+    public class MezclaPersonalizadaDto : IValidatableObject
+    {
+        /// <summary>Número de capas (Ncapas), de 1 a 3.</summary>
+        [Range(1, 3, ErrorMessage = "La mezcla debe tener entre 1 y 3 capas.")]
+        public int Capas { get; set; }
+
+        /// <summary>Capas en orden; debe traer exactamente <see cref="Capas"/> elementos.</summary>
+        [Required(ErrorMessage = "La composición de la mezcla es obligatoria.")]
+        public List<CapaMezclaDto> Composicion { get; set; } = new();
+
+        /// <summary>
+        /// Valida número de capas, suma de % de capas (100) y suma de % de materiales por capa (100).
+        /// </summary>
+        /// <param name="validationContext">Contexto de validación.</param>
+        /// <returns>Errores encontrados.</returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Composicion.Count != Capas)
+            {
+                yield return new ValidationResult($"La mezcla indica {Capas} capa(s) pero trae {Composicion.Count}.", new[] { nameof(Composicion) });
+                yield break;
+            }
+
+            decimal totalCapas = Composicion.Sum(c => Math.Round(c.Porcentaje, 2));
+            if (totalCapas != 100m)
+                yield return new ValidationResult($"La suma del porcentaje de las capas es {totalCapas} y debe ser 100.", new[] { nameof(Composicion) });
+
+            for (int i = 0; i < Composicion.Count; i++)
+            {
+                var capa = Composicion[i];
+                if (capa.Porcentaje <= 0)
+                    yield return new ValidationResult($"El porcentaje de la capa {i + 1} debe ser mayor que 0.", new[] { nameof(Composicion) });
+                decimal totalMateriales = capa.Materiales.Sum(m => Math.Round(m.Porcentaje, 2));
+                if (totalMateriales != 100m)
+                    yield return new ValidationResult($"La suma del porcentaje de los materiales de la capa {i + 1} es {totalMateriales} y debe ser 100.", new[] { nameof(Composicion) });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Capa de la mezcla editada: % de la capa (MezporcN), hasta 4 materiales y hasta 2 pigmentos.
+    /// </summary>
+    public class CapaMezclaDto : IValidatableObject
+    {
+        /// <summary>Porcentaje de la capa dentro de la mezcla (MezporcN).</summary>
+        [Range(0, 100, ErrorMessage = "El porcentaje de la capa debe estar entre 0 y 100.")]
+        public decimal Porcentaje { get; set; }
+
+        /// <summary>Materiales de la capa (tabla MezclaProductos), máximo 4. Sin huecos: no enviar el código 1.</summary>
+        [Required]
+        public List<ComponenteMezclaDto> Materiales { get; set; } = new();
+
+        /// <summary>Pigmentos de la capa (tabla MezclaPigmentos), máximo 2. Sin huecos: no enviar el código 2001.</summary>
+        public List<ComponenteMezclaDto>? Pigmentos { get; set; }
+
+        /// <summary>
+        /// Valida la cantidad de componentes y que no se envíen los códigos que BagPro usa para "vacío".
+        /// </summary>
+        /// <param name="validationContext">Contexto de validación.</param>
+        /// <returns>Errores encontrados.</returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Materiales.Count > 4)
+                yield return new ValidationResult("Máximo 4 materiales por capa.", new[] { nameof(Materiales) });
+            if (Materiales.Any(m => m.Codigo == 1))
+                yield return new ValidationResult("El material 1 significa 'sin material'; omítalo.", new[] { nameof(Materiales) });
+            if ((Pigmentos?.Count ?? 0) > 2)
+                yield return new ValidationResult("Máximo 2 pigmentos por capa.", new[] { nameof(Pigmentos) });
+            if (Pigmentos != null && Pigmentos.Any(p => p.Codigo == 2001))
+                yield return new ValidationResult("El pigmento 2001 significa 'sin pigmento'; omítalo.", new[] { nameof(Pigmentos) });
+        }
+    }
+
+    /// <summary>
+    /// Material o pigmento de una capa de mezcla.
+    /// </summary>
+    public class ComponenteMezclaDto
+    {
+        /// <summary>Código BagPro (MezclaProductos.id o MezclaPigmentos.id).</summary>
+        [Range(1, int.MaxValue, ErrorMessage = "Código de componente de mezcla no válido.")]
+        public int Codigo { get; set; }
+
+        /// <summary>Porcentaje del componente dentro de la capa.</summary>
+        [Range(0, 100, ErrorMessage = "El porcentaje del componente debe estar entre 0 y 100.")]
+        public decimal Porcentaje { get; set; }
     }
 
     /// <summary>

@@ -390,14 +390,14 @@ namespace BagproWebAPI.Controllers
                                       Wicket = (from w in _context.Wiketiandos where w.Id == Convert.ToString(ot.ClienteItems.Value) select w.Id.Trim()).FirstOrDefault(),
 
                                       // Información de Extrusión
-                                      Id_Material = Convert.ToInt32(ot.ExtMaterial),
+                                      Id_Material = EnteroOCero(ot.ExtMaterial),
                                       Material = ot.ExtMaterialNom != null ? ot.ExtMaterialNom.Trim() : ot.ExtMaterialNom,
-                                      Id_Pigmento_Extrusion = Convert.ToInt32(ot.ExtPigmento),
-                                      Pigmento_Extrusion = ot.ExtPigmentoNom.Trim(),
-                                      Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato) == 5 ? 4 : Convert.ToInt32(ot.ExtFormato),
-                                      Formato_Extrusin = ot.ExtFormatoNom.Trim(),
-                                      Id_Tratado = Convert.ToInt32(ot.ExtTratado),
-                                      Tratado = ot.ExtTratadoNom.Trim(),
+                                      Id_Pigmento_Extrusion = EnteroOCero(ot.ExtPigmento),
+                                      Pigmento_Extrusion = (ot.ExtPigmentoNom ?? "").Trim(),
+                                      Id_Formato_Extrusion = EnteroOCero(ot.ExtFormato) == 5 ? 4 : EnteroOCero(ot.ExtFormato),
+                                      Formato_Extrusin = (ot.ExtFormatoNom ?? "").Trim(),
+                                      Id_Tratado = EnteroOCero(ot.ExtTratado),
+                                      Tratado = (ot.ExtTratadoNom ?? "").Trim(),
                                       Calibre_Extrusion = ot.ExtCalibre,
                                       Und_Extrusion = ot.ExtUnidadesNom.Trim(),
                                       Ancho1_Extrusion = ot.ExtAcho1,
@@ -611,14 +611,14 @@ namespace BagproWebAPI.Controllers
                                    
 
                                    // Información de Extrusión
-                                   Id_Material = Convert.ToInt32(clot.ExtMaterial),
+                                   Id_Material = EnteroOCero(clot.ExtMaterial),
                                    Material = clot.ExtMaterialNom.Trim(),
-                                   Id_Pigmento_Extrusion = Convert.ToInt32(clot.ExtPigmento),
-                                   Pigmento_Extrusion = clot.ExtPigmentoNom.Trim(),
-                                   Id_Formato_Extrusion = Convert.ToInt32(ot.ExtFormato) == 5 ? 4 : Convert.ToInt32(ot.ExtFormato),
-                                   Formato_Extrusin = ot.ExtFormatoNom.Trim(),
-                                   Id_Tratado = Convert.ToInt32(clot.ExtTratado),
-                                   Tratado = clot.ExtTratadoNom.Trim(),
+                                   Id_Pigmento_Extrusion = EnteroOCero(clot.ExtPigmento),
+                                   Pigmento_Extrusion = (clot.ExtPigmentoNom ?? "").Trim(),
+                                   Id_Formato_Extrusion = EnteroOCero(ot.ExtFormato) == 5 ? 4 : EnteroOCero(ot.ExtFormato),
+                                   Formato_Extrusin = (ot.ExtFormatoNom ?? "").Trim(),
+                                   Id_Tratado = EnteroOCero(clot.ExtTratado),
+                                   Tratado = (clot.ExtTratadoNom ?? "").Trim(),
                                    Calibre_Extrusion = clot.ExtCalibre,
                                    Und_Extrusion = clot.ExtUnidadesNom.Trim(),
                                    Ancho1_Extrusion = clot.ExtAcho1,
@@ -1331,6 +1331,14 @@ namespace BagproWebAPI.Controllers
                 return File(stream.ToArray(), "application / pdf");
             }    
         }
+
+        /// <summary>
+        /// Convierte a entero un código de texto de BagPro; vacío, NULL o no numérico devuelve 0 (items sin ese proceso).
+        /// Se evalúa en memoria dentro de la proyección final, por eso no rompe la consulta cuando la columna es NULL.
+        /// </summary>
+        /// <param name="valor">Código guardado como texto.</param>
+        /// <returns>El código numérico o 0.</returns>
+        private static int EnteroOCero(string? valor) => int.TryParse(valor?.Trim(), out int n) ? n : 0;
     }
 }
 
