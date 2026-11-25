@@ -164,7 +164,7 @@ namespace BagproWebAPI.Controllers
                 origen.PtPresentacion = codigoPresentacion.ToString();
                 origen.PtPresentacionNom = presentacion;
                 origen.DatosvalorBolsa = precio;
-                origen.DatosValorKg = presentacion == "Kilo" ? precio : null;
+                origen.DatosValorKg = presentacion == "Kilo" ? precio : 0;
                 origen.UsrCrea = UsuarioCreacion;
                 origen.FechaCrea = DateTime.Now;
                 origen.FechaModifica = DateTime.Now;
@@ -241,7 +241,8 @@ namespace BagproWebAPI.Controllers
 
         /// <summary>
         /// Devuelve la ficha técnica de la primera fila del item (menor Id), con la forma de CrearItemDto
-        /// más los nombres de catálogo, para "Copiar desde item".
+        /// más los nombres de catálogo, para "Copiar desde item". Incluye mezclaComposicion: la composición de mezcla
+        /// guardada en el item (no la predefinida), con la forma de GET catalogos/mezclas/{item}.
         /// </summary>
         /// <param name="codigo">Código del item (ClienteItems).</param>
         /// <returns>200 con la ficha o 404 si el item no existe.</returns>
@@ -307,6 +308,8 @@ namespace BagproWebAPI.Controllers
                 tipoSellado = EnteroONulo(c.PtSelladoPt) is > 1 ? EnteroONulo(c.PtSelladoPt) : null, // 1 = sin sellado
                 mezcla = EnteroONulo(c.MezModo),
                 mezclaNom = c.MezModoNom?.Trim(),
+                // Composición guardada en el item (puede estar editada respecto a la predefinida).
+                mezclaComposicion = ComposicionMezclaItem(c),
                 tipoSelladoNom = c.PtSelladoPtNom?.Trim(),
                 cantidadPaquete = c.PtQtyPquete,
                 cantidadBulto = c.PtQtyBulto,
@@ -439,6 +442,21 @@ namespace BagproWebAPI.Controllers
             var mezcla = await _context.BpMezclasPreDefs.AsNoTracking().FirstOrDefaultAsync(m => m.Item == dto.Mezcla);
             if (mezcla == null) ModelState.AddModelError(nameof(dto.Mezcla), "La mezcla no existe.");
 
+            // Mezcla editada para este item: los códigos deben existir en los catálogos de BagPro que usa bpMezclasPreDef.
+            Dictionary<int, string> nombresMateriales = new(), nombresPigmentos = new();
+            var personalizada = dto.MezclaPersonalizada;
+            if (personalizada != null)
+            {
+                var idsMateriales = personalizada.Composicion.SelectMany(c => c.Materiales).Select(m => m.Codigo).Distinct().ToList();
+                var idsPigmentos = personalizada.Composicion.SelectMany(c => c.Pigmentos ?? new List<ComponenteMezclaDto>()).Select(p => p.Codigo).Distinct().ToList();
+                nombresMateriales = await NombresMaterialesMezclaAsync(idsMateriales);
+                nombresPigmentos = await NombresPigmentosMezclaAsync(idsPigmentos);
+                foreach (int m in idsMateriales.Where(m => !nombresMateriales.ContainsKey(m)))
+                    ModelState.AddModelError(nameof(dto.MezclaPersonalizada), $"El material de mezcla {m} no existe.");
+                foreach (int p in idsPigmentos.Where(p => !nombresPigmentos.ContainsKey(p)))
+                    ModelState.AddModelError(nameof(dto.MezclaPersonalizada), $"El pigmento de mezcla {p} no existe.");
+            }
+
             string? vendedor = string.IsNullOrWhiteSpace(dto.Vendedor) ? null : dto.Vendedor.Trim();
             if (vendedor != null && !await _context.Vendedores.AsNoTracking().AnyAsync(v => v.Id == vendedor))
                 ModelState.AddModelError(nameof(dto.Vendedor), "El vendedor no existe.");
@@ -470,9 +488,9 @@ namespace BagproWebAPI.Controllers
                 ExtUnidadesNom = Recortar(unidadNom, 30),
                 ExtCalibre = Math.Round(dto.Calibre, 2),
                 ExtPeso = 0,
-                ExtAcho1 = Redondear(dto.AnchoExtrusion1),
-                ExtAcho2 = Redondear(dto.AnchoExtrusion2),
-                ExtAcho3 = Redondear(dto.AnchoExtrusion3),
+                ExtAcho1 = Redondear(dto.AnchoExtrusion1) ?? 0,
+                ExtAcho2 = Redondear(dto.AnchoExtrusion2) ?? 0,
+                ExtAcho3 = Redondear(dto.AnchoExtrusion3) ?? 0,
                 ExtTratado = dto.Tratado?.ToString(),
                 ExtTratadoNom = Recortar(tratadoNom, 30),
                 Impresion = Indicador(dto.Impresion),
@@ -511,6 +529,7 @@ namespace BagproWebAPI.Controllers
                 PtFuelle = Math.Round(dto.Fuelle, 2),
                 // Sin OT: cantidades y valores de OT en 0, como BagPro escritorio deja los campos que no aplican.
                 DatosFechaDespachar = ahora.Date,
+                DatosOt = "0",
                 DatoscantBolsa = 0,
                 DatosvalorBolsa = precio,
                 DatoscantKg = 0,
@@ -539,7 +558,174 @@ namespace BagproWebAPI.Controllers
                 NocheC = 0,
             };
             AplicarMezcla(item, mezcla!);
+            if (personalizada != null) AplicarMezclaPersonalizada(item, personalizada, nombresMateriales, nombresPigmentos);
             return item;
+        }
+
+        /// <summary>
+        /// Reemplaza en el item la composición copiada de la mezcla predefinida por la editada para este item:
+        /// Ncapas, Mezporc1..3 y los 4 materiales y 2 pigmentos de cada capa. Conserva Mezcla, MezModo y MezModoNom
+        /// de la predefinida. Las capas y componentes no enviados quedan vacíos como en BagPro escritorio
+        /// (material '1', pigmento '2001', nombre '0', 0 %). No modifica bpMezclasPreDef.
+        /// </summary>
+        /// <param name="item">Fila de ClientesOT_Item con la mezcla predefinida ya aplicada.</param>
+        /// <param name="mezcla">Composición editada y validada.</param>
+        /// <param name="nombresMateriales">Nombres de MezclaProductos por código.</param>
+        /// <param name="nombresPigmentos">Nombres de MezclaPigmentos por código.</param>
+        /// <returns>No retorna un valor.</returns>
+        private void AplicarMezclaPersonalizada(ClientesOtItem item, MezclaPersonalizadaDto mezcla,
+            IReadOnlyDictionary<int, string> nombresMateriales, IReadOnlyDictionary<int, string> nombresPigmentos)
+        {
+            item.Ncapas = mezcla.Capas;
+            for (int capa = 1; capa <= 3; capa++)
+            {
+                var datos = capa <= mezcla.Composicion.Count ? mezcla.Composicion[capa - 1] : null;
+                AsignarColumnaMezcla(item, $"Mezporc{capa}", Math.Round(datos?.Porcentaje ?? 0m, 2));
+                for (int producto = 1; producto <= 4; producto++)
+                {
+                    var material = datos != null && producto <= datos.Materiales.Count ? datos.Materiales[producto - 1] : null;
+                    string nombre = material == null ? "0" : nombresMateriales[material.Codigo].Trim();
+                    AsignarColumnaMezcla(item, $"Mezprod{producto}cap{capa}", material?.Codigo.ToString(CultureInfo.InvariantCulture) ?? CodigoVacio);
+                    AsignarColumnaMezcla(item, $"Mezprod{producto}cap{capa}Nom", nombre.Length == 0 ? "0" : nombre);
+                    AsignarColumnaMezcla(item, $"Porc{producto}cap{capa}", Math.Round(material?.Porcentaje ?? 0m, 2));
+                }
+                var pigmentos = datos?.Pigmentos ?? new List<ComponenteMezclaDto>();
+                for (int pigmento = 1; pigmento <= 2; pigmento++)
+                {
+                    var componente = pigmento <= pigmentos.Count ? pigmentos[pigmento - 1] : null;
+                    string nombre = componente == null ? "0" : nombresPigmentos[componente.Codigo].Trim();
+                    AsignarColumnaMezcla(item, $"Mezpigm{pigmento}cap{capa}", componente?.Codigo.ToString(CultureInfo.InvariantCulture) ?? PigmentoVacio);
+                    AsignarColumnaMezcla(item, $"Mezpigm{pigmento}cap{capa}Nom", nombre.Length == 0 ? "0" : nombre);
+                    AsignarColumnaMezcla(item, $"Porcpig{pigmento}cap{capa}", Math.Round(componente?.Porcentaje ?? 0m, 2));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asigna una columna de mezcla de ClientesOT_Item por nombre de propiedad; los textos se recortan al largo
+        /// de la columna de destino, como en <see cref="AplicarMezcla"/>.
+        /// </summary>
+        /// <param name="item">Fila de ClientesOT_Item.</param>
+        /// <param name="propiedad">Nombre de la propiedad (p. ej. Mezprod1cap1).</param>
+        /// <param name="valor">Valor a asignar.</param>
+        /// <returns>No retorna un valor.</returns>
+        private void AsignarColumnaMezcla(ClientesOtItem item, string propiedad, object? valor)
+        {
+            if (valor is string texto)
+            {
+                var columna = _context.Model.FindEntityType(typeof(ClientesOtItem))!.FindProperty(propiedad);
+                valor = Recortar(texto, columna?.GetMaxLength() ?? texto.Length);
+            }
+            typeof(ClientesOtItem).GetProperty(propiedad)!.SetValue(item, valor);
+        }
+
+        /// <summary>
+        /// Nombres de los materiales de mezcla de BagPro (tabla MezclaProductos, la misma de M{c}P{n}Id en bpMezclasPreDef).
+        /// </summary>
+        /// <param name="ids">Códigos a buscar.</param>
+        /// <returns>Diccionario código → nombre de los códigos que existen.</returns>
+        private async Task<Dictionary<int, string>> NombresMaterialesMezclaAsync(List<int> ids)
+        {
+            if (ids.Count == 0) return new Dictionary<int, string>();
+            // La tabla no tiene clave en el modelo: se agrupa por id por si hubiera filas repetidas.
+            var filas = await _context.MezclaProductos.AsNoTracking().Where(x => ids.Contains(x.Id))
+                .Select(x => new { x.Id, x.NombreMaterial }).ToListAsync();
+            return filas.GroupBy(x => x.Id).ToDictionary(g => g.Key, g => (g.First().NombreMaterial ?? string.Empty).Trim());
+        }
+
+        /// <summary>
+        /// Nombres de los pigmentos de mezcla de BagPro (tabla MezclaPigmentos, la misma de M{c}Pig{n}Id en bpMezclasPreDef).
+        /// </summary>
+        /// <param name="ids">Códigos a buscar.</param>
+        /// <returns>Diccionario código → nombre de los códigos que existen.</returns>
+        private async Task<Dictionary<int, string>> NombresPigmentosMezclaAsync(List<int> ids)
+        {
+            if (ids.Count == 0) return new Dictionary<int, string>();
+            var filas = await _context.MezclaPigmentos.AsNoTracking().Where(x => ids.Contains(x.Id))
+                .Select(x => new { x.Id, x.NombreMaterial }).ToListAsync();
+            return filas.GroupBy(x => x.Id).ToDictionary(g => g.Key, g => (g.First().NombreMaterial ?? string.Empty).Trim());
+        }
+
+        /// <summary>
+        /// Arma la composición de una mezcla (predefinida o guardada en un item) en la forma que consume el front:
+        /// por capa, su % y la lista de materiales y pigmentos con código, nombre y %. Los huecos vacíos de BagPro
+        /// (material '1', pigmento '2001', código vacío o no numérico) se omiten.
+        /// </summary>
+        /// <param name="item">Código de la mezcla predefinida (bpMezclasPreDef.Item / MezModo), si se conoce.</param>
+        /// <param name="nombre">Nombre de la mezcla.</param>
+        /// <param name="capas">Número de capas guardado; se devuelven entre 1 y 3 capas.</param>
+        /// <param name="leer">Lee un valor de la fuente: (campo, número de componente, capa). Campos: "capa" (% de la capa),
+        /// "prod", "prodNom", "prodPorc", "pig", "pigNom", "pigPorc".</param>
+        /// <returns>{ item, nombre, capas, composicion: [{ capa, porcentaje, materiales: [{ codigo, nombre, porcentaje }], pigmentos: [...] }] }.</returns>
+        private static object ArmarComposicionMezcla(int? item, string? nombre, int? capas, Func<string, int, int, object?> leer)
+        {
+            int totalCapas = Math.Clamp(capas ?? 1, 1, 3);
+            static decimal Porcentaje(object? valor) => valor as decimal? ?? 0m;
+            static int? Codigo(object? valor) => valor switch
+            {
+                int n => n,
+                string s when int.TryParse(s.Trim(), out int n) => n,
+                _ => null,
+            };
+            static string NombreComponente(object? valor) => (valor as string)?.Trim() ?? string.Empty;
+
+            var composicion = Enumerable.Range(1, totalCapas).Select(c => new
+            {
+                capa = c,
+                porcentaje = Porcentaje(leer("capa", 0, c)),
+                materiales = Enumerable.Range(1, 4)
+                    .Select(n => new { codigo = Codigo(leer("prod", n, c)), nombre = NombreComponente(leer("prodNom", n, c)), porcentaje = Porcentaje(leer("prodPorc", n, c)) })
+                    .Where(m => m.codigo is > 0 and not 1)
+                    .Select(m => new { codigo = m.codigo!.Value, m.nombre, m.porcentaje })
+                    .ToList(),
+                pigmentos = Enumerable.Range(1, 2)
+                    .Select(n => new { codigo = Codigo(leer("pig", n, c)), nombre = NombreComponente(leer("pigNom", n, c)), porcentaje = Porcentaje(leer("pigPorc", n, c)) })
+                    .Where(p => p.codigo is > 0 and not 2001)
+                    .Select(p => new { codigo = p.codigo!.Value, p.nombre, p.porcentaje })
+                    .ToList(),
+            }).ToList();
+
+            return new { item, nombre = nombre?.Trim(), capas = capas ?? totalCapas, composicion };
+        }
+
+        /// <summary>
+        /// Composición de una mezcla predefinida de BagPro (bpMezclasPreDef).
+        /// </summary>
+        /// <param name="mezcla">Mezcla predefinida.</param>
+        /// <returns>Composición con la forma de <see cref="ArmarComposicionMezcla"/>.</returns>
+        private static object ComposicionMezclaPredefinida(BpMezclasPreDef mezcla)
+        {
+            object? Leer(string campo, int n, int c) => typeof(BpMezclasPreDef).GetProperty(campo switch
+            {
+                "capa" => $"Material{c}X100",
+                "prod" => $"M{c}p{n}id",
+                "prodNom" => $"M{c}p{n}nombre",
+                "prodPorc" => $"M{c}p{n}x100",
+                "pig" => $"M{c}pig{n}Id",
+                "pigNom" => $"M{c}pig{n}Nombre",
+                _ => $"M{c}pig{n}X100",
+            })!.GetValue(mezcla);
+            return ArmarComposicionMezcla(mezcla.Item, mezcla.Nombre, mezcla.MezclasNro, Leer);
+        }
+
+        /// <summary>
+        /// Composición de la mezcla guardada en una fila de ClientesOT_Item (puede diferir de la predefinida si se editó al crear).
+        /// </summary>
+        /// <param name="fila">Fila del item.</param>
+        /// <returns>Composición con la forma de <see cref="ArmarComposicionMezcla"/>.</returns>
+        private static object ComposicionMezclaItem(ClientesOtItem fila)
+        {
+            object? Leer(string campo, int n, int c) => typeof(ClientesOtItem).GetProperty(campo switch
+            {
+                "capa" => $"Mezporc{c}",
+                "prod" => $"Mezprod{n}cap{c}",
+                "prodNom" => $"Mezprod{n}cap{c}Nom",
+                "prodPorc" => $"Porc{n}cap{c}",
+                "pig" => $"Mezpigm{n}cap{c}",
+                "pigNom" => $"Mezpigm{n}cap{c}Nom",
+                _ => $"Porcpig{n}cap{c}",
+            })!.GetValue(fila);
+            return ArmarComposicionMezcla(EnteroONulo(fila.MezModo), fila.MezModoNom, fila.Ncapas, Leer);
         }
 
         /// <summary>
@@ -596,6 +782,57 @@ namespace BagproWebAPI.Controllers
                 .Select(m => new { item = m.Item, nombre = m.Nombre.Trim(), capas = m.MezclasNro })
                 .ToListAsync();
             return Ok(mezclas);
+        }
+
+        /// <summary>
+        /// Composición completa de una mezcla predefinida de BagPro (bpMezclasPreDef), para cargarla y editarla en la
+        /// creación de items. Los huecos vacíos (material 1, pigmento 2001) se omiten de las listas.
+        /// </summary>
+        /// <param name="item">Código de la mezcla (bpMezclasPreDef.Item).</param>
+        /// <returns>200 { item, nombre, capas, composicion: [{ capa, porcentaje, materiales: [{ codigo, nombre, porcentaje }],
+        /// pigmentos: [{ codigo, nombre, porcentaje }] }] } o 404 si la mezcla no existe.</returns>
+        [HttpGet("catalogos/mezclas/{item:int}")]
+        public async Task<IActionResult> GetMezclaPredefinida(int item)
+        {
+            var mezcla = await _context.BpMezclasPreDefs.AsNoTracking().FirstOrDefaultAsync(m => m.Item == item);
+            if (mezcla == null) return NotFound(new { mensaje = $"La mezcla {item} no existe." });
+            return Ok(ComposicionMezclaPredefinida(mezcla));
+        }
+
+        /// <summary>
+        /// Materiales de mezcla de BagPro (tabla MezclaProductos, origen de los códigos M{c}P{n}Id de bpMezclasPreDef),
+        /// sin el código 1 que BagPro usa para "sin material".
+        /// </summary>
+        /// <returns>200 con [{ id, nombre }] ordenados por nombre.</returns>
+        [HttpGet("catalogos/mezclas/materiales")]
+        public async Task<IActionResult> GetMaterialesMezcla()
+        {
+            var materiales = await _context.MezclaProductos.AsNoTracking()
+                .Where(x => x.Id != 1 && x.NombreMaterial.Trim() != string.Empty)
+                .Select(x => new { x.Id, x.NombreMaterial })
+                .ToListAsync();
+            return Ok(materiales
+                .GroupBy(x => x.Id)
+                .Select(g => new { id = g.Key, nombre = g.First().NombreMaterial.Trim() })
+                .OrderBy(x => x.nombre));
+        }
+
+        /// <summary>
+        /// Pigmentos de mezcla de BagPro (tabla MezclaPigmentos, origen de los códigos M{c}Pig{n}Id de bpMezclasPreDef),
+        /// sin el código 2001 que BagPro usa para "sin pigmento".
+        /// </summary>
+        /// <returns>200 con [{ id, nombre }] ordenados por nombre.</returns>
+        [HttpGet("catalogos/mezclas/pigmentos")]
+        public async Task<IActionResult> GetPigmentosMezcla()
+        {
+            var pigmentos = await _context.MezclaPigmentos.AsNoTracking()
+                .Where(x => x.Id != 2001 && x.NombreMaterial.Trim() != string.Empty)
+                .Select(x => new { x.Id, x.NombreMaterial })
+                .ToListAsync();
+            return Ok(pigmentos
+                .GroupBy(x => x.Id)
+                .Select(g => new { id = g.Key, nombre = g.First().NombreMaterial.Trim() })
+                .OrderBy(x => x.nombre));
         }
 
         /// <summary>
