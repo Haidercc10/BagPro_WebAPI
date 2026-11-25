@@ -24,6 +24,7 @@
 		}
 	],
 	"settings": {
-		"git.openRepositoryInParentFolders": "always"
+		"git.openRepositoryInParentFolders": "always",
+		"powershell.cwd": "WorkspaceAngular"
 	}
 }
