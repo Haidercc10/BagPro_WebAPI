@@ -240,6 +240,64 @@ namespace BagproWebAPI.Controllers
         }
 
         /// <summary>
+        /// Items de un cliente para "Copiar desde item" por cliente en la creación de items: uno por código, con las
+        /// presentaciones y los datos que los distinguen. Solo lectura.
+        /// V1 temporal en BagPro: la relación cliente/item de Plasticaribe (Clientes_Productos) aún está incompleta;
+        /// cuando se complete, la consulta pasa a PlasticaribeWebAPI con la misma forma de respuesta.
+        /// </summary>
+        /// <param name="cliente">Código del cliente en BagPro.</param>
+        /// <returns>200 con [{ codigo, nombre, presentaciones, formato, material, pigmento, unidad, ancho, largo, fuelle,
+        /// calibre, impresion, laminado, tintas, fechaCreacion }] del más reciente al más antiguo (vacío si no tiene items).</returns>
+        [HttpGet("cliente/{cliente:int}")]
+        public async Task<IActionResult> GetItemsCliente(int cliente)
+        {
+            var filas = await _context.ClientesOtItems.AsNoTracking()
+                .Where(c => c.Cliente == cliente && c.ClienteItems != null)
+                .Select(c => new
+                {
+                    c.Id, codigo = c.ClienteItems!.Value, c.ClienteItemsNom, c.PtPresentacionNom, c.PtFormatoptNom, c.ExtMaterialNom,
+                    c.ExtPigmentoNom, c.ExtUnidadesNom, c.PtAnchopt, c.PtLargopt, c.PtFuelle, c.ExtCalibre, c.Impresion, c.Lamiando,
+                    c.Laminado2, c.ImpTinta1Nom, c.ImpTinta2Nom, c.ImpTinta3Nom, c.ImpTinta4Nom, c.ImpTinta5Nom, c.ImpTinta6Nom,
+                    c.ImpTinta7Nom, c.ImpTinta8Nom, c.FechaCrea,
+                })
+                .ToListAsync();
+
+            // Las tintas sin usar llegan vacías o como "NO APLICA..."
+            static bool EsTinta(string? nombre) => !string.IsNullOrWhiteSpace(nombre) && !nombre.Trim().StartsWith("NO APLICA", StringComparison.OrdinalIgnoreCase);
+
+            var items = filas
+                .GroupBy(f => f.codigo)
+                .Select(g =>
+                {
+                    // Los datos técnicos se toman de la primera fila del item (como la ficha que se copia)
+                    var c = g.OrderBy(f => f.Id).First();
+                    return new
+                    {
+                        codigo = g.Key,
+                        nombre = c.ClienteItemsNom?.Trim(),
+                        presentaciones = g.Select(f => f.PtPresentacionNom?.Trim()).Where(p => !string.IsNullOrEmpty(p)).Distinct().ToList(),
+                        formato = c.PtFormatoptNom?.Trim(),
+                        material = c.ExtMaterialNom?.Trim(),
+                        pigmento = c.ExtPigmentoNom?.Trim(),
+                        unidad = c.ExtUnidadesNom?.Trim(),
+                        ancho = c.PtAnchopt ?? 0,
+                        largo = c.PtLargopt ?? 0,
+                        fuelle = c.PtFuelle ?? 0,
+                        calibre = c.ExtCalibre ?? 0,
+                        impresion = NombreItemNormalizador.EsSi(c.Impresion) || NombreItemNormalizador.EsSi(c.Lamiando),
+                        laminado = NombreItemNormalizador.EsSi(c.Laminado2),
+                        tintas = new[] { c.ImpTinta1Nom, c.ImpTinta2Nom, c.ImpTinta3Nom, c.ImpTinta4Nom, c.ImpTinta5Nom, c.ImpTinta6Nom, c.ImpTinta7Nom, c.ImpTinta8Nom }
+                            .Where(EsTinta).Select(t => t!.Trim()).ToList(),
+                        fechaCreacion = g.Min(f => f.FechaCrea),
+                    };
+                })
+                .OrderByDescending(x => x.codigo)
+                .ToList();
+
+            return Ok(items);
+        }
+
+        /// <summary>
         /// Devuelve la ficha técnica de la primera fila del item (menor Id), con la forma de CrearItemDto
         /// más los nombres de catálogo, para "Copiar desde item". Incluye mezclaComposicion: la composición de mezcla
         /// guardada en el item (no la predefinida), con la forma de GET catalogos/mezclas/{item}.
